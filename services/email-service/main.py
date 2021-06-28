@@ -1,19 +1,30 @@
 from flask import Flask, jsonify, request
-import requests
+import smtplib, ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
 
-def sendEmail(email, body):
-	request = requests.post(
-		"https://api.mailgun.net/v3/sandbox74ce6eb65f0840ca82d948300acd5fb8.mailgun.org/messages",
-		auth=("api", MAILGUN_API_KEY),
-		data={"from": "Mailgun Sandbox <postmaster@sandbox74ce6eb65f0840ca82d948300acd5fb8.mailgun.org>",
-			"to": email,
-			"subject": "UWUaaS Moderation Request",
-			"html": body})
+def sendEmail(receiver_email, body):
+    sender_email = "xxxxxx"
+    password = "xxxxxx"
 
-	print('Status: {0}'.format(request.status_code))
-	print('Body:   {0}'.format(request.text))
+    message = MIMEMultipart("alternative")
+    message["Subject"] = "UWUaaS Moderation Request"
+    message["From"] = sender_email
+    message["To"] = receiver_email
+
+    # convert html into mimetext format
+    emailContent = MIMEText(body, "html")
+    message.attach(emailContent)
+
+    # Create secure connection with server and send email
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(
+        sender_email, receiver_email, message.as_string()
+    )
 
 
 @app.route("/send", methods=['POST'])
