@@ -10,7 +10,6 @@ def sendEmail(email, body):
 		data={"from": "Mailgun Sandbox <postmaster@sandbox74ce6eb65f0840ca82d948300acd5fb8.mailgun.org>",
 			"to": email,
 			"subject": "UWUaaS Moderation Request",
-			"text": "This is a test",
 			"html": body})
 
 	print('Status: {0}'.format(request.status_code))
