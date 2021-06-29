@@ -13,14 +13,15 @@ await db.read()
 // Set default data
 // db.data = { pictures: [] }
 
-export default async function pushDB (fileName, fileLink, fileCategory) {
+export default async function pushDB (fileName, fileDesc, fileLink, fileCategory) {
     // You can also use this syntax if you prefer
     const { pictures } = db.data
 
     let information = {
         "category" : fileCategory,
         "link" : fileLink,
-        "name" : fileName
+        "name" : fileDesc,
+        "file" : fileName
     }
 
     pictures.push(information)

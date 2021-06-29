@@ -2,11 +2,12 @@ import express from 'express'
 import multer from 'multer'
 const upload = multer()
 const app = express()
-import { uploadFile, fileExt } from './src/helpers.js'
+import { uniqueId, uploadFile, fileExt } from './src/helpers.js'
 import pushDB from './src/lowdb.js'
 var router = express.Router();
 const PORT = 3000
 
+// for testing locally: node -r dotenv/config index.js  
 // https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
 
 
@@ -20,6 +21,7 @@ router.post('/upload', upload.any(), async(req, res) => {
     let image = req.files[0].buffer
     let category = req.body.category
     let name = req.body.name
+    let fileName = uniqueId()
     // parse from body
 
     // determine file extension
@@ -30,7 +32,7 @@ router.post('/upload', upload.any(), async(req, res) => {
     let imageData = Buffer.from(image, 'base64')
 
     // upload to s3
-    let link = await uploadFile(name + ext, imageData, category)
+    let link = await uploadFile(fileName + ext, imageData, category)
 
-    res.send(await pushDB(name, link, category)) 
+    res.send(await pushDB(fileName + ext, name, link, category)) 
   });

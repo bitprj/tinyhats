@@ -1,4 +1,5 @@
-import AWS from 'aws-sdk'
+import AWS from 'aws-sdk';
+import generateUniqueId from 'generate-unique-id'
 const ID = process.env.S3_ID;
 const SECRET = process.env.S3_SECRET;
 const BUCKET_NAME = 'uwuaascat';
@@ -39,4 +40,12 @@ export const fileExt = (ext) => {
     } else {
         process.exit()
     }
+}
+
+export const uniqueId = () => {
+    const id = generateUniqueId({
+        length: 16
+    });
+
+    return id
 }
