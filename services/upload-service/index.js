@@ -34,5 +34,6 @@ router.post('/upload', upload.any(), async(req, res) => {
     // upload to s3
     let link = await uploadFile(fileName + ext, imageData, category)
 
+    // push to lowdb
     res.send(await pushDB(fileName + ext, name, link, category)) 
   });
