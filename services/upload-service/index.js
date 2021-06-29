@@ -1,8 +1,9 @@
-const express = require('express')
-const multer = require("multer");
+import express from 'express'
+import multer from 'multer'
 const upload = multer()
 const app = express()
-const helpers = require('./helpers.js')
+import { uploadFile, fileExt } from './src/helpers.js'
+import pushDB from './src/lowdb.js'
 var router = express.Router();
 const PORT = 3000
 
@@ -15,21 +16,21 @@ app.listen(PORT, () => {
     console.log(`API Gateway started on port ${PORT}`)
 })
 
-router.post('/upload', upload.any(), function(req, res){
+router.post('/upload', upload.any(), async(req, res) => {
     let image = req.files[0].buffer
     let category = req.body.category
     let name = req.body.name
     // parse from body
 
     // determine file extension
-    let ext = helpers.fileExt(req.files[0].mimetype)
+    let ext = fileExt(req.files[0].mimetype)
 
     // base64 image to binary data
     console.log("Image received")
     let imageData = Buffer.from(image, 'base64')
 
     // upload to s3
-    let resp = helpers.uploadFile(name + ext, imageData, category)
-    console.log(resp)
-    res.send(resp)
+    let link = await uploadFile(name + ext, imageData, category)
+
+    res.send(await pushDB(name, link, category)) 
   });

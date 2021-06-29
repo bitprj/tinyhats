@@ -1,0 +1,9 @@
+{
+  "pictures": [
+    {
+      "category": "cat",
+      "link": "https://uwuaascat.s3.amazonaws.com/cat/coolcat.jpeg",
+      "name": "coolcat"
+    }
+  ]
+}

@@ -1,5 +1,4 @@
-require('dotenv').config();
-const AWS = require('aws-sdk');
+import AWS from 'aws-sdk'
 const ID = process.env.S3_ID;
 const SECRET = process.env.S3_SECRET;
 const BUCKET_NAME = 'uwuaascat';
@@ -9,7 +8,7 @@ const s3 = new AWS.S3({
     secretAccessKey: SECRET
 });
 
-const uploadFile = (fileName, fileContent, fileCategory) => {
+export async function uploadFile (fileName, fileContent, fileCategory) {
     let link = ""
     let key = `${fileCategory}/${fileName}`
     // Setting up S3 upload parameters
@@ -20,18 +19,17 @@ const uploadFile = (fileName, fileContent, fileCategory) => {
     };
 
     // Uploading files to the bucket
-    s3.upload(params, function(err, data) {
+    s3.upload(params, (err, data) => {
         if (err) {
             throw err;
         }
         link = data.Location
         console.log(`File uploaded successfully. ${link}`);
     });
-    console.log(link)
     return `https://${BUCKET_NAME}.s3.amazonaws.com/${key}`
 };
 
-const fileExt = (ext) => {
+export const fileExt = (ext) => {
     if (ext == "image/png") {
         return '.png'
     } else if (ext == "image/jpeg") {
@@ -42,6 +40,3 @@ const fileExt = (ext) => {
         process.exit()
     }
 }
-
-exports.uploadFile = uploadFile
-exports.fileExt = fileExt
