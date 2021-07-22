@@ -3,8 +3,8 @@ const fetch = require('node-fetch')
 require('dotenv').config()
 
 const findBaby = async (baby) => {
-  const subscriptionKey = ""
-  const uriBase = "" + '/face/v1.0/detect';
+  const subscriptionKey = process.env.SUBSCRIPTION_KEY
+  const uriBase = process.env.ENDPOINT + '/face/v1.0/detect';
 
   let params = new URLSearchParams({
     'returnFaceId': 'true',
