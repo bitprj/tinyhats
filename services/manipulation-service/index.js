@@ -24,6 +24,8 @@ router.post('/manipulate', upload.any(), async(req, res) => {
     let hat = hatLinks[randNum]
 
     let result = await image.findBaby(baby)
+
+    let finalBaby = await image.overlayHat(hat, result, baby)
     // push to lowdb
     res.send(result) 
   });

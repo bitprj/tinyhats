@@ -2,8 +2,8 @@ const Jimp = require('jimp')
 const fetch = require('node-fetch')
 
 const findBaby = async (baby) => {
-  const subscriptionKey = "352800627962499db666d887d8b6da43"
-  const uriBase = "https://colefaceapi.cognitiveservices.azure.com" + '/face/v1.0/detect';
+  const subscriptionKey = ""
+  const uriBase = "" + '/face/v1.0/detect';
 
   let params = new URLSearchParams({
     'returnFaceId': 'true',
@@ -27,6 +27,10 @@ const findBaby = async (baby) => {
   let data = await resp.json();
   console.log(data)
   return data;
+}
+
+const findBaby = async (baby) => {
+
 }
 
 exports.findBaby = findBaby
