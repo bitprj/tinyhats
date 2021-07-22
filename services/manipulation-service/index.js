@@ -23,7 +23,7 @@ router.post('/manipulate', upload.any(), async(req, res) => {
     let baby = req.files[0].buffer
     let hat = hatLinks[randNum]
 
-    image.findBaby(baby)
+    let result = await image.findBaby(baby)
     // push to lowdb
-    res.send(await pushDB(fileName + ext, name, link, category)) 
+    res.send(result) 
   });
