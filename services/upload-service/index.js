@@ -2,8 +2,7 @@ import express from 'express'
 import multer from 'multer'
 const upload = multer()
 const app = express()
-import { uniqueId, uploadFile, fileExt } from './src/helpers.js'
-import pushDB from './src/lowdb.js'
+import { uniqueId, uploadFile, fileExt, push2RDS } from './src/helpers.js'
 var router = express.Router();
 const PORT = 3000
 
@@ -19,7 +18,6 @@ app.listen(PORT, () => {
 
 router.post('/upload', upload.any(), async(req, res) => {
     let image = req.files[0].buffer
-    let category = req.body.category
     let name = req.body.name
     let fileName = uniqueId()
     // parse from body
@@ -32,8 +30,9 @@ router.post('/upload', upload.any(), async(req, res) => {
     let imageData = Buffer.from(image, 'base64')
 
     // upload to s3
-    let link = await uploadFile(fileName + ext, imageData, category)
+    let link = await uploadFile(fileName + ext, imageData)
 
-    // push to lowdb
-    res.send(await pushDB(fileName + ext, name, link, category)) 
+    // push to rds
+    let data = await push2RDS(fileName, ext, name, link)
+    res.send(data) 
   });

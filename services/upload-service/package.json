@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node services/upload/index.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "generate-unique-id": "^2.0.1",
     "lowdb": "^2.1.0",
     "multer": "^1.4.2",
+    "mysql": "^2.18.1",
     "nodemon": "^2.0.8"
   }
 }

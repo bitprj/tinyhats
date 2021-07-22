@@ -1,17 +1,29 @@
 import AWS from 'aws-sdk';
 import generateUniqueId from 'generate-unique-id'
+import mysql from 'mysql'
+
 const ID = process.env.S3_ID;
 const SECRET = process.env.S3_SECRET;
 const BUCKET_NAME = 'uwuaascat';
+
+const HOST = process.env.HOST;
+const PASSWORD = process.env.PASSWORD;
+
+const con = mysql.createConnection({
+    host: HOST,
+    port: '3306',
+    user: "admin",
+    password: PASSWORD,
+});
 
 const s3 = new AWS.S3({
     accessKeyId: ID,
     secretAccessKey: SECRET
 });
 
-export async function uploadFile (fileName, fileContent, fileCategory) {
+export async function uploadFile(fileName, fileContent) {
     let link = ""
-    let key = `${fileCategory}/${fileName}`
+    let key = fileName
     // Setting up S3 upload parameters
     const params = {
         Bucket: BUCKET_NAME,
@@ -50,3 +62,15 @@ export const uniqueId = () => {
 
     return id
 }
+
+export async function push2RDS(key, ext, name, link) {
+    con.connect(function(err) {
+        con.query(`INSERT INTO main.images (keyId, fileName, url, description) VALUES ('${key}', '${key + ext}', '${link}', '${name}')`, function(err, result, fields) {
+            if (err) return err;
+            if (result) return ({key: key, fileName: key + ext, url: link, description: name});
+            if (fields) return (fields);
+        });
+        // connect to mysql and push data
+    });
+    return {key: key, fileName: key + ext, url: link, description: name}
+};
