@@ -65,12 +65,12 @@ export const uniqueId = () => {
 
 export async function push2RDS(key, ext, name, link) {
     con.connect(function(err) {
-        con.query(`INSERT INTO main.images (keyId, fileName, url, description) VALUES ('${key}', '${key + ext}', '${link}', '${name}')`, function(err, result, fields) {
-            if (err) return err;
-            if (result) return ({key: key, fileName: key + ext, url: link, description: name});
-            if (fields) return (fields);
+        con.query(`INSERT INTO main.images (keyId, fileName, url, description, approve) VALUES ('${key}', '${key + ext}', '${link}', '${name}', 'false')`, function(err, result, fields) {
+            if (err) console.log(err);
+            if (result) console.log({key: key, fileName: key + ext, url: link, description: name, approve: "false"});
+            if (fields) console.log(fields);
         });
         // connect to mysql and push data
     });
-    return {key: key, fileName: key + ext, url: link, description: name}
+    return {key: key, fileName: key + ext, url: link, description: name, approve: "false"}
 };

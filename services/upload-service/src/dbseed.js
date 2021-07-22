@@ -1,10 +1,10 @@
 import mysql from 'mysql'
 
 export const con = mysql.createConnection({
-    host: "babieswithhats.coqtasittblb.us-east-2.rds.amazonaws.com",
+    host: process.env.HOST,
     port: '3306',
     user: "admin",
-    password: "x7CRPKg&t&^F",
+    password: process.env.PASSWORD
 });
 
 con.connect(function(err) {
@@ -12,7 +12,7 @@ con.connect(function(err) {
 
     con.query('CREATE DATABASE IF NOT EXISTS main;');
     con.query('USE main;');
-    con.query('CREATE TABLE IF NOT EXISTS images(id int NOT NULL AUTO_INCREMENT, keyId varchar(30), url varchar(255), fileName varchar(255), description varchar(255), PRIMARY KEY(id));', function(error, result, fields) {
+    con.query('CREATE TABLE IF NOT EXISTS images(id int NOT NULL AUTO_INCREMENT, keyId varchar(30), url varchar(255), fileName varchar(255), description varchar(255), approve varchar(30), PRIMARY KEY(id));', function(error, result, fields) {
         console.log(result);
         console.log(fields);
         console.log(error);
