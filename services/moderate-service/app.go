@@ -19,7 +19,7 @@ func main() {
 		var result string
 
 		if approval == "true" {
-			result = "Thanks for the approval! You approved an image with an id of " + id + "."
+			result = ApprovePicture(id)
 		} else if approval == "false" {
 			result = DeletePicture(id)
 		} else if approval == "" || id == "" {
