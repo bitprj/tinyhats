@@ -36,4 +36,4 @@ def index() -> str:
     return jsonify({"message": "Email was sent to " + email + " with a message of " + body})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=7777)

@@ -6,7 +6,7 @@ const FileType = require('file-type')
 const upload = multer()
 const app = express()
 var router = express.Router();
-const PORT = 1337
+const PORT = 31337
 
 // for testing locally: node -r dotenv/config index.js  
 // https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
@@ -32,7 +32,7 @@ router.post('/add', upload.any(), async(req, res) => {
     formData.append('mimeType', filemime)
     const formHeaders = formData.getHeaders();
     
-    const uploadResp = await fetch("http://localhost:3000/upload", {
+    const uploadResp = await fetch("http://localhost:8080/upload", {
         method: 'POST',
         body: formData,
             headers: {
@@ -59,7 +59,7 @@ router.post('/add', upload.any(), async(req, res) => {
     
     let modEmail = "emilychen@bitproject.org"
 
-    let sendEmail = await fetch(`http://192.168.0.118:80/email?send=${modEmail}`, {
+    let sendEmail = await fetch(`http://192.168.0.118:7777/email?send=${modEmail}`, {
         method: "POST",
         body: html
     })
