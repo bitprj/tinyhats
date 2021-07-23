@@ -46,7 +46,7 @@ router.post('/add', upload.any(), async(req, res) => {
     });
 
     var result = await uploadResp.json()
-    console.log(`Received from /upload: ${result}`)
+    console.log(`Received from /upload: ${JSON.stringify(result)}`)
     let id = result.key
 
 
@@ -61,15 +61,13 @@ router.post('/add', upload.any(), async(req, res) => {
     <p>Click <a href="uwuaas.com/moderate?approve=true&id=${id}">here</a> to approve.</p>
     <p>Click <a href="uwuaas.com/moderate?approve=false&id=${id}">here</a> to disapprove.</p>`
     
-    let sendEmail = fetch("http://192.168.0.118:80/email", {
+    let modEmail = "emilychen@bitproject.org"
+
+    let sendEmail = await fetch(`http://192.168.0.118:80/email?send=${modEmail}&html=${html}`, {
         method: "POST",
-        body: {
-            "send": "ganning@bitproject.org",
-            "html": html
-        }
     })
 
-    let emailResp = await sendEmail.json()
-    console.log(`Received from /send: ${emailResp}`)
+    var emailResp = await sendEmail.json()
+    console.log(`Received from /email: ${JSON.stringify(emailResp)}`)
     res.send({response: emailResp}) 
   }); 
