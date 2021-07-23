@@ -6,7 +6,7 @@ const FileType = require('file-type')
 const upload = multer()
 const app = express()
 var router = express.Router();
-const PORT = 3000
+const PORT = 1337
 
 // for testing locally: node -r dotenv/config index.js  
 // https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
@@ -26,16 +26,18 @@ router.post('/add', upload.any(), async(req, res) => {
     // binary to base64 for html
     console.log("Image received")
     let base64Image = Buffer.from(image).toString("base64")
-    console.log(base64Image)
+    // console.log(base64Image)
 
     // hit the upload endpoint to upload image and retrieve unique image id
-    let filemime = await FileType.fromBuffer(image)
+    let filemime = (await FileType.fromBuffer(image)).mime
+    console.log(`Mime Type: ${filemime}`)
     let formData = new FormData()
-    formData.append('file', content, {filename: "baby", type: filemime, data: image})
-    formData.append('data', {"name": name})
+    formData.append('file', image, {filename: "baby", mimetype: filemime, data: image})
+    formData.append('name', name)
+    formData.append('mimeType', filemime)
     const formHeaders = formData.getHeaders();
     
-    const resp = await fetch(uri, {
+    const uploadResp = await fetch("http://localhost:3000/upload", {
         method: 'POST',
         body: formData,
             headers: {
@@ -43,7 +45,8 @@ router.post('/add', upload.any(), async(req, res) => {
             },        
     });
 
-    var result = await resp.json()
+    var result = await uploadResp.json()
+    console.log(`Received from /upload: ${result}`)
     let id = result.key
 
 
@@ -58,12 +61,15 @@ router.post('/add', upload.any(), async(req, res) => {
     <p>Click <a href="uwuaas.com/moderate?approve=true&id=${id}">here</a> to approve.</p>
     <p>Click <a href="uwuaas.com/moderate?approve=false&id=${id}">here</a> to disapprove.</p>`
     
-    let resp = fetch("/email", {
+    let sendEmail = fetch("http://192.168.0.118:80/email", {
         method: "POST",
         body: {
             "send": "ganning@bitproject.org",
             "html": html
         }
     })
-    res.send({name: name}) 
+
+    let emailResp = await sendEmail.json()
+    console.log(`Received from /send: ${emailResp}`)
+    res.send({response: emailResp}) 
   }); 
