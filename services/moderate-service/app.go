@@ -13,14 +13,15 @@ func main() {
 
 	// Hello, World!
 	app.Get("/moderate", func(c *fiber.Ctx) error {
+		log.Print("Moderate request received")
 		var approval string = c.Query("approve")
 		var id string = c.Query("id")
 		var result string
 
 		if approval == "true" {
-			result = `Thank you for approving! The image had an id of ` + id
+			result = "Thanks for the approval! You approved an image with an id of " + id + "."
 		} else if approval == "false" {
-			result = "We're sorry that image " + id + " wasn't suitable. Thanks for your help!"
+			result = DeletePicture(id)
 		} else if approval == "" || id == "" {
 			result = "Please access a link from a valid moderation email."
 		}
