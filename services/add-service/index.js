@@ -6,7 +6,7 @@ const FileType = require('file-type')
 const upload = multer()
 const app = express()
 var router = express.Router();
-const PORT = 3000
+const PORT = 1337
 
 // for testing locally: node -r dotenv/config index.js  
 // https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
@@ -23,19 +23,16 @@ router.post('/add', upload.any(), async(req, res) => {
     let name = req.body.name
     // parse from body
 
-    // binary to base64 for html
-    console.log("Image received")
-    let base64Image = Buffer.from(image).toString("base64")
-    console.log(base64Image)
-
     // hit the upload endpoint to upload image and retrieve unique image id
-    let filemime = await FileType.fromBuffer(image)
+    let filemime = (await FileType.fromBuffer(image)).mime
+    console.log(`Mime Type: ${filemime}`)
     let formData = new FormData()
-    formData.append('file', content, {filename: "baby", type: filemime, data: image})
-    formData.append('data', {"name": name})
+    formData.append('file', image, {filename: "baby", mimetype: filemime, data: image})
+    formData.append('name', name)
+    formData.append('mimeType', filemime)
     const formHeaders = formData.getHeaders();
     
-    const resp = await fetch(uri, {
+    const uploadResp = await fetch("http://localhost:3000/upload", {
         method: 'POST',
         body: formData,
             headers: {
@@ -43,12 +40,14 @@ router.post('/add', upload.any(), async(req, res) => {
             },        
     });
 
-    var result = await resp.json()
+    var result = await uploadResp.json()
+    console.log(`Received from /upload: ${JSON.stringify(result)}`)
     let id = result.key
+    let imgLink = result.url
 
 
     let html = `<h2>Review this image</h2>
-    <h3><img src="data:${filemime};base64,${base64Image}" alt="" /></h3>
+    <h3><img src="${imgLink}" alt="" /></h3>
     <h3>Be sure to consider:</h3>
     <ul>
     <li>Is this appropriate?</li>
@@ -58,12 +57,14 @@ router.post('/add', upload.any(), async(req, res) => {
     <p>Click <a href="uwuaas.com/moderate?approve=true&id=${id}">here</a> to approve.</p>
     <p>Click <a href="uwuaas.com/moderate?approve=false&id=${id}">here</a> to disapprove.</p>`
     
-    let resp = fetch("/email", {
+    let modEmail = "emilychen@bitproject.org"
+
+    let sendEmail = await fetch(`http://192.168.0.118:80/email?send=${modEmail}`, {
         method: "POST",
-        body: {
-            "send": "ganning@bitproject.org",
-            "html": html
-        }
+        body: html
     })
-    res.send({name: name}) 
+
+    var emailResp = await sendEmail.json()
+    console.log(`Received from /email: ${JSON.stringify(emailResp)}`)
+    res.send({response: emailResp}) 
   }); 
