@@ -4,7 +4,7 @@ const upload = multer()
 const app = express()
 import { uniqueId, uploadFile, fileExt, push2RDS } from './src/helpers.js'
 var router = express.Router();
-const PORT = 3000
+const PORT = 8080
 
 // for testing locally: node -r dotenv/config index.js  
 // https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
