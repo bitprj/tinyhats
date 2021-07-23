@@ -6,8 +6,8 @@ import (
 	_"github.com/go-sql-driver/mysql"
   )
 
-var password string = "x7CRPKg&t&^F"
-var endpoint string = "babieswithhats.coqtasittblb.us-east-2.rds.amazonaws.com"
+var password string = ""
+var endpoint string = ""
 
 func ApprovePicture(id string) string {
 	var result string
