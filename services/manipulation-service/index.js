@@ -31,5 +31,5 @@ router.post('/manipulate', upload.any(), async(req, res) => {
     }
 
     let finalBaby = await image.overlayHat(hat, result, baby)
-    res.send(finalBaby) 
+    res.send({finalBaby}) 
   });
