@@ -4,7 +4,7 @@ const upload = multer()
 const app = express()
 const image = require('./src/image.js')
 var router = express.Router();
-const PORT = 3000
+const PORT = 80
 
 // for testing locally: node -r dotenv/config index.js  
 // https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
@@ -31,5 +31,5 @@ router.post('/manipulate', upload.any(), async(req, res) => {
     }
 
     let finalBaby = await image.overlayHat(hat, result, baby)
-    res.send(finalBaby) 
+    res.send({finalBaby}) 
   });
