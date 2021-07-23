@@ -17,13 +17,15 @@ app.listen(PORT, () => {
 })
 
 router.post('/upload', upload.any(), async(req, res) => {
+    console.log("Started")
     let image = req.files[0].buffer
     let name = req.body.name
     let fileName = uniqueId()
     // parse from body
+    console.log(fileName, name, image)
 
     // determine file extension
-    let ext = fileExt(req.files[0].mimetype)
+    let ext = fileExt(req.body.mimeType)
 
     // base64 image to binary data
     console.log("Image received")

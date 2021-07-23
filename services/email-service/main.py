@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+import json
 import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -6,8 +7,8 @@ from email.mime.multipart import MIMEMultipart
 app = Flask(__name__)
 
 def sendEmail(receiver_email, body):
-    sender_email = "xxxxxx"
-    password = "xxxxxx"
+    sender_email = ""
+    password = ""
 
     message = MIMEMultipart("alternative")
     message["Subject"] = "UWUaaS Moderation Request"
@@ -27,10 +28,10 @@ def sendEmail(receiver_email, body):
     )
 
 
-@app.route("/send", methods=['POST'])
+@app.route("/email", methods=['POST'])
 def index() -> str:
-    email = request.json.get("send")
-    body = request.json.get("html")
+    email = request.args.get("send")
+    body = request.get_data().decode()
     sendEmail(email, body)
     return jsonify({"message": "Email was sent to " + email + " with a message of " + body})
 
