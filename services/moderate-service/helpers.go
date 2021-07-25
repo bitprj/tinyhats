@@ -1,15 +1,17 @@
 package main
 
 import (
+	"os"
 	"log"
 	"database/sql"
 	_"github.com/go-sql-driver/mysql"
   )
 
-var password string = ""
-var endpoint string = ""
+var password string = os.Getenv("PASSWORD")
+var endpoint string = os.Getenv("HOST")
 
 func ApprovePicture(id string) string {
+	
 	var result string
 
 	// open connection
