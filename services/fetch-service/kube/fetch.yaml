@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fetch-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fetch-service
+  template:
+    metadata:
+      labels:
+        app: fetch-service
+    spec:
+      containers:
+        - name: fetch-service
+          image: bitprj/fetch-service
+          ports:
+            - containerPort: 1337
+          # env:
+          #   - name: MONGO_URL
+          #     value: mongodb://mongo:27017/dev
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fetch-service
+spec:
+  selector:
+    app: knote
+  ports:
+    - port: 80
+      targetPort: 1337
+  type: LoadBalancer
