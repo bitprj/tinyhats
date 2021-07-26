@@ -32,7 +32,7 @@ router.post('/add', upload.any(), async(req, res) => {
     formData.append('mimeType', filemime)
     const formHeaders = formData.getHeaders();
     
-    const uploadResp = await fetch("http://localhost:8080/upload", {
+    const uploadResp = await fetch("/upload", {
         method: 'POST',
         body: formData,
             headers: {
@@ -59,7 +59,7 @@ router.post('/add', upload.any(), async(req, res) => {
     
     let modEmail = "emilychen@bitproject.org"
 
-    let sendEmail = await fetch(`http://192.168.0.118:7777/email?send=${modEmail}`, {
+    let sendEmail = await fetch(`/email?send=${modEmail}`, {
         method: "POST",
         body: html
     })

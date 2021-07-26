@@ -17,9 +17,9 @@ spec:
           image: bitprj/moderate-service
           ports:
             - containerPort: 5000
-          # env:
-          #   - name: MONGO_URL
-          #     value: mongodb://mongo:27017/dev
+          env:
+            - name: MONGO_URL
+              value: mongodb://mongo:27017/dev
           imagePullPolicy: Always
 ---
 apiVersion: v1
