@@ -17,9 +17,11 @@ spec:
           image: bitprj/email-service
           ports:
             - containerPort: 7777
-          # env:
-          #   - name: MONGO_URL
-          #     value: mongodb://mongo:27017/dev
+          env:
+            - name: EMAIL
+              value: emilychen@bitproject.org
+            - name: EMAIL_PASSWORD
+              value: Trianniss4@
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -28,7 +30,7 @@ metadata:
   name: email-service
 spec:
   selector:
-    app: knote
+    app: fetch-service
   ports:
     - port: 80
       targetPort: 7777

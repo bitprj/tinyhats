@@ -27,8 +27,10 @@ router.post('/add', upload.any(), async(req, res) => {
     formData.append('file', image, {filename: "baby", data: image})
     formData.append('name', name)
     const formHeaders = formData.getHeaders();
+
+    console.log(process.env.ADD_ENDPOINT)
     
-    const addResp = await fetch("http://localhost:31337/add", {
+    const addResp = await fetch(`http://${process.env.ADD_SERVICE_SERVICE_HOST}:${process.env.ADD_SERVICE_SERVICE_PORT}/add`, {
         method: 'POST',
         body: formData,
             headers: {
@@ -42,7 +44,7 @@ router.post('/add', upload.any(), async(req, res) => {
 });
 
 router.get('/fetch', upload.any(), async(req, res) => {
-    const addResp = await fetch("http://localhost:1337/fetch", {
+    const addResp = await fetch(`http://${process.env.FETCH_SERVICE_SERVICE_HOST}:${process.env.FETCH_SERVICE_SERVICE_PORT}/fetch`, {
         method: 'GET',      
     });
 

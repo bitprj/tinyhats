@@ -17,9 +17,11 @@ spec:
           image: bitprj/add-service
           ports:
             - containerPort: 31337
-          # env:
-          #   - name: MONGO_URL
-          #     value: mongodb://mongo:27017/dev
+          env:
+            - name: UPLOAD_ENDPOINT
+              value: https://ab612311c912a41ce89b70d7db4e70c4-84380695.us-east-2.elb.amazonaws.com
+            - name: EMAIL_ENDPOINT
+              value: https://a77eb6879980e4732befb1ccdd4365e3-1987684319.us-east-2.elb.amazonaws.com
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -28,7 +30,7 @@ metadata:
   name: add-service
 spec:
   selector:
-    app: knote
+    app: add-service
   ports:
     - port: 80
       targetPort: 31337

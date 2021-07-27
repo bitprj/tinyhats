@@ -17,9 +17,11 @@ spec:
           image: bitprj/gateway-service
           ports:
             - containerPort: 4444
-          # env:
-          #   - name: MONGO_URL
-          #     value: mongodb://mongo:27017/dev
+          env:
+            - name: FETCH_ENDPOINT
+              value: https://a6929fbbfd2404ed8962c91eea394d35-1854050381.us-east-2.elb.amazonaws.com
+            - name: ADD_ENDPOINT
+              value: https://a26ba46e907944fdf926b73f74f0358d-526249480.us-east-2.elb.amazonaws.com
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -28,7 +30,7 @@ metadata:
   name: gateway-service
 spec:
   selector:
-    app: knote
+    app: gateway-service
   ports:
     - port: 80
       targetPort: 4444

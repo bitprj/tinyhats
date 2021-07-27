@@ -18,7 +18,7 @@ app.listen(PORT, () => {
     console.log(`API Gateway started on port ${PORT}`)
 })
 
-router.post('/add', upload.any(), async(req, res) => {
+router.post(`/add`, upload.any(), async(req, res) => {
     let image = req.files[0].buffer
     let name = req.body.name
     // parse from body
@@ -32,7 +32,7 @@ router.post('/add', upload.any(), async(req, res) => {
     formData.append('mimeType', filemime)
     const formHeaders = formData.getHeaders();
     
-    const uploadResp = await fetch("/upload", {
+    const uploadResp = await fetch(`http://${process.env.UPLOAD_SERVICE_SERVICE_HOST}:${process.env.UPLOAD_SERVICE_SERVICE_PORT}/upload`, {
         method: 'POST',
         body: formData,
             headers: {
@@ -59,7 +59,7 @@ router.post('/add', upload.any(), async(req, res) => {
     
     let modEmail = "emilychen@bitproject.org"
 
-    let sendEmail = await fetch(`/email?send=${modEmail}`, {
+    let sendEmail = await fetch(`http://${process.env.EMAIL_SERVICE_SERVICE_HOST}:${process.env.EMAIL_SERVICE_SERVICE_PORT}/email?send=${modEmail}`, {
         method: "POST",
         body: html
     })

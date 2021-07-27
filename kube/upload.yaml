@@ -17,9 +17,15 @@ spec:
           image: bitprj/upload-service
           ports:
             - containerPort: 8080
-          # env:
-          #   - name: MONGO_URL
-          #     value: mongodb://mongo:27017/dev
+          env:
+            - name: HOST
+              value: babieswithhats.coqtasittblb.us-east-2.rds.amazonaws.com
+            - name: PASSWORD
+              value: x7CRPKg&t&^F
+            - name: S3_ID
+              value: AKIA5N7DT3EGUDGBFMIH
+            - name: S3_SECRET
+              value: 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
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -28,7 +34,7 @@ metadata:
   name: upload-service
 spec:
   selector:
-    app: knote
+    app: upload-service
   ports:
     - port: 80
       targetPort: 8080

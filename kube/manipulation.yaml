@@ -17,9 +17,11 @@ spec:
           image: bitprj/manipulation-service
           ports:
             - containerPort: 80
-          # env:
-          #   - name: MONGO_URL
-          #     value: mongodb://mongo:27017/dev
+          env:
+            - name: SUBSCRIPTION_KEY
+              value: 352800627962499db666d887d8b6da43
+            - name: ENDPOINT
+              value: https://colefaceapi.cognitiveservices.azure.com
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -28,7 +30,7 @@ metadata:
   name: manipulation-service
 spec:
   selector:
-    app: knote
+    app: manipulation-service
   ports:
     - port: 80
       targetPort: 80

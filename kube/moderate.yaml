@@ -18,8 +18,10 @@ spec:
           ports:
             - containerPort: 5000
           env:
-            - name: MONGO_URL
-              value: mongodb://mongo:27017/dev
+            - name: HOST
+              value: babieswithhats.coqtasittblb.us-east-2.rds.amazonaws.com
+            - name: PASSWORD
+              value: x7CRPKg&t&^F
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -28,7 +30,7 @@ metadata:
   name: moderate-service
 spec:
   selector:
-    app: knote
+    app: moderate-service
   ports:
     - port: 80
       targetPort: 5000
