@@ -24,6 +24,8 @@ func main() {
 			result = DeletePicture(id)
 		} else if approval == "" || id == "" {
 			result = "Please access a link from a valid moderation email."
+		} else {
+			result = "Please access a link from a valid moderation email."
 		}
 
 		return c.SendString(result)

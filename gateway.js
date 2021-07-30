@@ -61,6 +61,6 @@ router.get('/moderate', upload.any(), async(req, res) => {
         method: 'GET'
     })
 
-    var result = await moderateResp.json()
+    var result = await moderateResp.text()
     res.send({result})
 })
