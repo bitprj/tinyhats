@@ -22,6 +22,8 @@ spec:
               value: babieswithhats.coqtasittblb.us-east-2.rds.amazonaws.com
             - name: PASSWORD
               value: x7CRPKg&t&^F
+            - name: MANIPULATE_ENDPOINT
+              value: manipulation-service:80
           imagePullPolicy: Always
 ---
 apiVersion: v1

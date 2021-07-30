@@ -23,9 +23,9 @@ spec:
             - name: PASSWORD
               value: x7CRPKg&t&^F
             - name: S3_ID
-              value: AKIA5N7DT3EGUDGBFMIH
+              value: AKIA5N7DT3EGZ22PFQF4
             - name: S3_SECRET
-              value: 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
+              value: DRLVdM9QzQQj6MymfDwMQOGeKSK1YxoKjHr4Qbqy
           imagePullPolicy: Always
 ---
 apiVersion: v1

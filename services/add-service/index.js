@@ -32,7 +32,7 @@ router.post(`/add`, upload.any(), async(req, res) => {
     formData.append('mimeType', filemime)
     const formHeaders = formData.getHeaders();
     
-    const uploadResp = await fetch(`http://${process.env.UPLOAD_SERVICE_SERVICE_HOST}:${process.env.UPLOAD_SERVICE_SERVICE_PORT}/upload`, {
+    const uploadResp = await fetch(`http://${process.env.UPLOAD_ENDPOINT}/upload`, {
         method: 'POST',
         body: formData,
             headers: {
@@ -59,7 +59,7 @@ router.post(`/add`, upload.any(), async(req, res) => {
     
     let modEmail = "emilychen@bitproject.org"
 
-    let sendEmail = await fetch(`http://${process.env.EMAIL_SERVICE_SERVICE_HOST}:${process.env.EMAIL_SERVICE_SERVICE_PORT}/email?send=${modEmail}`, {
+    let sendEmail = await fetch(`http://${process.env.EMAIL_ENDPOINT}/email?send=${modEmail}`, {
         method: "POST",
         body: html
     })

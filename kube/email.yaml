@@ -30,7 +30,7 @@ metadata:
   name: email-service
 spec:
   selector:
-    app: fetch-service
+    app: email-service
   ports:
     - port: 80
       targetPort: 7777

@@ -30,7 +30,7 @@ router.post('/add', upload.any(), async(req, res) => {
 
     console.log(process.env.ADD_ENDPOINT)
     
-    const addResp = await fetch(`http://${process.env.ADD_SERVICE_SERVICE_HOST}:${process.env.ADD_SERVICE_SERVICE_PORT}/add`, {
+    const addResp = await fetch(`http://${process.env.ADD_ENDPOINT}/add`, {
         method: 'POST',
         body: formData,
             headers: {
@@ -44,7 +44,7 @@ router.post('/add', upload.any(), async(req, res) => {
 });
 
 router.get('/fetch', upload.any(), async(req, res) => {
-    const addResp = await fetch(`http://${process.env.FETCH_SERVICE_SERVICE_HOST}:${process.env.FETCH_SERVICE_SERVICE_PORT}/fetch`, {
+    const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch`, {
         method: 'GET',      
     });
 
@@ -53,3 +53,14 @@ router.get('/fetch', upload.any(), async(req, res) => {
     var result = await addResp.json()
     res.send({result}) 
 });
+
+router.get('/moderate', upload.any(), async(req, res) => {
+    let approve = req.query.approve;
+    let id = req.query.id;
+    const moderateResp = await fetch(`http://${process.env.MODERATE_ENDPOINT}/moderate?approve=${approve}&id=${id}`, {
+        method: 'GET'
+    })
+
+    var result = await moderateResp.json()
+    res.send({result})
+})

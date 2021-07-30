@@ -37,7 +37,7 @@ router.get('/fetch', upload.any(), async(req, res) => {
     formData.append('file', image, {filename: "baby", data: image})
     const formHeaders = formData.getHeaders();
     
-    const manipulateRequest = await fetch("/manipulate", {
+    const manipulateRequest = await fetch(`http://${process.env.MANIPULATE_ENDPOINT}/manipulate`, {
         method: 'POST',
         body: formData,
             headers: {

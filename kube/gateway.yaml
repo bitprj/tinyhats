@@ -19,9 +19,11 @@ spec:
             - containerPort: 4444
           env:
             - name: FETCH_ENDPOINT
-              value: https://a6929fbbfd2404ed8962c91eea394d35-1854050381.us-east-2.elb.amazonaws.com
+              value: fetch-service:80
             - name: ADD_ENDPOINT
-              value: https://a26ba46e907944fdf926b73f74f0358d-526249480.us-east-2.elb.amazonaws.com
+              value: add-service:80
+            - name: MODERATE_ENDPOINT
+              value: moderate-service:80
           imagePullPolicy: Always
 ---
 apiVersion: v1
