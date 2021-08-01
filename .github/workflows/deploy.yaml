@@ -84,10 +84,14 @@ jobs:
           push: true
           tags: bitprj/upload-service
   deploy:
-    needs: build
+    # needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Make Deploy Directory
+        run: |
+          mkdir deploy
 
       - name: Replace Environment Variables (GATEWAY)
         uses: danielr1996/envsubst-action@1.0.0
