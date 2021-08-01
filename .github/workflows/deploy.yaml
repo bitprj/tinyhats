@@ -1,4 +1,4 @@
-name: Gateway Service
+name: Build and Deploy to K8s
 
 on:
   push:
@@ -84,6 +84,7 @@ jobs:
           push: true
           tags: bitprj/upload-service
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
