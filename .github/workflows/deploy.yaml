@@ -146,6 +146,11 @@ jobs:
           input: kube/upload.yaml
           output: deploy/upload.yaml
 
+      - name: Install AWS Authenticator
+        run: |
+          curl -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.7/2020-07-08/bin/linux/amd64/aws-iam-authenticator
+          chmod +x /usr/local/bin/aws-iam-authenticator
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
