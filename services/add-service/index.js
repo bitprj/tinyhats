@@ -54,10 +54,10 @@ router.post(`/add`, upload.any(), async(req, res) => {
     <li>Does this picture contain a baby?</li>
     <li>Could a hat be easily overlayed on the head?</li>
     </ul>
-    <p>Click <a href="uwuaas.com/moderate?approve=true&id=${id}">here</a> to approve.</p>
-    <p>Click <a href="uwuaas.com/moderate?approve=false&id=${id}">here</a> to disapprove.</p>`
+    <p>Click <a href="${process.env.ENDPOINT}/moderate?approve=true&id=${id}">here</a> to approve.</p>
+    <p>Click <a href="${process.env.ENDPOINT}/moderate?approve=false&id=${id}">here</a> to disapprove.</p>`
     
-    let modEmail = "emilychen@bitproject.org"
+    let modEmail = process.env.SEND_TO_EMAIL
 
     let sendEmail = await fetch(`http://${process.env.EMAIL_ENDPOINT}/email?send=${modEmail}`, {
         method: "POST",

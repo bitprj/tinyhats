@@ -19,11 +19,11 @@ spec:
             - containerPort: 4444
           env:
             - name: FETCH_ENDPOINT
-              value: fetch-service:80
+              value: "$FETCH_ENDPOINT"
             - name: ADD_ENDPOINT
-              value: add-service:80
+              value: "$ADD_ENDPOINT"
             - name: MODERATE_ENDPOINT
-              value: moderate-service:80
+              value: "$MODERATE_ENDPOINT"
           imagePullPolicy: Always
 ---
 apiVersion: v1

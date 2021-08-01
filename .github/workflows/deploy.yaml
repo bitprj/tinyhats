@@ -1,0 +1,159 @@
+name: Gateway Service
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Gateway Service
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: bitprj/gateway-service
+      - name: Add Service
+        uses: docker/build-push-action@v2
+        with:
+          context: services/add-service
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: bitprj/add-service
+      - name: Email Service
+        uses: docker/build-push-action@v2
+        with:
+          context: services/email-service
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: bitprj/email-service
+      - name: Fetch Service
+        uses: docker/build-push-action@v2
+        with:
+          context: services/fetch-service
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: bitprj/fetch-service
+      - name: Email Service
+        uses: docker/build-push-action@v2
+        with:
+          context: services/email-service
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: bitprj/email-service
+      - name: Fetch Service
+        uses: docker/build-push-action@v2
+        with:
+          context: services/fetch-service
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: bitprj/fetch-service
+      - name: Manipulation Service
+        uses: docker/build-push-action@v2
+        with:
+          context: services/manipulation-service
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: bitprj/manipulation-service
+      - name: Moderate Service
+        uses: docker/build-push-action@v2
+        with:
+          context: services/moderate-service
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: bitprj/moderate-service
+      - name: Upload Service
+        uses: docker/build-push-action@v2
+        with:
+          context: services/upload-service
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: bitprj/upload-service
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Replace Environment Variables (GATEWAY)
+        uses: danielr1996/envsubst-action@1.0.0
+        env:
+          FETCH_ENDPOINT: ${{ secrets.UPLOAD_ENDPOINT }}
+          ADD_ENDPOINT: ${{ secrets.ADD_ENDPOINT }}
+          MODERATE_ENDPOINT: ${{ secrets.MODERATE_ENDPOINT }}
+        with:
+          input: kube/gateway.yaml
+          output: deploy/gateway.yaml
+      - name: Replace Environment Variables (ADD)
+        uses: danielr1996/envsubst-action@1.0.0
+        env:
+          UPLOAD_ENDPOINT: ${{ secrets.UPLOAD_ENDPOINT }}
+          EMAIL_ENDPOINT: ${{ secrets.EMAIL_ENDPOINT }}
+        with:
+          input: kube/add.yaml
+          output: deploy/add.yaml
+      - name: Replace Environment Variables (EMAIL)
+        uses: danielr1996/envsubst-action@1.0.0
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        with:
+          input: kube/email.yaml
+          output: deploy/email.yaml
+      - name: Replace Environment Variables (FETCH)
+        uses: danielr1996/envsubst-action@1.0.0
+        env:
+          HOST: ${{ secrets.HOST }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          MANIPULATE_ENDPOINT: ${{ secrets.MANIPULATE_ENDPOINT }}
+        with:
+          input: kube/fetch.yaml
+          output: deploy/fetch.yaml
+      - name: Replace Environment Variables (MODERATE)
+        uses: danielr1996/envsubst-action@1.0.0
+        env:
+          HOST: ${{ secrets.HOST }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        with:
+          input: kube/moderate.yaml
+          output: deploy/moderate.yaml
+      - name: Replace Environment Variables (UPLOAD)
+        uses: danielr1996/envsubst-action@1.0.0
+        env:
+          HOST: ${{ secrets.HOST }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          S3_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          S3_SECRET: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        with:
+          input: kube/upload.yaml
+          output: deploy/upload.yaml
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Trigger deploy
+        uses: Consensys/kubernetes-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: apply deploy
+      
+ 
+      

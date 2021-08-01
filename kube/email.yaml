@@ -19,9 +19,9 @@ spec:
             - containerPort: 7777
           env:
             - name: EMAIL
-              value: emilychen@bitproject.org
+              value: "$EMAIL"
             - name: EMAIL_PASSWORD
-              value: Trianniss4@
+              value: "$EMAIL_PASSWORD"
           imagePullPolicy: Always
 ---
 apiVersion: v1

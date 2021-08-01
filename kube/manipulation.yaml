@@ -19,9 +19,9 @@ spec:
             - containerPort: 80
           env:
             - name: SUBSCRIPTION_KEY
-              value: bb8d0b74d8184bd4907793f0d086e313
+              value: "$SUBSCRIPTION_KEY"
             - name: ENDPOINT
-              value: https://colefaceapi.cognitiveservices.azure.com
+              value: "$ENDPOINT"
           imagePullPolicy: Always
 ---
 apiVersion: v1

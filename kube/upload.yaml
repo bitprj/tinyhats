@@ -19,13 +19,13 @@ spec:
             - containerPort: 8080
           env:
             - name: HOST
-              value: babieswithhats.coqtasittblb.us-east-2.rds.amazonaws.com
+              value: "$HOST"
             - name: PASSWORD
-              value: x7CRPKg&t&^F
+              value: "$PASSWORD"
             - name: S3_ID
-              value: AKIA5N7DT3EGZ22PFQF4
+              value: "$S3_ID"
             - name: S3_SECRET
-              value: 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
+              value: "$S3_SECRET"
           imagePullPolicy: Always
 ---
 apiVersion: v1

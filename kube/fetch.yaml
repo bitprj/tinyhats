@@ -19,11 +19,11 @@ spec:
             - containerPort: 1337
           env:
             - name: HOST
-              value: babieswithhats.coqtasittblb.us-east-2.rds.amazonaws.com
+              value: "$HOST"
             - name: PASSWORD
-              value: x7CRPKg&t&^F
+              value: "$PASSWORD"
             - name: MANIPULATE_ENDPOINT
-              value: manipulation-service:80
+              value: "$MANIPULATE_ENDPOINT"
           imagePullPolicy: Always
 ---
 apiVersion: v1
