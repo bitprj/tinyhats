@@ -3,6 +3,7 @@ const multer = require('multer')
 const FormData = require('form-data')
 const upload = multer()
 const fetch = require("node-fetch")
+const functions = require("src/helpers.js")
 const app = express()
 var router = express.Router();
 const PORT = 4444
@@ -27,7 +28,7 @@ router.post('/:apiName', upload.any(), async (req, res) => {
     
         console.log(process.env.ADD_ENDPOINT)
         
-        const addResp = await fetch(`http://localhost:80/add`, {
+        const addResp = await fetch(`http://${process.env.ADD_ENDPOINT}/add`, {
             method: 'POST',
             body: formData,
                 headers: {
@@ -39,13 +40,36 @@ router.post('/:apiName', upload.any(), async (req, res) => {
         console.log(`Received from /add: ${JSON.stringify(result)}`)
         res.send({result})
     } else if (route == "") {
-        const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch`, {
-            method: 'GET',      
+        let formData = new FormData()
+        formData.append('file', req.files[0].buffer, {filename: "face", data: req.files[0].buffer})
+        const formHeaders = formData.getHeaders();
+        const fetchResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+            ...formHeaders,
+            },  
         });
     
         console.log("Fetching base64 image")
     
-        var result = await addResp.json()
+        var result = await fetchResp.json()
+        res.send({result}) 
+    } else {
+        let formData = new FormData()
+        formData.append('file', req.files[0].buffer, {filename: "face", data: req.files[0].buffer})
+        const formHeaders = formData.getHeaders();
+        const fetchResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?style=${route}`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+            ...formHeaders,
+            },  
+        });
+
+        console.log("Fetching base64 image")
+    
+        var result = await fetchResp.json()
         res.send({result}) 
     }
 })
@@ -58,13 +82,30 @@ router.get('/:apiName', upload.any(), async (req, res) => {
     if (route == "moderate") {
         let approve = req.query.approve;
         let id = req.query.id;
-        const moderateResp = await fetch(`http://localhost:80/moderate?approve=${approve}&id=${id}`, {
+        const moderateResp = await fetch(`http://${process.env.MODERATE_ENDPOINT}/moderate?approve=${approve}&id=${id}`, {
             method: 'GET'
         })
     
         var result = await moderateResp.text()
         res.send({result})
-    }
+    } else if (route == "") {
+        const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch`, {
+            method: 'GET',      
+        });
+    
+        console.log("Fetching base64 image")
+    
+        var result = await addResp.json()
+        res.send({result}) 
+    } else {
+        const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?style=${route}`, {
+            method: 'GET',      
+        });
+    
+        console.log("Fetching base64 image")
+    
+        var result = await addResp.json()
+        res.send({result}) 
 })
 
 app.use('/', router)
