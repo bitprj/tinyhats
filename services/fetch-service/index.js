@@ -19,22 +19,28 @@ app.listen(PORT, () => {
 })
 
 router.get('/fetch', upload.any(), async(req, res) => {
-    // get random baby picture
-    let babies = await listPictures()
-    let babiesList = babies[0]
-    console.log(babiesList)
+    // get random hat picture
+    let hats = await listPictures()
+    let hatList = hats[0]
+    console.log(hatList)
 
-    let randNum = Math.floor(Math.random() * babiesList.length)
-    let babyLink = babiesList[randNum].url
-    console.log(babyLink)
+    let randNum = Math.floor(Math.random() * hatList.length)
+    let hatLink = hatList[randNum].url
+    console.log(hatLink)
 
-    let image = await downloadBuffer(babyLink)
+    let image = await downloadBuffer(hatLink)
     image = Buffer.from(image)
     console.log(image)
 
+    //my fav boss ever
+    let johnKinmonth = await downloadBuffer("https://pbs.twimg.com/profile_images/812363965095235584/hfniQLSk_400x400.jpg");
+    johnKinmonth = Buffer.from(johnKinmonth)
+    console.log(johnKinmonth)
+
     // hit the upload endpoint to upload image and retrieve unique image id
     let formData = new FormData()
-    formData.append('file', image, {filename: "baby", data: image})
+    formData.append('file', johnKinmonth, {filename: "johnKinmonth", data: johnKinmonth})
+    formData.append('file', image, {filename: "hat", data: image})
     const formHeaders = formData.getHeaders();
     
     const manipulateRequest = await fetch(`http://${process.env.MANIPULATE_ENDPOINT}/manipulate`, {
