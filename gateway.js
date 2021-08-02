@@ -3,7 +3,6 @@ const multer = require('multer')
 const FormData = require('form-data')
 const upload = multer()
 const fetch = require("node-fetch")
-const functions = require("src/helpers.js")
 const app = express()
 var router = express.Router();
 const PORT = 4444
@@ -76,7 +75,6 @@ router.post('/:apiName', upload.any(), async (req, res) => {
 
 router.get('/:apiName', upload.any(), async (req, res) => {
     console.log(`[!] ${req.params.apiName} was accessed.`)
-    res.end(req.params.apiName + '\n')
 
     let route = req.params.apiName;
     if (route == "moderate") {
@@ -106,6 +104,7 @@ router.get('/:apiName', upload.any(), async (req, res) => {
     
         var result = await addResp.json()
         res.send({result}) 
+}
 })
 
 app.use('/', router)
