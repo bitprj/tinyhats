@@ -3,9 +3,12 @@ const multer = require('multer')
 const FormData = require('form-data')
 const upload = multer()
 const fetch = require("node-fetch")
+const cors = require('cors')
 const app = express()
 var router = express.Router();
 const PORT = 4444
+
+app.use(cors());
 
 // for testing locally: node -r dotenv/config index.js  
 // https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
