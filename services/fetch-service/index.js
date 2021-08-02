@@ -19,14 +19,18 @@ app.listen(PORT, () => {
 
 router.get('/fetch', upload.any(), async(req, res) => {
     let style = req.query.style
-    let face = defaultBoss()
+    let face = await defaultBoss()
     let b64Result = ''
 
-    if (style != "") {
-        let hat = getSpecificHat(style)
+    if (style != undefined) {
+        console.log("No custom image, no style")
+        let hat = await getSpecificHat(style)
+        console.log("Got specific hat")
         b64Result = await requestManipulate(face, hat)
     } else {
-        let hat = getRandomHat()
+        console.log("No custom image, yes style")
+        let hat = await getRandomHat()
+        console.log("Got random hat: " + hat)
         b64Result = await requestManipulate(face, hat)
     }
 
@@ -39,12 +43,14 @@ router.post('/fetch', upload.any(), async(req, res) => {
     let face = req.files[0].buffer
     let b64Result = ''
 
-    if (style != "") {
-        let hat = getSpecificHat(style)
+    if (style != undefined) {
+        console.log("Custom image, no style")
+        let hat = await getSpecificHat(style)
 
         b64Result = await requestManipulate(face, hat)
     } else {
-        let hat = getRandomHat()
+        console.log("Custom image, yes style")
+        let hat = await getRandomHat()
 
         b64Result = await requestManipulate(face, hat)
     }
