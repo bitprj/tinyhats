@@ -1,8 +1,7 @@
 import express from 'express'
 import multer from 'multer'
-import fetch from 'node-fetch'
-import FormData from 'form-data'
-import { listPictures, downloadBuffer, defaultBoss, getRandomHat, getSpecificHat } from './src/helpers.js'
+
+import { defaultBoss, getRandomHat, getSpecificHat, requestManipulate } from './src/helpers.js'
 const upload = multer()
 const app = express()
 var router = express.Router();
@@ -19,15 +18,36 @@ app.listen(PORT, () => {
 })
 
 router.get('/fetch', upload.any(), async(req, res) => {
-    
+    let style = req.query.style
+    let face = defaultBoss()
+    let b64Result = ''
+
+    if (style != "") {
+        let hat = getSpecificHat(style)
+        b64Result = await requestManipulate(face, hat)
+    } else {
+        let hat = getRandomHat()
+        b64Result = await requestManipulate(face, hat)
+    }
 
 
     res.send(b64Result)
 });
 
 router.post('/fetch', upload.any(), async(req, res) => {
+    let style = req.query.style
+    let face = req.files[0].buffer
+    let b64Result = ''
 
+    if (style != "") {
+        let hat = getSpecificHat(style)
 
+        b64Result = await requestManipulate(face, hat)
+    } else {
+        let hat = getRandomHat()
+
+        b64Result = await requestManipulate(face, hat)
+    }
 
     res.send(b64Result)
 }); 

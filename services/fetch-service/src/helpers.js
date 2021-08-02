@@ -1,6 +1,8 @@
 import { connect } from 'http2';
 import mysql from 'mysql2'
 import fetch from 'node-fetch'
+import fetch from 'node-fetch'
+import FormData from 'form-data'
 
 const HOST = process.env.HOST;
 const PASSWORD = process.env.PASSWORD;
@@ -28,8 +30,22 @@ export async function downloadBuffer(url) {
     return data
 }
 
-export async function getSpecificHat() {
+export async function getSpecificHat(style) {
+    var sql = `SELECT * FROM main.images WHERE description='${style}'`;
+    const results = await con.promise().query(sql)
     
+    let hatList = results[0]
+    console.log(hatList)
+
+    let randNum = Math.floor(Math.random() * hatList.length)
+    let hatLink = hatList[randNum].url
+    console.log(hatLink)
+
+    let image = await downloadBuffer(hatLink)
+    image = Buffer.from(image)
+    console.log(image)
+
+    return image
 }
 
 export async function getRandomHat() {
@@ -75,4 +91,6 @@ export async function requestManipulate(face, hat) {
 
     var b64Result = await manipulateRequest.json()
     console.log(`Received response from /manipulate`)
+
+    return b64Result
 }
