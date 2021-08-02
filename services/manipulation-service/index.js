@@ -18,6 +18,7 @@ app.listen(PORT, () => {
 
 router.post('/manipulate', upload.any(), async(req, res) => {
     var result;
+    console.log(req.files)
     let baby = req.files[0].buffer
     let hat = req.files[1].buffer
 
@@ -25,6 +26,7 @@ router.post('/manipulate', upload.any(), async(req, res) => {
         result = await image.findBaby(baby)
     } catch (e) {
         res.send("Invalid image")
+        console.log(e)
     }
 
     let finalBaby = await image.overlayHat(hat, result, baby)

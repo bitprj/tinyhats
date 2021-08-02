@@ -1,8 +1,7 @@
 import express from 'express'
 import multer from 'multer'
-import fetch from 'node-fetch'
-import FormData from 'form-data'
-import { listPictures, downloadBuffer } from './src/helpers.js'
+
+import { defaultBoss, getRandomHat, getSpecificHat, requestManipulate } from './src/helpers.js'
 const upload = multer()
 const app = express()
 var router = express.Router();
@@ -19,34 +18,42 @@ app.listen(PORT, () => {
 })
 
 router.get('/fetch', upload.any(), async(req, res) => {
-    // get random baby picture
-    let babies = await listPictures()
-    let babiesList = babies[0]
-    console.log(babiesList)
+    let style = req.query.style
+    let face = await defaultBoss()
+    let b64Result = ''
 
-    let randNum = Math.floor(Math.random() * babiesList.length)
-    let babyLink = babiesList[randNum].url
-    console.log(babyLink)
+    if (style != undefined) {
+        console.log("No custom image, no style")
+        let hat = await getSpecificHat(style)
+        console.log("Got specific hat")
+        b64Result = await requestManipulate(face, hat)
+    } else {
+        console.log("No custom image, yes style")
+        let hat = await getRandomHat()
+        console.log("Got random hat: " + hat)
+        b64Result = await requestManipulate(face, hat)
+    }
 
-    let image = await downloadBuffer(babyLink)
-    image = Buffer.from(image)
-    console.log(image)
-
-    // hit the upload endpoint to upload image and retrieve unique image id
-    let formData = new FormData()
-    formData.append('file', image, {filename: "baby", data: image})
-    const formHeaders = formData.getHeaders();
-    
-    const manipulateRequest = await fetch(`http://${process.env.MANIPULATE_ENDPOINT}/manipulate`, {
-        method: 'POST',
-        body: formData,
-            headers: {
-            ...formHeaders,
-            },        
-    });
-
-    var b64Result = await manipulateRequest.json()
-    console.log(`Received response from /manipuate`)
 
     res.send(b64Result)
-  }); 
+});
+
+router.post('/fetch', upload.any(), async(req, res) => {
+    let style = req.query.style
+    let face = req.files[0].buffer
+    let b64Result = ''
+
+    if (style != undefined) {
+        console.log("Custom image, no style")
+        let hat = await getSpecificHat(style)
+
+        b64Result = await requestManipulate(face, hat)
+    } else {
+        console.log("Custom image, yes style")
+        let hat = await getRandomHat()
+
+        b64Result = await requestManipulate(face, hat)
+    }
+
+    res.send(b64Result)
+}); 
