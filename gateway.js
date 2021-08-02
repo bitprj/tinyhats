@@ -10,6 +10,24 @@ const PORT = 4444
 // for testing locally: node -r dotenv/config index.js  
 // https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
 
+router.post('/', upload.any(), async (req, res) => {
+    let formData = new FormData()
+    formData.append('file', req.files[0].buffer, {filename: "face", data: req.files[0].buffer})
+    const formHeaders = formData.getHeaders();
+    const fetchResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+        ...formHeaders,
+        },  
+    });
+
+    console.log("Fetching base64 image")
+
+    var result = await fetchResp.json()
+    res.send({result}) 
+})
+
 router.post('/:apiName', upload.any(), async (req, res) => {
     console.log(`[!] ${req.params.apiName} was accessed.`)
     let route = req.params.apiName
@@ -38,22 +56,6 @@ router.post('/:apiName', upload.any(), async (req, res) => {
         var result = await addResp.json()
         console.log(`Received from /add: ${JSON.stringify(result)}`)
         res.send({result})
-    } else if (route == "") {
-        let formData = new FormData()
-        formData.append('file', req.files[0].buffer, {filename: "face", data: req.files[0].buffer})
-        const formHeaders = formData.getHeaders();
-        const fetchResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-            ...formHeaders,
-            },  
-        });
-    
-        console.log("Fetching base64 image")
-    
-        var result = await fetchResp.json()
-        res.send({result}) 
     } else {
         let formData = new FormData()
         formData.append('file', req.files[0].buffer, {filename: "face", data: req.files[0].buffer})
@@ -73,6 +75,17 @@ router.post('/:apiName', upload.any(), async (req, res) => {
     }
 })
 
+router.get('/', upload.any(), async (req, res) => {
+    const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch`, {
+        method: 'GET',      
+    });
+
+    console.log("Fetching base64 image")
+
+    var result = await addResp.json()
+    res.send({result}) 
+})
+
 router.get('/:apiName', upload.any(), async (req, res) => {
     console.log(`[!] ${req.params.apiName} was accessed.`)
 
@@ -86,15 +99,6 @@ router.get('/:apiName', upload.any(), async (req, res) => {
     
         var result = await moderateResp.text()
         res.send({result})
-    } else if (route == "") {
-        const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch`, {
-            method: 'GET',      
-        });
-    
-        console.log("Fetching base64 image")
-    
-        var result = await addResp.json()
-        res.send({result}) 
     } else {
         const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?style=${route}`, {
             method: 'GET',      
