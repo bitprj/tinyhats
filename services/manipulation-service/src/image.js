@@ -40,12 +40,6 @@ const overlayHat = async (hat, result, baby) => {
     opacitySource: 0.9
   })
 
-  // image.composite(hatImg, 0, 0, {
-  //   mode: Jimp.BLEND_SOURCE_OVER,
-  //   opacityDest: 1,
-  //   opacitySource: 0.97
-  // })
-
   return await image.getBase64Async(Jimp.MIME_PNG)
 }
 
