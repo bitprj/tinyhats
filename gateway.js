@@ -43,7 +43,7 @@ router.post('/add', upload.any(), async(req, res) => {
     res.send({result}) 
 });
 
-router.get('/fetch', upload.any(), async(req, res) => {
+router.get('/', upload.any(), async(req, res) => {
     const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch`, {
         method: 'GET',      
     });
