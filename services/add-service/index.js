@@ -46,13 +46,13 @@ router.post(`/add`, upload.any(), async(req, res) => {
     let imgLink = result.url
 
 
-    let html = `<h2>Review this image</h2>
+    let html = `<h2>Review this hat 🎩</h2>
     <h3><img src="${imgLink}" alt="" /></h3>
     <h3>Be sure to consider:</h3>
     <ul>
     <li>Is this appropriate?</li>
-    <li>Does this picture contain a baby?</li>
-    <li>Could a hat be easily overlayed on the head?</li>
+    <li>Does this picture contain an object that could be used as a hat?</li>
+    <li>Could this be easily overlayed on a head?</li>
     </ul>
     <p>Click <a href="${process.env.ENDPOINT}/moderate?approve=true&id=${id}">here</a> to approve.</p>
     <p>Click <a href="${process.env.ENDPOINT}/moderate?approve=false&id=${id}">here</a> to disapprove.</p>`
