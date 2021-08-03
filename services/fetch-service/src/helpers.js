@@ -30,7 +30,7 @@ export async function downloadBuffer(url) {
 }
 
 export async function getSpecificHat(style) {
-    var sql = `SELECT * FROM main.images WHERE description='${style}'`;
+    var sql = `SELECT * FROM main.images WHERE description='${style}' AND approve='true'`;
     const results = await con.promise().query(sql)
     
     let hatList = results[0]
@@ -47,7 +47,7 @@ export async function getSpecificHat(style) {
 }
 
 export async function getHatData() {
-    var sql = `SELECT description, url FROM main.images`;
+    var sql = `SELECT description, url FROM main.images WHERE approve='true'`;
     const results = await con.promise().query(sql)
     
     let hatList = results[0]
