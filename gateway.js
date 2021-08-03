@@ -114,6 +114,22 @@ router.get('/:apiName', upload.any(), async (req, res) => {
 }
 })
 
+router.get('/api/:apiName', upload.any(), async (req, res) => {
+    console.log(`[!] /api/${req.params.apiName} was accessed.`)
+    let route = req.params.apiName;
+    
+    if (route == "hats") {
+        const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?hats=true`, {
+            method: 'GET',      
+        });
+
+        console.log("Fetching hat list")
+
+        var result = await addResp.json()
+        res.send(result)
+    }
+})
+
 app.use('/', router)
 
 app.listen(PORT, () => {

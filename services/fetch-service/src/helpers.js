@@ -46,6 +46,16 @@ export async function getSpecificHat(style) {
     return image
 }
 
+export async function getHatData() {
+    var sql = `SELECT description, url FROM main.images`;
+    const results = await con.promise().query(sql)
+    
+    let hatList = results[0]
+    console.log(hatList)
+
+    return hatList
+}
+
 export async function getRandomHat() {
     // get random hat picture
     let hats = await listPictures()
