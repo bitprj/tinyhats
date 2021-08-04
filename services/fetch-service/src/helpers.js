@@ -86,8 +86,8 @@ export async function requestManipulate(face, hat, numberHats) {
     console.log(numberHats)
     for (var i = numberHats; i >= 1; i--) {
         console.log(i)
-        let translate = i*1.9
-        let rotate = i*200
+        let translate = i*0.6
+        let rotate = i*10
         let formData = await createForm(faceData, hat)
         const formHeaders = formData.getHeaders();
         const manipulateRequest = await fetch(`http://${process.env.MANIPULATE_ENDPOINT}/manipulate?translate=${translate}&rotate=${rotate}`, {
