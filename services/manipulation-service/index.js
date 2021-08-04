@@ -21,6 +21,8 @@ router.post('/manipulate', upload.any(), async(req, res) => {
     console.log(req.files)
     let baby = req.files[0].buffer
     let hat = req.files[1].buffer
+    let rotate = parseInt(req.query.rotate)
+    let translate = parseInt(req.query.translate)
 
     try {
         result = await image.findBaby(baby)
@@ -29,6 +31,6 @@ router.post('/manipulate', upload.any(), async(req, res) => {
         console.log(e)
     }
 
-    let finalBaby = await image.overlayHat(hat, result, baby)
+    let finalBaby = await image.overlayHat(hat, result, baby, translate, rotate)
     res.send({finalBaby}) 
   });

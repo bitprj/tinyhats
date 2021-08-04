@@ -27,14 +27,17 @@ const findBaby = async (baby) => {
   return data;
 }
 
-const overlayHat = async (hat, result, baby) => {
+const overlayHat = async (hat, result, baby, translate, rotate) => {
   let hatImg = await Jimp.read(hat);
   const image = await Jimp.read(baby);
   let face = result[0].faceRectangle
 
-  hatImg = await hatImg.resize(face.width*1.5, face.height*1.5)
+  hatImg = await hatImg.resize(face.width, face.height)
+  hatImg = await hatImg.rotate(rotate)
 
-  image.composite(hatImg, face.left - face.width*0.3, face.top - face.height*1.5, {
+  translate = translate * 0.3
+
+  image.composite(hatImg, face.left - face.width*translate, face.top - face.height*1.2, {
     mode: Jimp.BLEND_SOURCE_OVER,
     opacityDest: 1,
     opacitySource: 0.9

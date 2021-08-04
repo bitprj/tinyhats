@@ -13,11 +13,21 @@ app.use(cors());
 // for testing locally: node -r dotenv/config index.js  
 // https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
 
+function getNumber(req) {
+    let param = ""
+    if (req.query.number != undefined) {
+        param = `number=${req.query.number}`
+    }
+
+    return param
+}
+
 router.post('/', upload.any(), async (req, res) => {
+    let param = getNumber(req)
     let formData = new FormData()
     formData.append('file', req.files[0].buffer, {filename: "face", data: req.files[0].buffer})
     const formHeaders = formData.getHeaders();
-    const fetchResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch`, {
+    const fetchResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?` + param, {
         method: 'POST',
         body: formData,
         headers: {
@@ -60,10 +70,11 @@ router.post('/:apiName', upload.any(), async (req, res) => {
         console.log(`Received from /add: ${JSON.stringify(result)}`)
         res.send({result})
     } else {
+        let param = getNumber(req)
         let formData = new FormData()
         formData.append('file', req.files[0].buffer, {filename: "face", data: req.files[0].buffer})
         const formHeaders = formData.getHeaders();
-        const fetchResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?style=${route}`, {
+        const fetchResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?style=${route}&` + param, {
             method: 'POST',
             body: formData,
             headers: {
@@ -79,7 +90,8 @@ router.post('/:apiName', upload.any(), async (req, res) => {
 })
 
 router.get('/', upload.any(), async (req, res) => {
-    const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch`, {
+    let param = getNumber(req)
+    const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?` + param, {
         method: 'GET',      
     });
 
@@ -103,7 +115,8 @@ router.get('/:apiName', upload.any(), async (req, res) => {
         var result = await moderateResp.text()
         res.send({result})
     } else {
-        const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?style=${route}`, {
+        let param = getNumber(req)
+        const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?style=${route}&` + param, {
             method: 'GET',      
         });
     
