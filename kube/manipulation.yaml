@@ -18,10 +18,12 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: SUBSCRIPTION_KEY
-              value: "$SUBSCRIPTION_KEY"
-            - name: ENDPOINT
-              value: "$ENDPOINT"
+            - name: S3_ID
+              value: "$S3_ID"
+            - name: S3_SECRET
+              value: "$S3_SECRET"
+            - name: "AWS_REGION"
+              value: "$AWS_REGION"
           imagePullPolicy: Always
 ---
 apiVersion: v1

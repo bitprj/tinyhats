@@ -1,43 +1,43 @@
 const Jimp = require('jimp')
-const fetch = require('node-fetch')
-require('dotenv').config()
+const AWS = require('aws-sdk')
+
+const config = new AWS.Config({
+  accessKeyId: process.env.S3_ID,
+  secretAccessKey: process.env.S3_SECRET,
+  region: process.env.AWS_REGION
+})
+
+const client = new AWS.Rekognition();
 
 const findBaby = async (baby) => {
-  const subscriptionKey = process.env.SUBSCRIPTION_KEY
-  const uriBase = process.env.ENDPOINT + '/face/v1.0/detect';
+  const params = {
+    Image: {
+      // only accepts pure buffer
+      "Bytes": baby
+    },
+    Attributes: ['ALL']
+  }
+  
+  let data = await client.detectFaces(params).promise()
+  // use await to retrieve face data
+  console.log(`Detected faces: ${JSON.stringify(data.FaceDetails[0].BoundingBox)}`)
 
-  let params = new URLSearchParams({
-    'returnFaceId': 'true',
-  })
-
-  // making the post request
-  let resp = await fetch(uriBase + '?' + params.toString(),{
-      method: 'POST',
-      body: baby,
-      // we want to send the image
-      headers: {
-          'Content-Type' : 'application/octet-stream',
-          'Ocp-Apim-Subscription-Key' : subscriptionKey
-      }
-  })
-
-  // receive the response
-  let data = await resp.json();
-  console.log(data)
   return data;
 }
 
 const overlayHat = async (hat, result, baby, translate, rotate) => {
   let hatImg = await Jimp.read(hat);
   const image = await Jimp.read(baby);
-  let face = result[0].faceRectangle
+  let face = result.FaceDetails[0].BoundingBox
 
-  hatImg = await hatImg.resize(face.width, face.height)
+  let scale = 400
+
+  hatImg = await hatImg.resize(face.Width*scale, face.Height*scale)
   hatImg = await hatImg.rotate(rotate)
 
   translate = translate * 0.3
-
-  image.composite(hatImg, face.left - face.width*translate, face.top - face.height*1.2, {
+  //  BoundingBox.Width:      ${data.BoundingBox.Width}`)
+  image.composite(hatImg, face.Left*scale - face.Width*scale*translate, face.Top*scale - face.Height*0.8*scale, {
     mode: Jimp.BLEND_SOURCE_OVER,
     opacityDest: 1,
     opacitySource: 0.9
