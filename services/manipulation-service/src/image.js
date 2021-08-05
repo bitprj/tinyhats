@@ -28,7 +28,7 @@ const findBaby = async (baby) => {
   //     data = response
   //   }
   // })
-  console.log(`Detected faces: ${JSON.stringify(data)}`)
+  console.log(`Detected faces: ${JSON.stringify(data.FaceDetails[0].BoundingBox)}`)
 
   return data;
   // receive the response
@@ -40,14 +40,16 @@ const findBaby = async (baby) => {
 const overlayHat = async (hat, result, baby, translate, rotate) => {
   let hatImg = await Jimp.read(hat);
   const image = await Jimp.read(baby);
-  let face = result.BoundingBox
+  let face = result.FaceDetails[0].BoundingBox
 
-  hatImg = await hatImg.resize(face.Width, face.Height)
+  let scale = 400
+
+  hatImg = await hatImg.resize(face.Width*scale, face.Height*scale)
   hatImg = await hatImg.rotate(rotate)
 
   translate = translate * 0.3
   //  BoundingBox.Width:      ${data.BoundingBox.Width}`)
-  image.composite(hatImg, face.Left - face.Width*translate, face.Top - face.Height*1.2, {
+  image.composite(hatImg, face.Left*scale - face.Width*scale*translate, face.Top*scale - face.Height*0.8*scale, {
     mode: Jimp.BLEND_SOURCE_OVER,
     opacityDest: 1,
     opacitySource: 0.9
