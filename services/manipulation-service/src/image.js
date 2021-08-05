@@ -1,43 +1,53 @@
 const Jimp = require('jimp')
-const fetch = require('node-fetch')
-require('dotenv').config()
+const AWS = require('aws-sdk')
+const bucket = 'bucket' // the bucketname without s3://
+const photo  = 'input.jpg' // the name of file
+
+const config = new AWS.Config({
+  accessKeyId: process.env.S3_ID,
+  secretAccessKey: process.env.S3_SECRET,
+  region: process.env.AWS_REGION
+})
+
+const client = new AWS.Rekognition();
 
 const findBaby = async (baby) => {
-  const subscriptionKey = process.env.SUBSCRIPTION_KEY
-  const uriBase = process.env.ENDPOINT + '/face/v1.0/detect';
+  const params = {
+    Image: {
+      // only accepts pure buffer
+      "Bytes": baby
+    },
+    Attributes: ['ALL']
+  }
+  
+  let data = await client.detectFaces(params).promise()
+  // client.detectFaces(params, function(err, response) {
+  //   if (err) {
+  //     console.log(err, err.stack); // an error occurred
+  //   } else {
+  //     data = response
+  //   }
+  // })
+  console.log(`Detected faces: ${JSON.stringify(data)}`)
 
-  let params = new URLSearchParams({
-    'returnFaceId': 'true',
-  })
-
-  // making the post request
-  let resp = await fetch(uriBase + '?' + params.toString(),{
-      method: 'POST',
-      body: baby,
-      // we want to send the image
-      headers: {
-          'Content-Type' : 'application/octet-stream',
-          'Ocp-Apim-Subscription-Key' : subscriptionKey
-      }
-  })
-
-  // receive the response
-  let data = await resp.json();
-  console.log(data)
   return data;
+  // receive the response
+  // let data = await resp.json();
+  // console.log(data)
+  // return data;
 }
 
 const overlayHat = async (hat, result, baby, translate, rotate) => {
   let hatImg = await Jimp.read(hat);
   const image = await Jimp.read(baby);
-  let face = result[0].faceRectangle
+  let face = result.BoundingBox
 
-  hatImg = await hatImg.resize(face.width, face.height)
+  hatImg = await hatImg.resize(face.Width, face.Height)
   hatImg = await hatImg.rotate(rotate)
 
   translate = translate * 0.3
-
-  image.composite(hatImg, face.left - face.width*translate, face.top - face.height*1.2, {
+  //  BoundingBox.Width:      ${data.BoundingBox.Width}`)
+  image.composite(hatImg, face.Left - face.Width*translate, face.Top - face.Height*1.2, {
     mode: Jimp.BLEND_SOURCE_OVER,
     opacityDest: 1,
     opacitySource: 0.9

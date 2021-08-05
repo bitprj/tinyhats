@@ -25,6 +25,8 @@ router.post('/manipulate', upload.any(), async(req, res) => {
     let translate = parseInt(req.query.translate)
 
     try {
+        // send to AWS SDK
+        console.log(baby)
         result = await image.findBaby(baby)
     } catch (e) {
         res.send("Invalid image")
