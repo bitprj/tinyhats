@@ -1,7 +1,5 @@
 const Jimp = require('jimp')
 const AWS = require('aws-sdk')
-const bucket = 'bucket' // the bucketname without s3://
-const photo  = 'input.jpg' // the name of file
 
 const config = new AWS.Config({
   accessKeyId: process.env.S3_ID,
@@ -21,20 +19,10 @@ const findBaby = async (baby) => {
   }
   
   let data = await client.detectFaces(params).promise()
-  // client.detectFaces(params, function(err, response) {
-  //   if (err) {
-  //     console.log(err, err.stack); // an error occurred
-  //   } else {
-  //     data = response
-  //   }
-  // })
+  // use await to retrieve face data
   console.log(`Detected faces: ${JSON.stringify(data.FaceDetails[0].BoundingBox)}`)
 
   return data;
-  // receive the response
-  // let data = await resp.json();
-  // console.log(data)
-  // return data;
 }
 
 const overlayHat = async (hat, result, baby, translate, rotate) => {
