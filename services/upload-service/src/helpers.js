@@ -4,7 +4,7 @@ import mysql from 'mysql'
 
 const ID = process.env.S3_ID;
 const SECRET = process.env.S3_SECRET;
-const BUCKET_NAME = 'uwuaascat';
+const BUCKET_NAME = 'tinyhats';
 
 const HOST = process.env.HOST;
 const PASSWORD = process.env.PASSWORD;

@@ -21,7 +21,7 @@ con.connect(function(err) {
 });
 
 con.connect(function(err) {
-    con.query(`DELETE FROM main.images WHERE description="cowboy"`, function(err, result, fields) {
+    con.query(`SELECT * FROM main.images`, function(err, result, fields) {
         if (err) console.log(err);
         if (result) console.log("Current state: " + JSON.stringify(result));
 
