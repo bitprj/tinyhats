@@ -1,0 +1,1374 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Metadata:
+    Generator: "former2"
+Description: ""
+Resources:
+    IAMRole:
+        Type: "AWS::IAM::Role"
+        Properties:
+            Path: "/"
+            RoleName: !Sub "eksctl-${S3Bucket}-cluster-ServiceRole-JB66EUS1U5YB"
+            AssumeRolePolicyDocument: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"eks.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+            MaxSessionDuration: 3600
+            ManagedPolicyArns: 
+              - "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+              - "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+            Description: ""
+            Tags: 
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/ServiceRole"
+
+    IAMRole2:
+        Type: "AWS::IAM::Role"
+        Properties:
+            Path: "/"
+            RoleName: !Sub "eksctl-${S3Bucket}-nodegroup-ng-f062-NodeInstanceRole-1Q6ZQLSIFI580"
+            AssumeRolePolicyDocument: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+            MaxSessionDuration: 3600
+            ManagedPolicyArns: 
+              - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+              - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+              - "arn:aws:iam::aws:policy/AmazonRekognitionFullAccess"
+              - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+            Description: ""
+            Tags: 
+              - 
+                Key: "alpha.eksctl.io/nodegroup-name"
+                Value: "ng-f0629712"
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "alpha.eksctl.io/nodegroup-type"
+                Value: "managed"
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-nodegroup-ng-f0629712/NodeInstanceRole"
+
+    IAMPolicy:
+        Type: "AWS::IAM::Policy"
+        Properties:
+            PolicyDocument: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"ec2:DescribeAccountAttributes\",\"ec2:DescribeAddresses\",\"ec2:DescribeInternetGateways\"],\"Resource\":\"*\",\"Effect\":\"Allow\"}]}"
+            Roles: 
+              - !Ref IAMRole
+            PolicyName: !Sub "eksctl-${S3Bucket}-cluster-PolicyELBPermissions"
+
+    IAMPolicy2:
+        Type: "AWS::IAM::Policy"
+        Properties:
+            PolicyDocument: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"cloudwatch:PutMetricData\"],\"Resource\":\"*\",\"Effect\":\"Allow\"}]}"
+            Roles: 
+              - !Ref IAMRole
+            PolicyName: !Sub "eksctl-${S3Bucket}-cluster-PolicyCloudWatchMetrics"
+
+    IAMInstanceProfile:
+        Type: "AWS::IAM::InstanceProfile"
+        Properties:
+            Path: "/"
+            InstanceProfileName: !Ref AutoScalingAutoScalingGroup
+            Roles: 
+              - !Ref IAMRole2
+
+    EC2VPC:
+        Type: "AWS::EC2::VPC"
+        Properties:
+            CidrBlock: "192.168.0.0/16"
+            EnableDnsSupport: true
+            EnableDnsHostnames: true
+            InstanceTenancy: "default"
+            Tags: 
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/VPC"
+              - 
+                Key: "aws:cloudformation:logical-id"
+                Value: "VPC"
+              - 
+                Key: "aws:cloudformation:stack-id"
+                Value: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/eksctl-${S3Bucket}-cluster/b28e10c0-f655-11eb-9a9a-0a2edca56308"
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "aws:cloudformation:stack-name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster"
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+
+    EC2Subnet:
+        Type: "AWS::EC2::Subnet"
+        Properties:
+            AvailabilityZone: !Sub "${AWS::Region}a"
+            CidrBlock: "192.168.128.0/19"
+            VpcId: !Ref EC2VPC
+            MapPublicIpOnLaunch: false
+            Tags: 
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "kubernetes.io/role/internal-elb"
+                Value: "1"
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/SubnetPrivateUSEAST2A"
+
+    EC2InternetGateway:
+        Type: "AWS::EC2::InternetGateway"
+        Properties:
+            Tags: 
+              - 
+                Key: "aws:cloudformation:stack-name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster"
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "aws:cloudformation:stack-id"
+                Value: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/eksctl-${S3Bucket}-cluster/b28e10c0-f655-11eb-9a9a-0a2edca56308"
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/InternetGateway"
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "aws:cloudformation:logical-id"
+                Value: "InternetGateway"
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+
+    EC2EIP:
+        Type: "AWS::EC2::EIP"
+        Properties:
+            Domain: "vpc"
+            Tags: 
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "aws:cloudformation:stack-name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster"
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "aws:cloudformation:stack-id"
+                Value: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/eksctl-${S3Bucket}-cluster/b28e10c0-f655-11eb-9a9a-0a2edca56308"
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/NATIP"
+              - 
+                Key: "aws:cloudformation:logical-id"
+                Value: "NATIP"
+
+    EC2EIPAssociation:
+        Type: "AWS::EC2::EIPAssociation"
+        Properties:
+            AllocationId: !GetAtt EC2EIP.AllocationId
+            NetworkInterfaceId: "eni-07c2c543f91d77467"
+            PrivateIpAddress: "192.168.22.84"
+
+    EC2RouteTable:
+        Type: "AWS::EC2::RouteTable"
+        Properties:
+            VpcId: !Ref EC2VPC
+            Tags: 
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "aws:cloudformation:stack-id"
+                Value: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/eksctl-${S3Bucket}-cluster/b28e10c0-f655-11eb-9a9a-0a2edca56308"
+              - 
+                Key: "aws:cloudformation:logical-id"
+                Value: "PrivateRouteTableUSEAST2A"
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "aws:cloudformation:stack-name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster"
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/PrivateRouteTableUSEAST2A"
+
+    EC2RouteTable2:
+        Type: "AWS::EC2::RouteTable"
+        Properties:
+            VpcId: !Ref EC2VPC
+            Tags: 
+              - 
+                Key: "aws:cloudformation:stack-id"
+                Value: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/eksctl-${S3Bucket}-cluster/b28e10c0-f655-11eb-9a9a-0a2edca56308"
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/PrivateRouteTableUSEAST2B"
+              - 
+                Key: "aws:cloudformation:logical-id"
+                Value: "PrivateRouteTableUSEAST2B"
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "aws:cloudformation:stack-name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster"
+
+    EC2RouteTable3:
+        Type: "AWS::EC2::RouteTable"
+        Properties:
+            VpcId: !Ref EC2VPC
+            Tags: 
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/PrivateRouteTableUSEAST2C"
+              - 
+                Key: "aws:cloudformation:stack-name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster"
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "aws:cloudformation:logical-id"
+                Value: "PrivateRouteTableUSEAST2C"
+              - 
+                Key: "aws:cloudformation:stack-id"
+                Value: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/eksctl-${S3Bucket}-cluster/b28e10c0-f655-11eb-9a9a-0a2edca56308"
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+
+    EC2RouteTable4:
+        Type: "AWS::EC2::RouteTable"
+        Properties:
+            VpcId: !Ref EC2VPC
+            Tags: 
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/PublicRouteTable"
+              - 
+                Key: "aws:cloudformation:stack-id"
+                Value: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/eksctl-${S3Bucket}-cluster/b28e10c0-f655-11eb-9a9a-0a2edca56308"
+              - 
+                Key: "aws:cloudformation:logical-id"
+                Value: "PublicRouteTable"
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "aws:cloudformation:stack-name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster"
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+
+    EC2NatGateway:
+        Type: "AWS::EC2::NatGateway"
+        Properties:
+            SubnetId: "subnet-096e9ad94c18c848d"
+            Tags: 
+              - 
+                Key: "aws:cloudformation:stack-name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster"
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "aws:cloudformation:stack-id"
+                Value: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/eksctl-${S3Bucket}-cluster/b28e10c0-f655-11eb-9a9a-0a2edca56308"
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "aws:cloudformation:logical-id"
+                Value: "NATGateway"
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/NATGateway"
+            AllocationId: !GetAtt EC2EIP.AllocationId
+
+    EC2Instance:
+        Type: "AWS::EC2::Instance"
+        Properties:
+            ImageId: "ami-0a217fd96603e6bba"
+            InstanceType: "m5.large"
+            AvailabilityZone: !Sub "${AWS::Region}b"
+            Tenancy: "default"
+            SubnetId: "subnet-096e9ad94c18c848d"
+            EbsOptimized: false
+            SecurityGroupIds: 
+              - !Ref EC2SecurityGroup9
+              - !Ref EC2SecurityGroup9
+            SourceDestCheck: true
+            BlockDeviceMappings: 
+              - 
+                DeviceName: "/dev/xvda"
+                Ebs: 
+                    Encrypted: false
+                    VolumeSize: 80
+                    SnapshotId: "snap-0f54db95baaba4a49"
+                    VolumeType: "gp3"
+                    DeleteOnTermination: true
+            UserData: "TUlNRS1WZXJzaW9uOiAxLjAKQ29udGVudC1UeXBlOiBtdWx0aXBhcnQvbWl4ZWQ7IGJvdW5kYXJ5PSIvLyIKCi0tLy8KQ29udGVudC1UeXBlOiB0ZXh0L3gtc2hlbGxzY3JpcHQ7IGNoYXJzZXQ9InVzLWFzY2lpIgojIS9iaW4vYmFzaApzZXQgLWV4CkI2NF9DTFVTVEVSX0NBPUxTMHRMUzFDUlVkSlRpQkRSVkpVU1VaSlEwRlVSUzB0TFMwdENrMUpTVU0xZWtORFFXTXJaMEYzU1VKQlowbENRVVJCVGtKbmEzRm9hMmxIT1hjd1FrRlJjMFpCUkVGV1RWSk5kMFZSV1VSV1VWRkVSWGR3Y21SWFNtd0tZMjAxYkdSSFZucE5RalJZUkZSSmVFMUVaM2RPYWtGNFRYcFZlVTFHYjFoRVZFMTRUVVJuZDA1RVFYaE5lbFY1VFVadmQwWlVSVlJOUWtWSFFURlZSUXBCZUUxTFlUTldhVnBZU25WYVdGSnNZM3BEUTBGVFNYZEVVVmxLUzI5YVNXaDJZMDVCVVVWQ1FsRkJSR2RuUlZCQlJFTkRRVkZ2UTJkblJVSkJURGxpQ21oNVkzUnROa3R2VG5JeU5qaHhla05tTkZGWlJXUm9OSHAyTWxKNmRtcEJWeTlxVHpFMk9IaFJTR0p1VFZWMFZ6UnhXWGh3ZEZsUmJ6RnBURll3VjJNS2RtMTNjWGhRVUdoeFprVkdWRzlXYWtrNUwydFJRM296VUVSRE9TczVjbmhEU0hoT1ltRldiMFJaUTJsaFRtWktZV2RDT1dZekx6SjJWV3h2Tld4aWFBcE5TVkl5ZHpSb1VIVlVaMVpVZDFGRFFWSkZhbGhQZHpZMGJIWk5ha2RXVVUxTlRVNUdkMWgyVmtNeFlYRm1iVkowU2xJMlUwaDBSWFJEVW1RdlZERlZDbTlIVlRrNVZFZFJXbEJRTjBsUldGUlZSbkpIWVVWb2NYZG5iVmQyZFN0NVpUQlRiVVpCTTNWclMxZFJaMm93YWpFMFkwa3dkbFZLVXpaSGJuQTNhV2NLZFhObVRXVXpla0pNTm5wc2F6QnZPVkZZVldod1oydG9WMll4VTFKbE1qRjJVR3RVWjJwS1NtaFViM2hIZG5wdGVTdFRNMkV5SzJ0RE1Ea3dVemhUTkFveGJFTXZlR2N4WWk5Q04xTklTWEphWlM5TlEwRjNSVUZCWVU1RFRVVkJkMFJuV1VSV1VqQlFRVkZJTDBKQlVVUkJaMHRyVFVFNFIwRXhWV1JGZDBWQ0NpOTNVVVpOUVUxQ1FXWTRkMGhSV1VSV1VqQlBRa0paUlVaRWJVYzBUU3MxTUdaQmVEVmlZVEZ5ZGk5UlQzSk1SSFJyVW5OTlFUQkhRMU54UjFOSllqTUtSRkZGUWtOM1ZVRkJORWxDUVZGQlZHSnBVWGhwZUVORE5XWnVOa1ZqZURSRFpUWk1aRzVEVlhBeGJGaENiMDFtZFUxaE1HOTBSRlJMZFhwU2JuUnJLd280SzNWclRHZDNURk52UjA0MVltSkxPRmRrTW1wR1VrSjZjR2xuZVdFelpqRjBTSE5aZDB4NVNYWnJNMlZ5VEZFMlNUYzFaV2RKVTNSMlJuSjJjRkZDQ2sxSVJuQm1TMmwzUW5RMFZrWkJNa2hsV1ZCTmMwSnBkM0EyUjJOU09YSjVOMmhtWnpjcmRFVlRVRTFEZVdSc1pFbEJURFZDVEZjMWFUWlVTbGhLYXprS01uSkVZblUyTmtocFNrZFRaV0pYVlVkS2FsWmpaMmxDTmtsdFNGcFNaR04xT0VaT05XOHhhMm95ZVZoNWRtNWhUWGxpWVhWMlp6VkJObVZhWlVjdk9BcDBkSGgwV1c5a1YzcGhRVlF2VFhkdk5XcE9halpLV1dsNFJEbE5LMkpXZFd4SFExaEdhSEJzWnpGd1MyRnVaMlJqWWpSc01FeGlVM1l2T1N0c1dTOUhDbUlyY1ZoblRGRXhTMjFrYWtSdVRVTjBkV0l2VjI5RFRuTkRiVmMxT0c5S1JERldNQW90TFMwdExVVk9SQ0JEUlZKVVNVWkpRMEZVUlMwdExTMHRDZz09CkFQSV9TRVJWRVJfVVJMPWh0dHBzOi8vM0JEMjg3NTU5QzgzNzM5NEJGN0ZBQjQwQjYxMjgyQUMuZ3I3LnVzLWVhc3QtMi5la3MuYW1hem9uYXdzLmNvbQpLOFNfQ0xVU1RFUl9ETlNfSVA9MTAuMTAwLjAuMTAKL2V0Yy9la3MvYm9vdHN0cmFwLnNoIHRpbnloYXRzIC0ta3ViZWxldC1leHRyYS1hcmdzICctLW5vZGUtbGFiZWxzPWVrcy5hbWF6b25hd3MuY29tL3NvdXJjZUxhdW5jaFRlbXBsYXRlVmVyc2lvbj0xLGFscGhhLmVrc2N0bC5pby9jbHVzdGVyLW5hbWU9dGlueWhhdHMsYWxwaGEuZWtzY3RsLmlvL25vZGVncm91cC1uYW1lPW5nLWYwNjI5NzEyLGVrcy5hbWF6b25hd3MuY29tL25vZGVncm91cC1pbWFnZT1hbWktMGEyMTdmZDk2NjAzZTZiYmEsZWtzLmFtYXpvbmF3cy5jb20vY2FwYWNpdHlUeXBlPU9OX0RFTUFORCxla3MuYW1hem9uYXdzLmNvbS9ub2RlZ3JvdXA9bmctZjA2Mjk3MTIsZWtzLmFtYXpvbmF3cy5jb20vc291cmNlTGF1bmNoVGVtcGxhdGVJZD1sdC0wZjA1Nzk1YjFmNjA2NThlNScgLS1iNjQtY2x1c3Rlci1jYSAkQjY0X0NMVVNURVJfQ0EgLS1hcGlzZXJ2ZXItZW5kcG9pbnQgJEFQSV9TRVJWRVJfVVJMIC0tZG5zLWNsdXN0ZXItaXAgJEs4U19DTFVTVEVSX0ROU19JUAoKLS0vLy0t"
+            IamInstanceProfile: !Ref AutoScalingAutoScalingGroup
+            Tags: 
+              - 
+                Key: "k8s.io/cluster-autoscaler/enabled"
+                Value: "true"
+              - 
+                Key: "eks:cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: !Sub "k8s.io/cluster-autoscaler/${S3Bucket}"
+                Value: "owned"
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+              - 
+                Key: "eks:nodegroup-name"
+                Value: "ng-f0629712"
+              - 
+                Key: "alpha.eksctl.io/nodegroup-name"
+                Value: "ng-f0629712"
+              - 
+                Key: "aws:ec2:fleet-id"
+                Value: "fleet-4ed50155-7602-cedc-8c30-09204dfbc0b6"
+              - 
+                Key: "Name"
+                Value: !Sub "${S3Bucket}-ng-f0629712-Node"
+              - 
+                Key: "alpha.eksctl.io/nodegroup-type"
+                Value: "managed"
+              - 
+                Key: "aws:autoscaling:groupName"
+                Value: !Ref AutoScalingAutoScalingGroup
+              - 
+                Key: "aws:ec2launchtemplate:id"
+                Value: !Ref EC2LaunchTemplate2
+              - 
+                Key: "aws:ec2launchtemplate:version"
+                Value: "1"
+            HibernationOptions: 
+                Configured: false
+            CpuOptions: 
+                CoreCount: 1
+                ThreadsPerCore: 2
+            EnclaveOptions: 
+                Enabled: false
+
+    EC2Instance2:
+        Type: "AWS::EC2::Instance"
+        Properties:
+            ImageId: "ami-0a217fd96603e6bba"
+            InstanceType: "m5.large"
+            AvailabilityZone: !Sub "${AWS::Region}c"
+            Tenancy: "default"
+            SubnetId: "subnet-0164e1ec90263c4cf"
+            EbsOptimized: false
+            SecurityGroupIds: 
+              - !Ref EC2SecurityGroup9
+              - !Ref EC2SecurityGroup9
+            SourceDestCheck: true
+            BlockDeviceMappings: 
+              - 
+                DeviceName: "/dev/xvda"
+                Ebs: 
+                    Encrypted: false
+                    VolumeSize: 80
+                    SnapshotId: "snap-0f54db95baaba4a49"
+                    VolumeType: "gp3"
+                    DeleteOnTermination: true
+            UserData: "TUlNRS1WZXJzaW9uOiAxLjAKQ29udGVudC1UeXBlOiBtdWx0aXBhcnQvbWl4ZWQ7IGJvdW5kYXJ5PSIvLyIKCi0tLy8KQ29udGVudC1UeXBlOiB0ZXh0L3gtc2hlbGxzY3JpcHQ7IGNoYXJzZXQ9InVzLWFzY2lpIgojIS9iaW4vYmFzaApzZXQgLWV4CkI2NF9DTFVTVEVSX0NBPUxTMHRMUzFDUlVkSlRpQkRSVkpVU1VaSlEwRlVSUzB0TFMwdENrMUpTVU0xZWtORFFXTXJaMEYzU1VKQlowbENRVVJCVGtKbmEzRm9hMmxIT1hjd1FrRlJjMFpCUkVGV1RWSk5kMFZSV1VSV1VWRkVSWGR3Y21SWFNtd0tZMjAxYkdSSFZucE5RalJZUkZSSmVFMUVaM2RPYWtGNFRYcFZlVTFHYjFoRVZFMTRUVVJuZDA1RVFYaE5lbFY1VFVadmQwWlVSVlJOUWtWSFFURlZSUXBCZUUxTFlUTldhVnBZU25WYVdGSnNZM3BEUTBGVFNYZEVVVmxLUzI5YVNXaDJZMDVCVVVWQ1FsRkJSR2RuUlZCQlJFTkRRVkZ2UTJkblJVSkJURGxpQ21oNVkzUnROa3R2VG5JeU5qaHhla05tTkZGWlJXUm9OSHAyTWxKNmRtcEJWeTlxVHpFMk9IaFJTR0p1VFZWMFZ6UnhXWGh3ZEZsUmJ6RnBURll3VjJNS2RtMTNjWGhRVUdoeFprVkdWRzlXYWtrNUwydFJRM296VUVSRE9TczVjbmhEU0hoT1ltRldiMFJaUTJsaFRtWktZV2RDT1dZekx6SjJWV3h2Tld4aWFBcE5TVkl5ZHpSb1VIVlVaMVpVZDFGRFFWSkZhbGhQZHpZMGJIWk5ha2RXVVUxTlRVNUdkMWgyVmtNeFlYRm1iVkowU2xJMlUwaDBSWFJEVW1RdlZERlZDbTlIVlRrNVZFZFJXbEJRTjBsUldGUlZSbkpIWVVWb2NYZG5iVmQyZFN0NVpUQlRiVVpCTTNWclMxZFJaMm93YWpFMFkwa3dkbFZLVXpaSGJuQTNhV2NLZFhObVRXVXpla0pNTm5wc2F6QnZPVkZZVldod1oydG9WMll4VTFKbE1qRjJVR3RVWjJwS1NtaFViM2hIZG5wdGVTdFRNMkV5SzJ0RE1Ea3dVemhUTkFveGJFTXZlR2N4WWk5Q04xTklTWEphWlM5TlEwRjNSVUZCWVU1RFRVVkJkMFJuV1VSV1VqQlFRVkZJTDBKQlVVUkJaMHRyVFVFNFIwRXhWV1JGZDBWQ0NpOTNVVVpOUVUxQ1FXWTRkMGhSV1VSV1VqQlBRa0paUlVaRWJVYzBUU3MxTUdaQmVEVmlZVEZ5ZGk5UlQzSk1SSFJyVW5OTlFUQkhRMU54UjFOSllqTUtSRkZGUWtOM1ZVRkJORWxDUVZGQlZHSnBVWGhwZUVORE5XWnVOa1ZqZURSRFpUWk1aRzVEVlhBeGJGaENiMDFtZFUxaE1HOTBSRlJMZFhwU2JuUnJLd280SzNWclRHZDNURk52UjA0MVltSkxPRmRrTW1wR1VrSjZjR2xuZVdFelpqRjBTSE5aZDB4NVNYWnJNMlZ5VEZFMlNUYzFaV2RKVTNSMlJuSjJjRkZDQ2sxSVJuQm1TMmwzUW5RMFZrWkJNa2hsV1ZCTmMwSnBkM0EyUjJOU09YSjVOMmhtWnpjcmRFVlRVRTFEZVdSc1pFbEJURFZDVEZjMWFUWlVTbGhLYXprS01uSkVZblUyTmtocFNrZFRaV0pYVlVkS2FsWmpaMmxDTmtsdFNGcFNaR04xT0VaT05XOHhhMm95ZVZoNWRtNWhUWGxpWVhWMlp6VkJObVZhWlVjdk9BcDBkSGgwV1c5a1YzcGhRVlF2VFhkdk5XcE9halpLV1dsNFJEbE5LMkpXZFd4SFExaEdhSEJzWnpGd1MyRnVaMlJqWWpSc01FeGlVM1l2T1N0c1dTOUhDbUlyY1ZoblRGRXhTMjFrYWtSdVRVTjBkV0l2VjI5RFRuTkRiVmMxT0c5S1JERldNQW90TFMwdExVVk9SQ0JEUlZKVVNVWkpRMEZVUlMwdExTMHRDZz09CkFQSV9TRVJWRVJfVVJMPWh0dHBzOi8vM0JEMjg3NTU5QzgzNzM5NEJGN0ZBQjQwQjYxMjgyQUMuZ3I3LnVzLWVhc3QtMi5la3MuYW1hem9uYXdzLmNvbQpLOFNfQ0xVU1RFUl9ETlNfSVA9MTAuMTAwLjAuMTAKL2V0Yy9la3MvYm9vdHN0cmFwLnNoIHRpbnloYXRzIC0ta3ViZWxldC1leHRyYS1hcmdzICctLW5vZGUtbGFiZWxzPWVrcy5hbWF6b25hd3MuY29tL3NvdXJjZUxhdW5jaFRlbXBsYXRlVmVyc2lvbj0xLGFscGhhLmVrc2N0bC5pby9jbHVzdGVyLW5hbWU9dGlueWhhdHMsYWxwaGEuZWtzY3RsLmlvL25vZGVncm91cC1uYW1lPW5nLWYwNjI5NzEyLGVrcy5hbWF6b25hd3MuY29tL25vZGVncm91cC1pbWFnZT1hbWktMGEyMTdmZDk2NjAzZTZiYmEsZWtzLmFtYXpvbmF3cy5jb20vY2FwYWNpdHlUeXBlPU9OX0RFTUFORCxla3MuYW1hem9uYXdzLmNvbS9ub2RlZ3JvdXA9bmctZjA2Mjk3MTIsZWtzLmFtYXpvbmF3cy5jb20vc291cmNlTGF1bmNoVGVtcGxhdGVJZD1sdC0wZjA1Nzk1YjFmNjA2NThlNScgLS1iNjQtY2x1c3Rlci1jYSAkQjY0X0NMVVNURVJfQ0EgLS1hcGlzZXJ2ZXItZW5kcG9pbnQgJEFQSV9TRVJWRVJfVVJMIC0tZG5zLWNsdXN0ZXItaXAgJEs4U19DTFVTVEVSX0ROU19JUAoKLS0vLy0t"
+            IamInstanceProfile: !Ref AutoScalingAutoScalingGroup
+            Tags: 
+              - 
+                Key: "aws:autoscaling:groupName"
+                Value: !Ref AutoScalingAutoScalingGroup
+              - 
+                Key: "aws:ec2:fleet-id"
+                Value: "fleet-66fd015d-de22-cefc-a63a-81a095ad579e"
+              - 
+                Key: "eks:nodegroup-name"
+                Value: "ng-f0629712"
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+              - 
+                Key: "alpha.eksctl.io/nodegroup-type"
+                Value: "managed"
+              - 
+                Key: !Sub "k8s.io/cluster-autoscaler/${S3Bucket}"
+                Value: "owned"
+              - 
+                Key: "aws:ec2launchtemplate:version"
+                Value: "1"
+              - 
+                Key: "k8s.io/cluster-autoscaler/enabled"
+                Value: "true"
+              - 
+                Key: "alpha.eksctl.io/nodegroup-name"
+                Value: "ng-f0629712"
+              - 
+                Key: "aws:ec2launchtemplate:id"
+                Value: !Ref EC2LaunchTemplate2
+              - 
+                Key: "Name"
+                Value: !Sub "${S3Bucket}-ng-f0629712-Node"
+              - 
+                Key: "eks:cluster-name"
+                Value: !Ref S3Bucket
+            HibernationOptions: 
+                Configured: false
+            CpuOptions: 
+                CoreCount: 1
+                ThreadsPerCore: 2
+            EnclaveOptions: 
+                Enabled: false
+
+    ElasticLoadBalancingLoadBalancer:
+        Type: "AWS::ElasticLoadBalancing::LoadBalancer"
+        Properties:
+            LoadBalancerName: "a96fec3cb44bd4d2ca7e5e68dc02ac68"
+            Listeners: 
+              - 
+                InstancePort: 30266
+                InstanceProtocol: "TCP"
+                LoadBalancerPort: 80
+                Protocol: "TCP"
+            Subnets: 
+              - "subnet-0164e1ec90263c4cf"
+              - "subnet-02a6da00853b73082"
+              - "subnet-096e9ad94c18c848d"
+            Instances: 
+              - !Ref EC2Instance2
+              - !Ref EC2Instance
+            HealthCheck: 
+                Target: "TCP:30266"
+                Interval: 10
+                Timeout: 5
+                UnhealthyThreshold: 6
+                HealthyThreshold: 2
+            SecurityGroups: 
+              - !Ref EC2SecurityGroup3
+            Scheme: "internet-facing"
+            Tags: 
+              - 
+                Key: "kubernetes.io/service-name"
+                Value: "default/add-service"
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+
+    AutoScalingAutoScalingGroup:
+        Type: "AWS::AutoScaling::AutoScalingGroup"
+        Properties:
+            AutoScalingGroupName: "eks-08bd8c90-c562-8005-437a-025ceb0bc69f"
+            MixedInstancesPolicy: 
+                LaunchTemplate: 
+                    LaunchTemplateSpecification: 
+                        LaunchTemplateId: !Ref EC2LaunchTemplate2
+                        LaunchTemplateName: "eks-08bd8c90-c562-8005-437a-025ceb0bc69f"
+                        Version: "1"
+                    Overrides: 
+                      - 
+                        InstanceType: "m5.large"
+                InstancesDistribution: 
+                    OnDemandAllocationStrategy: "prioritized"
+                    OnDemandBaseCapacity: 0
+                    OnDemandPercentageAboveBaseCapacity: 100
+                    SpotAllocationStrategy: "lowest-price"
+                    SpotInstancePools: 2
+            MinSize: 2
+            MaxSize: 2
+            DesiredCapacity: 2
+            Cooldown: 300
+            AvailabilityZones: 
+              - !GetAtt EC2Subnet.AvailabilityZone
+              - !Sub "${AWS::Region}b"
+              - !Sub "${AWS::Region}c"
+            HealthCheckType: "EC2"
+            HealthCheckGracePeriod: 15
+            VPCZoneIdentifier: 
+              - "subnet-0164e1ec90263c4cf"
+              - "subnet-096e9ad94c18c848d"
+              - "subnet-02a6da00853b73082"
+            TerminationPolicies: 
+              - "AllocationStrategy"
+              - "OldestLaunchTemplate"
+              - "OldestInstance"
+            ServiceLinkedRoleARN: !Sub "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+            Tags: 
+              - 
+                Key: "eks:cluster-name"
+                Value: !Ref S3Bucket
+                PropagateAtLaunch: true
+              - 
+                Key: "eks:nodegroup-name"
+                Value: "ng-f0629712"
+                PropagateAtLaunch: true
+              - 
+                Key: "k8s.io/cluster-autoscaler/enabled"
+                Value: "true"
+                PropagateAtLaunch: true
+              - 
+                Key: !Sub "k8s.io/cluster-autoscaler/${S3Bucket}"
+                Value: "owned"
+                PropagateAtLaunch: true
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+                PropagateAtLaunch: true
+            NewInstancesProtectedFromScaleIn: false
+            CapacityRebalance: true
+
+    EC2SecurityGroup:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "Communication between the control plane and worker nodegroups"
+            GroupName: !Sub "eksctl-${S3Bucket}-cluster-ControlPlaneSecurityGroup-18UQRMQ8A227O"
+            Tags: 
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "aws:cloudformation:stack-id"
+                Value: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/eksctl-${S3Bucket}-cluster/b28e10c0-f655-11eb-9a9a-0a2edca56308"
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/ControlPlaneSecurityGroup"
+              - 
+                Key: "aws:cloudformation:logical-id"
+                Value: "ControlPlaneSecurityGroup"
+              - 
+                Key: "aws:cloudformation:stack-name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster"
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+            VpcId: !Ref EC2VPC
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
+
+    EC2SecurityGroup2:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "Security group for Kubernetes ELB a064d361bdb5442848ea8f730c1fc4f9 (default/upload-service)"
+            GroupName: "k8s-elb-a064d361bdb5442848ea8f730c1fc4f9"
+            Tags: 
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+            VpcId: !Ref EC2VPC
+            SecurityGroupIngress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 80
+                IpProtocol: "tcp"
+                ToPort: 80
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 3
+                IpProtocol: "icmp"
+                ToPort: 4
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
+
+    EC2SecurityGroup3:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "Security group for Kubernetes ELB a96fec3cb44bd4d2ca7e5e68dc02ac68 (default/add-service)"
+            GroupName: "k8s-elb-a96fec3cb44bd4d2ca7e5e68dc02ac68"
+            Tags: 
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+            VpcId: !Ref EC2VPC
+            SecurityGroupIngress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 80
+                IpProtocol: "tcp"
+                ToPort: 80
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 3
+                IpProtocol: "icmp"
+                ToPort: 4
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
+
+    EC2SecurityGroup4:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "Security group for Kubernetes ELB afc1c3ed43f93462383bd0835f8e96f8 (default/email-service)"
+            GroupName: "k8s-elb-afc1c3ed43f93462383bd0835f8e96f8"
+            Tags: 
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+            VpcId: !Ref EC2VPC
+            SecurityGroupIngress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 80
+                IpProtocol: "tcp"
+                ToPort: 80
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 3
+                IpProtocol: "icmp"
+                ToPort: 4
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
+
+    EC2SecurityGroup5:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "Security group for Kubernetes ELB a0e86b2dacaba4cb4b0dd9e607e22182 (default/fetch-service)"
+            GroupName: "k8s-elb-a0e86b2dacaba4cb4b0dd9e607e22182"
+            Tags: 
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+            VpcId: !Ref EC2VPC
+            SecurityGroupIngress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 80
+                IpProtocol: "tcp"
+                ToPort: 80
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 3
+                IpProtocol: "icmp"
+                ToPort: 4
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
+
+    EC2SecurityGroup6:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "Communication between all nodes in the cluster"
+            GroupName: !Sub "eksctl-${S3Bucket}-cluster-ClusterSharedNodeSecurityGroup-W4A512AQYBPL"
+            Tags: 
+              - 
+                Key: "eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "aws:cloudformation:logical-id"
+                Value: "ClusterSharedNodeSecurityGroup"
+              - 
+                Key: "aws:cloudformation:stack-name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster"
+              - 
+                Key: "aws:cloudformation:stack-id"
+                Value: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/eksctl-${S3Bucket}-cluster/b28e10c0-f655-11eb-9a9a-0a2edca56308"
+              - 
+                Key: "alpha.eksctl.io/cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "alpha.eksctl.io/eksctl-version"
+                Value: "0.58.0"
+              - 
+                Key: "Name"
+                Value: !Sub "eksctl-${S3Bucket}-cluster/ClusterSharedNodeSecurityGroup"
+            VpcId: !Ref EC2VPC
+            SecurityGroupIngress: 
+              - 
+                SourceSecurityGroupId: "sg-086ef0a9b3340b971"
+                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                Description: "Allow nodes to communicate with each other (all ports)"
+                IpProtocol: "-1"
+              - 
+                SourceSecurityGroupId: !Ref EC2SecurityGroup9
+                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                Description: "Allow managed and unmanaged nodes to communicate with each other (all ports)"
+                IpProtocol: "-1"
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
+
+    EC2SecurityGroup7:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "Security group for Kubernetes ELB aaa790ffa64f14f0487f2c6540d7edde (default/moderate-service)"
+            GroupName: "k8s-elb-aaa790ffa64f14f0487f2c6540d7edde"
+            Tags: 
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+            VpcId: !Ref EC2VPC
+            SecurityGroupIngress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 80
+                IpProtocol: "tcp"
+                ToPort: 80
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 3
+                IpProtocol: "icmp"
+                ToPort: 4
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
+
+    EC2SecurityGroup8:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "Security group for Kubernetes ELB a35284d4081d64376b0ac2e67a94309c (default/manipulation-service)"
+            GroupName: "k8s-elb-a35284d4081d64376b0ac2e67a94309c"
+            Tags: 
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+            VpcId: !Ref EC2VPC
+            SecurityGroupIngress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 80
+                IpProtocol: "tcp"
+                ToPort: 80
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 3
+                IpProtocol: "icmp"
+                ToPort: 4
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
+
+    EC2SecurityGroup9:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "EKS created security group applied to ENI that is attached to EKS Control Plane master nodes, as well as any managed workloads."
+            GroupName: !Sub "eks-cluster-sg-${S3Bucket}-2029677512"
+            Tags: 
+              - 
+                Key: "Name"
+                Value: !Sub "eks-cluster-sg-${S3Bucket}-2029677512"
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+              - 
+                Key: "aws:eks:cluster-name"
+                Value: !Ref S3Bucket
+            VpcId: !Ref EC2VPC
+            SecurityGroupIngress: 
+              - 
+                SourceSecurityGroupId: !Ref EC2SecurityGroup2
+                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                IpProtocol: "-1"
+              - 
+                SourceSecurityGroupId: !Ref EC2SecurityGroup3
+                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                IpProtocol: "-1"
+              - 
+                SourceSecurityGroupId: !Ref EC2SecurityGroup4
+                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                IpProtocol: "-1"
+              - 
+                SourceSecurityGroupId: !Ref EC2SecurityGroup5
+                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                IpProtocol: "-1"
+              - 
+                SourceSecurityGroupId: "sg-086ef0a9b3340b971"
+                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                Description: "Allow unmanaged nodes to communicate with control plane (all ports)"
+                IpProtocol: "-1"
+              - 
+                SourceSecurityGroupId: !Ref EC2SecurityGroup7
+                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                IpProtocol: "-1"
+              - 
+                SourceSecurityGroupId: !Ref EC2SecurityGroup8
+                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                IpProtocol: "-1"
+              - 
+                SourceSecurityGroupId: "sg-0d06a76bf93ee4dfc"
+                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                IpProtocol: "-1"
+              - 
+                SourceSecurityGroupId: !Ref EC2SecurityGroup10
+                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                IpProtocol: "-1"
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
+
+    EC2SecurityGroup10:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "Security group for Kubernetes ELB a899a5c65ea2d44388ab536001d9176f (default/gateway-service)"
+            GroupName: "k8s-elb-a899a5c65ea2d44388ab536001d9176f"
+            Tags: 
+              - 
+                Key: !Sub "kubernetes.io/cluster/${S3Bucket}"
+                Value: "owned"
+            VpcId: !Ref EC2VPC
+            SecurityGroupIngress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 80
+                IpProtocol: "tcp"
+                ToPort: 80
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 3
+                IpProtocol: "icmp"
+                ToPort: 4
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
+
+    EC2LaunchTemplate:
+        Type: "AWS::EC2::LaunchTemplate"
+        Properties:
+            LaunchTemplateName: !Sub "eksctl-${S3Bucket}-nodegroup-ng-f0629712"
+            LaunchTemplateData: 
+                TagSpecifications: 
+                  - 
+                    ResourceType: "instance"
+                    Tags: 
+                      - 
+                        Key: "Name"
+                        Value: !Sub "${S3Bucket}-ng-f0629712-Node"
+                      - 
+                        Key: "alpha.eksctl.io/nodegroup-name"
+                        Value: "ng-f0629712"
+                      - 
+                        Key: "alpha.eksctl.io/nodegroup-type"
+                        Value: "managed"
+                  - 
+                    ResourceType: "volume"
+                    Tags: 
+                      - 
+                        Key: "Name"
+                        Value: !Sub "${S3Bucket}-ng-f0629712-Node"
+                      - 
+                        Key: "alpha.eksctl.io/nodegroup-name"
+                        Value: "ng-f0629712"
+                      - 
+                        Key: "alpha.eksctl.io/nodegroup-type"
+                        Value: "managed"
+                  - 
+                    ResourceType: "network-interface"
+                    Tags: 
+                      - 
+                        Key: "Name"
+                        Value: !Sub "${S3Bucket}-ng-f0629712-Node"
+                      - 
+                        Key: "alpha.eksctl.io/nodegroup-name"
+                        Value: "ng-f0629712"
+                      - 
+                        Key: "alpha.eksctl.io/nodegroup-type"
+                        Value: "managed"
+                BlockDeviceMappings: 
+                  - 
+                    DeviceName: "/dev/xvda"
+                    Ebs: 
+                        Iops: 3000
+                        VolumeSize: 80
+                        VolumeType: "gp3"
+                        Throughput: 125
+                SecurityGroupIds: 
+                  - !Ref EC2SecurityGroup9
+                MetadataOptions: 
+                    HttpPutResponseHopLimit: 2
+                    HttpTokens: "optional"
+
+    EC2LaunchTemplate2:
+        Type: "AWS::EC2::LaunchTemplate"
+        Properties:
+            LaunchTemplateName: "eks-08bd8c90-c562-8005-437a-025ceb0bc69f"
+            LaunchTemplateData: 
+                TagSpecifications: 
+                  - 
+                    ResourceType: "volume"
+                    Tags: 
+                      - 
+                        Key: "alpha.eksctl.io/nodegroup-type"
+                        Value: "managed"
+                      - 
+                        Key: "eks:cluster-name"
+                        Value: !Ref S3Bucket
+                      - 
+                        Key: "alpha.eksctl.io/nodegroup-name"
+                        Value: "ng-f0629712"
+                      - 
+                        Key: "eks:nodegroup-name"
+                        Value: "ng-f0629712"
+                      - 
+                        Key: "Name"
+                        Value: !Sub "${S3Bucket}-ng-f0629712-Node"
+                  - 
+                    ResourceType: "instance"
+                    Tags: 
+                      - 
+                        Key: "alpha.eksctl.io/nodegroup-type"
+                        Value: "managed"
+                      - 
+                        Key: "eks:cluster-name"
+                        Value: !Ref S3Bucket
+                      - 
+                        Key: "alpha.eksctl.io/nodegroup-name"
+                        Value: "ng-f0629712"
+                      - 
+                        Key: "eks:nodegroup-name"
+                        Value: "ng-f0629712"
+                      - 
+                        Key: "Name"
+                        Value: !Sub "${S3Bucket}-ng-f0629712-Node"
+                UserData: "TUlNRS1WZXJzaW9uOiAxLjAKQ29udGVudC1UeXBlOiBtdWx0aXBhcnQvbWl4ZWQ7IGJvdW5kYXJ5PSIvLyIKCi0tLy8KQ29udGVudC1UeXBlOiB0ZXh0L3gtc2hlbGxzY3JpcHQ7IGNoYXJzZXQ9InVzLWFzY2lpIgojIS9iaW4vYmFzaApzZXQgLWV4CkI2NF9DTFVTVEVSX0NBPUxTMHRMUzFDUlVkSlRpQkRSVkpVU1VaSlEwRlVSUzB0TFMwdENrMUpTVU0xZWtORFFXTXJaMEYzU1VKQlowbENRVVJCVGtKbmEzRm9hMmxIT1hjd1FrRlJjMFpCUkVGV1RWSk5kMFZSV1VSV1VWRkVSWGR3Y21SWFNtd0tZMjAxYkdSSFZucE5RalJZUkZSSmVFMUVaM2RPYWtGNFRYcFZlVTFHYjFoRVZFMTRUVVJuZDA1RVFYaE5lbFY1VFVadmQwWlVSVlJOUWtWSFFURlZSUXBCZUUxTFlUTldhVnBZU25WYVdGSnNZM3BEUTBGVFNYZEVVVmxLUzI5YVNXaDJZMDVCVVVWQ1FsRkJSR2RuUlZCQlJFTkRRVkZ2UTJkblJVSkJURGxpQ21oNVkzUnROa3R2VG5JeU5qaHhla05tTkZGWlJXUm9OSHAyTWxKNmRtcEJWeTlxVHpFMk9IaFJTR0p1VFZWMFZ6UnhXWGh3ZEZsUmJ6RnBURll3VjJNS2RtMTNjWGhRVUdoeFprVkdWRzlXYWtrNUwydFJRM296VUVSRE9TczVjbmhEU0hoT1ltRldiMFJaUTJsaFRtWktZV2RDT1dZekx6SjJWV3h2Tld4aWFBcE5TVkl5ZHpSb1VIVlVaMVpVZDFGRFFWSkZhbGhQZHpZMGJIWk5ha2RXVVUxTlRVNUdkMWgyVmtNeFlYRm1iVkowU2xJMlUwaDBSWFJEVW1RdlZERlZDbTlIVlRrNVZFZFJXbEJRTjBsUldGUlZSbkpIWVVWb2NYZG5iVmQyZFN0NVpUQlRiVVpCTTNWclMxZFJaMm93YWpFMFkwa3dkbFZLVXpaSGJuQTNhV2NLZFhObVRXVXpla0pNTm5wc2F6QnZPVkZZVldod1oydG9WMll4VTFKbE1qRjJVR3RVWjJwS1NtaFViM2hIZG5wdGVTdFRNMkV5SzJ0RE1Ea3dVemhUTkFveGJFTXZlR2N4WWk5Q04xTklTWEphWlM5TlEwRjNSVUZCWVU1RFRVVkJkMFJuV1VSV1VqQlFRVkZJTDBKQlVVUkJaMHRyVFVFNFIwRXhWV1JGZDBWQ0NpOTNVVVpOUVUxQ1FXWTRkMGhSV1VSV1VqQlBRa0paUlVaRWJVYzBUU3MxTUdaQmVEVmlZVEZ5ZGk5UlQzSk1SSFJyVW5OTlFUQkhRMU54UjFOSllqTUtSRkZGUWtOM1ZVRkJORWxDUVZGQlZHSnBVWGhwZUVORE5XWnVOa1ZqZURSRFpUWk1aRzVEVlhBeGJGaENiMDFtZFUxaE1HOTBSRlJMZFhwU2JuUnJLd280SzNWclRHZDNURk52UjA0MVltSkxPRmRrTW1wR1VrSjZjR2xuZVdFelpqRjBTSE5aZDB4NVNYWnJNMlZ5VEZFMlNUYzFaV2RKVTNSMlJuSjJjRkZDQ2sxSVJuQm1TMmwzUW5RMFZrWkJNa2hsV1ZCTmMwSnBkM0EyUjJOU09YSjVOMmhtWnpjcmRFVlRVRTFEZVdSc1pFbEJURFZDVEZjMWFUWlVTbGhLYXprS01uSkVZblUyTmtocFNrZFRaV0pYVlVkS2FsWmpaMmxDTmtsdFNGcFNaR04xT0VaT05XOHhhMm95ZVZoNWRtNWhUWGxpWVhWMlp6VkJObVZhWlVjdk9BcDBkSGgwV1c5a1YzcGhRVlF2VFhkdk5XcE9halpLV1dsNFJEbE5LMkpXZFd4SFExaEdhSEJzWnpGd1MyRnVaMlJqWWpSc01FeGlVM1l2T1N0c1dTOUhDbUlyY1ZoblRGRXhTMjFrYWtSdVRVTjBkV0l2VjI5RFRuTkRiVmMxT0c5S1JERldNQW90TFMwdExVVk9SQ0JEUlZKVVNVWkpRMEZVUlMwdExTMHRDZz09CkFQSV9TRVJWRVJfVVJMPWh0dHBzOi8vM0JEMjg3NTU5QzgzNzM5NEJGN0ZBQjQwQjYxMjgyQUMuZ3I3LnVzLWVhc3QtMi5la3MuYW1hem9uYXdzLmNvbQpLOFNfQ0xVU1RFUl9ETlNfSVA9MTAuMTAwLjAuMTAKL2V0Yy9la3MvYm9vdHN0cmFwLnNoIHRpbnloYXRzIC0ta3ViZWxldC1leHRyYS1hcmdzICctLW5vZGUtbGFiZWxzPWVrcy5hbWF6b25hd3MuY29tL3NvdXJjZUxhdW5jaFRlbXBsYXRlVmVyc2lvbj0xLGFscGhhLmVrc2N0bC5pby9jbHVzdGVyLW5hbWU9dGlueWhhdHMsYWxwaGEuZWtzY3RsLmlvL25vZGVncm91cC1uYW1lPW5nLWYwNjI5NzEyLGVrcy5hbWF6b25hd3MuY29tL25vZGVncm91cC1pbWFnZT1hbWktMGEyMTdmZDk2NjAzZTZiYmEsZWtzLmFtYXpvbmF3cy5jb20vY2FwYWNpdHlUeXBlPU9OX0RFTUFORCxla3MuYW1hem9uYXdzLmNvbS9ub2RlZ3JvdXA9bmctZjA2Mjk3MTIsZWtzLmFtYXpvbmF3cy5jb20vc291cmNlTGF1bmNoVGVtcGxhdGVJZD1sdC0wZjA1Nzk1YjFmNjA2NThlNScgLS1iNjQtY2x1c3Rlci1jYSAkQjY0X0NMVVNURVJfQ0EgLS1hcGlzZXJ2ZXItZW5kcG9pbnQgJEFQSV9TRVJWRVJfVVJMIC0tZG5zLWNsdXN0ZXItaXAgJEs4U19DTFVTVEVSX0ROU19JUAoKLS0vLy0t"
+                BlockDeviceMappings: 
+                  - 
+                    DeviceName: "/dev/xvda"
+                    Ebs: 
+                        Iops: 3000
+                        VolumeSize: 80
+                        VolumeType: "gp3"
+                        Throughput: 125
+                IamInstanceProfile: 
+                    Name: "eks-08bd8c90-c562-8005-437a-025ceb0bc69f"
+                SecurityGroupIds: 
+                  - !Ref EC2SecurityGroup9
+                ImageId: "ami-0a217fd96603e6bba"
+                MetadataOptions: 
+                    HttpPutResponseHopLimit: 2
+                    HttpTokens: "optional"
+
+    EC2Volume:
+        Type: "AWS::EC2::Volume"
+        Properties:
+            AvailabilityZone: !GetAtt EC2Instance2.AvailabilityZone
+            Encrypted: false
+            Size: 80
+            VolumeType: "gp3"
+            SnapshotId: "snap-0f54db95baaba4a49"
+            Tags: 
+              - 
+                Key: "alpha.eksctl.io/nodegroup-type"
+                Value: "managed"
+              - 
+                Key: "eks:nodegroup-name"
+                Value: "ng-f0629712"
+              - 
+                Key: "Name"
+                Value: !Sub "${S3Bucket}-ng-f0629712-Node"
+              - 
+                Key: "alpha.eksctl.io/nodegroup-name"
+                Value: "ng-f0629712"
+              - 
+                Key: "eks:cluster-name"
+                Value: !Ref S3Bucket
+            MultiAttachEnabled: false
+
+    EC2Volume2:
+        Type: "AWS::EC2::Volume"
+        Properties:
+            AvailabilityZone: !GetAtt EC2Instance.AvailabilityZone
+            Encrypted: false
+            Size: 80
+            VolumeType: "gp3"
+            SnapshotId: "snap-0f54db95baaba4a49"
+            Tags: 
+              - 
+                Key: "eks:cluster-name"
+                Value: !Ref S3Bucket
+              - 
+                Key: "eks:nodegroup-name"
+                Value: "ng-f0629712"
+              - 
+                Key: "Name"
+                Value: !Sub "${S3Bucket}-ng-f0629712-Node"
+              - 
+                Key: "alpha.eksctl.io/nodegroup-type"
+                Value: "managed"
+              - 
+                Key: "alpha.eksctl.io/nodegroup-name"
+                Value: "ng-f0629712"
+            MultiAttachEnabled: false
+
+    EC2NetworkInterface:
+        Type: "AWS::EC2::NetworkInterface"
+        Properties:
+            Description: ""
+            PrivateIpAddress: !GetAtt EC2Instance.PrivateIp
+            PrivateIpAddresses: 
+              - 
+                PrivateIpAddress: !GetAtt EC2Instance.PrivateIp
+                Primary: true
+              - 
+                PrivateIpAddress: "192.168.15.57"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.3.201"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.16.155"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.26.127"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.25.50"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.16.6"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.8.230"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.11.135"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.18.231"
+                Primary: false
+            SubnetId: "subnet-096e9ad94c18c848d"
+            SourceDestCheck: true
+            GroupSet: 
+              - !Ref EC2SecurityGroup9
+
+    EC2NetworkInterface2:
+        Type: "AWS::EC2::NetworkInterface"
+        Properties:
+            Description: !Sub "aws-K8S-${EC2Instance2}"
+            PrivateIpAddress: "192.168.80.134"
+            PrivateIpAddresses: 
+              - 
+                PrivateIpAddress: "192.168.80.134"
+                Primary: true
+              - 
+                PrivateIpAddress: "192.168.92.203"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.75.44"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.79.252"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.75.207"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.67.159"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.83.65"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.80.242"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.72.37"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.93.134"
+                Primary: false
+            SubnetId: "subnet-0164e1ec90263c4cf"
+            SourceDestCheck: true
+            Tags: 
+              - 
+                Key: "node.k8s.amazonaws.com/createdAt"
+                Value: "2021-08-06T01:46:13Z"
+              - 
+                Key: "node.k8s.amazonaws.com/instance_id"
+                Value: !Ref EC2Instance2
+            GroupSet: 
+              - !Ref EC2SecurityGroup9
+
+    EC2NetworkInterface3:
+        Type: "AWS::EC2::NetworkInterface"
+        Properties:
+            Description: ""
+            PrivateIpAddress: !GetAtt EC2Instance2.PrivateIp
+            PrivateIpAddresses: 
+              - 
+                PrivateIpAddress: !GetAtt EC2Instance2.PrivateIp
+                Primary: true
+              - 
+                PrivateIpAddress: "192.168.86.120"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.76.251"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.71.143"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.70.15"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.73.128"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.94.48"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.89.34"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.95.212"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.74.38"
+                Primary: false
+            SubnetId: "subnet-0164e1ec90263c4cf"
+            SourceDestCheck: true
+            GroupSet: 
+              - !Ref EC2SecurityGroup9
+
+    EC2NetworkInterface4:
+        Type: "AWS::EC2::NetworkInterface"
+        Properties:
+            Description: !Sub "Amazon EKS ${S3Bucket}"
+            PrivateIpAddress: "192.168.178.68"
+            PrivateIpAddresses: 
+              - 
+                PrivateIpAddress: "192.168.178.68"
+                Primary: true
+            SubnetId: "subnet-0c85530df1dbc4de7"
+            SourceDestCheck: true
+            GroupSet: 
+              - !Ref EC2SecurityGroup9
+              - !Ref EC2SecurityGroup
+
+    EC2NetworkInterface5:
+        Type: "AWS::EC2::NetworkInterface"
+        Properties:
+            Description: !Sub "Amazon EKS ${S3Bucket}"
+            PrivateIpAddress: "192.168.145.15"
+            PrivateIpAddresses: 
+              - 
+                PrivateIpAddress: "192.168.145.15"
+                Primary: true
+            SubnetId: !Ref EC2Subnet
+            SourceDestCheck: true
+            GroupSet: 
+              - !Ref EC2SecurityGroup9
+              - !Ref EC2SecurityGroup
+
+    EC2NetworkInterface6:
+        Type: "AWS::EC2::NetworkInterface"
+        Properties:
+            Description: !Sub "aws-K8S-${EC2Instance}"
+            PrivateIpAddress: "192.168.5.76"
+            PrivateIpAddresses: 
+              - 
+                PrivateIpAddress: "192.168.5.76"
+                Primary: true
+              - 
+                PrivateIpAddress: "192.168.6.105"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.9.90"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.12.10"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.30.191"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.12.31"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.12.48"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.12.229"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.14.213"
+                Primary: false
+              - 
+                PrivateIpAddress: "192.168.22.7"
+                Primary: false
+            SubnetId: "subnet-096e9ad94c18c848d"
+            SourceDestCheck: true
+            Tags: 
+              - 
+                Key: "node.k8s.amazonaws.com/createdAt"
+                Value: "2021-08-06T02:40:32Z"
+              - 
+                Key: "node.k8s.amazonaws.com/instance_id"
+                Value: !Ref EC2Instance
+            GroupSet: 
+              - !Ref EC2SecurityGroup9
+
+    S3Bucket:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: !Ref RDSDBInstance
+
+    S3BucketPolicy:
+        Type: "AWS::S3::BucketPolicy"
+        Properties:
+            Bucket: !Ref S3Bucket
+            PolicyDocument: 
+                Version: "2012-10-17"
+                Statement: 
+                  - 
+                    Sid: "AddPerm"
+                    Effect: "Allow"
+                    Principal: "*"
+                    Action: "s3:GetObject"
+                    Resource: !Sub "arn:aws:s3:::${S3Bucket}/*"
+
+    RDSDBInstance:
+        Type: "AWS::RDS::DBInstance"
+        Properties:
+            DBInstanceIdentifier: "tinyhats"
+            AllocatedStorage: 20
+            DBInstanceClass: "db.t2.micro"
+            Engine: "mysql"
+            MasterUsername: "admin"
+            MasterUserPassword: "REPLACEME"
+            PreferredBackupWindow: "09:14-09:44"
+            BackupRetentionPeriod: 7
+            AvailabilityZone: !Sub "${AWS::Region}c"
+            PreferredMaintenanceWindow: "wed:07:37-wed:08:07"
+            MultiAZ: false
+            EngineVersion: "8.0.23"
+            AutoMinorVersionUpgrade: true
+            LicenseModel: "general-public-license"
+            PubliclyAccessible: true
+            StorageType: "gp2"
+            Port: 3306
+            StorageEncrypted: false
+            CopyTagsToSnapshot: true
+            MonitoringInterval: 0
+            EnableIAMDatabaseAuthentication: false
+            EnablePerformanceInsights: false
+            DeletionProtection: false
+            DBSubnetGroupName: "default"
+            VPCSecurityGroups: 
+              - "sg-3196cb5c"
+            MaxAllocatedStorage: 1000
+            DBParameterGroupName: "default.mysql8.0"
+            OptionGroupName: "default:mysql-8-0"
+            CACertificateIdentifier: "rds-ca-2019"
+
+    EKSCluster:
+        Type: "AWS::EKS::Cluster"
+        Properties:
+            Name: !Ref S3Bucket
+            RoleArn: !GetAtt IAMRole.Arn
+            Version: "1.20"
+            ResourcesVpcConfig: 
+                SecurityGroupIds: 
+                  - !Ref EC2SecurityGroup
+                SubnetIds: 
+                  - "subnet-0164e1ec90263c4cf"
+                  - "subnet-096e9ad94c18c848d"
+                  - "subnet-02a6da00853b73082"
+                  - "subnet-00d3a0a823d126bb1"
+                  - !Ref EC2Subnet
+                  - "subnet-0c85530df1dbc4de7"
+            KubernetesNetworkConfig: 
+                ServiceIpv4Cidr: "10.100.0.0/16"
+
+    EKSNodegroup:
+        Type: "AWS::EKS::Nodegroup"
+        Properties:
+            NodegroupName: "ng-f0629712"
+            ClusterName: !Ref S3Bucket
+            Version: "1.20"
+            ReleaseVersion: "1.20.4-20210722"
+            ScalingConfig: 
+                MinSize: 2
+                MaxSize: 2
+                DesiredSize: 2
+            InstanceTypes: 
+              - "m5.large"
+            Subnets: 
+              - "subnet-0164e1ec90263c4cf"
+              - "subnet-096e9ad94c18c848d"
+              - "subnet-02a6da00853b73082"
+            AmiType: "AL2_x86_64"
+            NodeRole: !GetAtt IAMRole2.Arn
+            Labels: 
+                "alpha.eksctl.io/nodegroup-name": "ng-f0629712"
+                "alpha.eksctl.io/cluster-name": !Ref S3Bucket
+            Tags: 
+                "aws:cloudformation:stack-name": !Sub "eksctl-${S3Bucket}-nodegroup-ng-f0629712"
+                "alpha.eksctl.io/cluster-name": !Ref S3Bucket
+                "alpha.eksctl.io/nodegroup-name": "ng-f0629712"
+                "aws:cloudformation:stack-id": !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/eksctl-${S3Bucket}-nodegroup-ng-f0629712/a9cd3e00-f657-11eb-8efe-020ea7027b6e"
+                "eksctl.cluster.k8s.io/v1alpha1/cluster-name": !Ref S3Bucket
+                "aws:cloudformation:logical-id": "ManagedNodeGroup"
+                "alpha.eksctl.io/nodegroup-type": "managed"
+                "alpha.eksctl.io/eksctl-version": "0.58.0"
+            LaunchTemplate: 
+                Id: !Ref EC2LaunchTemplate
+                Name: !Sub "eksctl-${S3Bucket}-nodegroup-ng-f0629712"
+                Version: "1"
+            CapacityType: "ON_DEMAND"
+
