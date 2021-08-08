@@ -73,7 +73,7 @@ export async function getRandomHat() {
 
 export async function defaultBoss() {
     //my fav boss ever
-    let johnKinmonth = await downloadBuffer("https://pbs.twimg.com/profile_images/812363965095235584/hfniQLSk_400x400.jpg");
+    let johnKinmonth = await downloadBuffer("https://user-images.githubusercontent.com/69332964/128645143-86405a62-691b-4de9-8500-b9362675e1db.png");
     johnKinmonth = Buffer.from(johnKinmonth)
 
     return johnKinmonth
