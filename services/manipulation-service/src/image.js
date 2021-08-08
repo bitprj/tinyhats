@@ -28,16 +28,22 @@ const findBaby = async (baby) => {
 const overlayHat = async (hat, result, baby, translate, rotate) => {
   let hatImg = await Jimp.read(hat);
   const image = await Jimp.read(baby);
+  let jimpFace = image.bitmap
+
   let face = result.FaceDetails[0].BoundingBox
 
-  let scale = 400
+  let width = face.Width * jimpFace.width
+  let height = face.Height * jimpFace.height
+  let left = face.Left * jimpFace.width
+  let top = face.Top * jimpFace.height
+  //  BoundingBox.Width:      ${data.BoundingBox.Width}`)
 
-  hatImg = await hatImg.resize(face.Width*scale, face.Height*scale)
+  hatImg = await hatImg.resize(width, height)
   hatImg = await hatImg.rotate(rotate)
 
   translate = translate * 0.3
-  //  BoundingBox.Width:      ${data.BoundingBox.Width}`)
-  image.composite(hatImg, face.Left*scale - face.Width*scale*translate, face.Top*scale - face.Height*0.8*scale, {
+
+  image.composite(hatImg, left - width*translate, top - height*1.2, {
     mode: Jimp.BLEND_SOURCE_OVER,
     opacityDest: 1,
     opacitySource: 0.9
