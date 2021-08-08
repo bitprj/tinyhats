@@ -13,9 +13,6 @@ spec:
         app: gateway-service
     spec:
       containers:
-        - command:
-          - gateway-service
-          - --cors-allowed-origins=["*"]
         - name: gateway-service
           image: bitprj/gateway-service
           ports:
