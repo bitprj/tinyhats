@@ -2,7 +2,7 @@
 
 
 # The Scenario
-TinyHat.Me is an up and coming startup that provides an API to allow users to try on tiny hats via a REST API. The startup is looking to you to ship some awesome new features! While we have a frontend working to serve cute images from a database, the startup is looking to add some exciting new features. Today, as the newest backend engineer at TinyHat.Me, you are going to be learning how the microservices work, as well as fix a few outstanding bugs from our customers!
+TinyHat.Me is an up and coming startup that provides an API to allow users to try on tiny hats via a REST API. The startup is looking to you to ship some awesome new features! While we have a frontend working to serve tiny hats from a database, the startup is looking to add some exciting new features. Today, as the newest backend engineer at TinyHat.Me, you are going to be learning how the microservices work, as well as fix a few outstanding bugs from our customers!
 
 <img src="https://user-images.githubusercontent.com/69332964/128766963-f2cce4f8-076c-4cff-a4a7-67be99ea6616.png" width=429 height=217></img>
 
