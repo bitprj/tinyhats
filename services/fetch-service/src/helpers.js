@@ -14,7 +14,7 @@ const con = mysql.createConnection({
 });
 
 export async function listPictures() {
-    var sql = "SELECT * FROM main.images WHERE approve='true'";
+    var sql = "SELECT * FROM main.images";
     const results = await con.promise().query(sql)
     return results
 };
