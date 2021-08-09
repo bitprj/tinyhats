@@ -1,4 +1,4 @@
-# Introduction to Kubernetes
+![image](https://user-images.githubusercontent.com/69332964/128773669-a4c000e4-bd8b-4e29-8498-f7f9d88027cd.png)
 
 
 # The Scenario
