@@ -39,13 +39,16 @@ Returns a JSON object of all hats' image links and style identifiers.
 
 ### `[POST] /`
 > `api.tinyhat.me` POST with multipart/form-data: image with face
+
 Returns a random tinyhat on your POSTed image.
 
 ### `[POST] /${hat style}`
 > `api.tinyhat.me/santa` POST with multipart/form-data: image with face
+
 Returns a specific hat style on your POSTed image.
 ### `[POST] /add`
 > `api.tinyhat.me/add` POST with multipart/form-data: image with hat and `name` attribute
+
 Emails moderator with your proposed hat for moderation.
 
 ### Flowchart
