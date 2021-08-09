@@ -1,5 +1,6 @@
 ![image](https://user-images.githubusercontent.com/69332964/128773669-a4c000e4-bd8b-4e29-8498-f7f9d88027cd.png)
 
+<h4 align="center">Click <a href="https://github.com/bitprj/intro-to-k8s/tree/bugs">here</a> to see the "buggy" version 🐛</h4>
 
 # The Scenario
 TinyHat.Me is an up and coming startup that provides an API to allow users to try on tiny hats via a REST API. The startup is looking to you to ship some awesome new features! While we have a frontend working to serve tiny hats from a database, the startup is looking to add some exciting new features. Today, as the newest backend engineer at TinyHat.Me, you are going to be learning how the microservices work, as well as fix a few outstanding bugs from our customers!
