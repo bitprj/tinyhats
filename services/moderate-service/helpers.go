@@ -58,7 +58,7 @@ func DeletePicture(id string) string {
 		// panic(err.Error())
 	} else {
 		log.Print("Image " + id + " deleted.")
-		result = "Thanks for the approval! You approved an image with an id of " + id + "."
+		result = "We're sorry that image was not suitable. We have deleted the image with an id of " + id + "."
 	}
 	defer insert.Close()
 

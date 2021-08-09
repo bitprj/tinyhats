@@ -15,7 +15,7 @@ func main() {
 	app.Get("/moderate", func(c *fiber.Ctx) error {
 		log.Print("Moderate request received")
 		var approval string = c.Query("approve")
-		var id string = c.Query("id")
+		var id string = c.Query("approve")
 		var result string
 
 		if approval == "true" {
