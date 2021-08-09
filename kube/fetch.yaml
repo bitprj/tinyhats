@@ -15,6 +15,11 @@ spec:
       containers:
         - name: fetch-service
           image: bitprj/fetch-service
+          resources:
+            limits:
+              memory: "20Mi"
+            requests:
+              memory: "10Mi"
           ports:
             - containerPort: 1337
           env:
