@@ -44,10 +44,11 @@ router.post(`/add`, upload.any(), async(req, res) => {
     console.log(`Received from /upload: ${JSON.stringify(result)}`)
     let id = result.key
     let imgLink = result.url
-
+    let style = result.description
 
     let html = `<h2>Review this hat 🎩</h2>
     <h3><img src="${imgLink}" alt="" /></h3>
+    <p>The user has given it a style of "<b>${style}</b>."</p>
     <h3>Be sure to consider:</h3>
     <ul>
     <li>Is this appropriate?</li>
