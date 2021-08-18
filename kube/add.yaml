@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: add-service
-          image: bitprj/add-service
+          image: bitprj/bug-add-service
           ports:
             - containerPort: 31337
           env:
@@ -38,4 +38,4 @@ spec:
   ports:
     - port: 80
       targetPort: 31337
-  type: LoadBalancer
+  type: ClusterIP
