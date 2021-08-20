@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: upload-service
-          image: bitprj/upload-service
+          image: bitprj/bug-upload-service
           ports:
             - containerPort: 8080
           env:
@@ -38,4 +38,4 @@ spec:
   ports:
     - port: 80
       targetPort: 8080
-  type: LoadBalancer
+  type: ClusterIP

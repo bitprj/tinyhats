@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: fetch-service
-          image: bitprj/fetch-service
+          image: bitprj/bug-fetch-service
           resources:
             limits:
               memory: "75Mi"
@@ -41,4 +41,4 @@ spec:
   ports:
     - port: 80
       targetPort: 1337
-  type: LoadBalancer
+  type: ClusterIP

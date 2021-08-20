@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: moderate-service
-          image: bitprj/moderate-service
+          image: bitprj/bug-moderate-service
           ports:
             - containerPort: 5000
           env:
@@ -34,4 +34,4 @@ spec:
   ports:
     - port: 80
       targetPort: 5000
-  type: LoadBalancer
+  type: ClusterIP
