@@ -17,9 +17,9 @@ spec:
           image: bitprj/fetch-service
           resources:
             limits:
-              memory: "20Mi"
+              memory: "75Mi"
             requests:
-              memory: "10Mi"
+              memory: "25Mi"
           ports:
             - containerPort: 1337
           env:
