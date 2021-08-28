@@ -112,6 +112,17 @@ func addService(w http.ResponseWriter, request *http.Request) {
 			emailResp, err := http.Post(urlSend, "application/octet-stream", bytes.NewReader([]byte(html)))
 			
 			fmt.Println(emailResp)
+
+			responseMessage := fmt.Sprintf(`{"message": "Your image with a style of "%s" has been sent to the moderator."}`, p.Description)
+
+			js, err := json.Marshal(responseMessage)
+			if err != nil {
+			  http.Error(w, err.Error(), http.StatusInternalServerError)
+			  return
+			}
+		  
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(js)
 			w.WriteHeader(200)
 		}
 }
