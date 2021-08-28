@@ -38,4 +38,4 @@ spec:
   ports:
     - port: 80
       targetPort: 31337
-  type: LoadBalancer
+  type: ClusterIP
