@@ -8,7 +8,17 @@ import (
 	"mime/multipart"
 	"log"
 	"os"
+	"encoding/json"
 )
+
+type Message struct {
+	Key   string  `json:"key"`
+	FileName string `json:"fileName"`
+	Url string `json:"url"`
+	Description string `json:"description"`
+	Approve string `json:"approve"`
+}
+
 func main() {
 	createEmployeeHanlder := http.HandlerFunc(addService)
 	http.Handle("/add", createEmployeeHanlder)
@@ -51,7 +61,7 @@ func addService(w http.ResponseWriter, request *http.Request) {
 		err = writer.Close()
 
 		uploadEndpoint := os.Getenv("UPLOAD_ENDPOINT")
-    	uploadURL := fmt.Sprintf(`http://%s/upload`, uploadEndpoint)
+    	uploadURL := fmt.Sprintf(`http://localhost:8080%s/upload`, uploadEndpoint)
 		req, err := http.NewRequest("POST", uploadURL, body)
 		req.Header.Set("Content-Type", writer.FormDataContentType())
 
@@ -69,12 +79,20 @@ func addService(w http.ResponseWriter, request *http.Request) {
 				log.Fatal(err)
 			}
 		resp.Body.Close()
-			fmt.Println(resp.StatusCode)
-			fmt.Println(resp.Header)
+		// 	fmt.Println(resp.StatusCode)
+		// 	fmt.Println(resp.Header)
+			var buf []byte
+			buf, _ = io.ReadAll(body)
 			fmt.Println(body)
+			var p Message
+			newErr := json.Unmarshal(buf, &p)
+			if newErr != nil {
+				panic(newErr)
+			}
+			fmt.Println(p.Url)
 		}
 
-	// ENDPOINT := os.Getenv(“ENDPOINT”)
+	// ENDPOINT := os.Getenv("ENDPOINT")
 	// html := fmt.Sprintf(`<h2>Review this hat :tophat:</h2>
 	// <h3><img src=“%s” alt=“” /></h3>
 	// <p>The user has given it a style of “<b>%s</b>.“</p>
@@ -87,61 +105,13 @@ func addService(w http.ResponseWriter, request *http.Request) {
 	// <p>Click <a href=“%s/moderate?approve=true&id=%s”>here</a> to approve.</p>
 	// <p>Click <a href=“$%s/moderate?approve=false&id=$%s”>here</a> to disapprove.</p>
 	// `, imgLink, style, ENDPOINT,id,ENDPOINT,id)
-	// 
-	// uploadEndpoint := os.Getenv("UPLOAD_ENDPOINT")
-    // const uploadURL = fmt.Sprintf(`http://%s/upload`, uploadEndpoint)
-	// emailEndpoint := os.Getenv(“EMAIL_ENDPOINT”)
-    // modEmail := os.Getenv(“SEND_TO_EMAIL”)
-	    // body := &bytes.Buffer{}
-    // writer := multipart.NewWriter(body)
-    // fw, err := writer.CreateFormField("mimeType")
-    // if err != nil {
-    // }
-    // fw, err = writer.CreateFormField("name")
-    // if err != nil {
-    // }
-    // fw, err = writer.CreateFormFile("file", "test.png")
-    // if err != nil {
-    // }
-    // file, err := os.Open("test.png")
-    // if err != nil {
-    //     panic(err)
-    // }
-    // _, err = io.Copy(fw, file)
-    // if err != nil {
-    //     return err
-    // }
-    // // Close multipart writer.
-    // writer.Close()
-    // const urlSend = fmt.Sprintf(`http://%s/email?send=%s`, emailEndpoint, modEmail)
-    // resp, err := http.Post(urlSend , “application/json”, bytes.NewBuffer(requestBody))
-	// resp.Header.Add("Content-Type", writer.formDataContentType())
-	// return resp
-
-
 	
+	// emailEndpoint := os.Getenv("EMAIL_ENDPOINT")
+    // modEmail := os.Getenv("SEND_TO_EMAIL")
+
+    // urlSend := fmt.Sprintf(`http://%s/email?send=%s`, emailEndpoint, modEmail)
+    // emailResp, err := http.Post(urlSend, "application/octet-stream", []bytes(html))
+	
+	// fmt.Println(emailResp)
 	w.WriteHeader(200)
-	return
-}
-
-func newfileUploadRequest(uri string, name string, params map[string]string, paramName string, file multipart.File) (*http.Request, error) {
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
-	part, err := writer.CreateFormFile(paramName, name)
-	if err != nil {
-		return nil, err
-	}
-	_, err = io.Copy(part, file)
-
-	for key, val := range params {
-		_ = writer.WriteField(key, val)
-	}
-	err = writer.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", uri, body)
-	req.Header.Set("Content-Type", writer.FormDataContentType())
-	return req, err
 }
