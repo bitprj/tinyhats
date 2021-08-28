@@ -7,6 +7,7 @@ import (
 	"io"
 	"mime/multipart"
 	"log"
+	"os"
 )
 func main() {
 	createEmployeeHanlder := http.HandlerFunc(addService)
@@ -24,7 +25,7 @@ func addService(w http.ResponseWriter, request *http.Request) {
 	//Access the photo key - First Approach
         // Create a buffer to store the header of the file in
         fileHeader := make([]byte, 512)
-		
+
 		// Copy the headers into the FileHeader buffer
 		file.Read(fileHeader)
 
@@ -49,7 +50,9 @@ func addService(w http.ResponseWriter, request *http.Request) {
 
 		err = writer.Close()
 
-		req, err := http.NewRequest("POST", "http://localhost:8080/upload", body)
+		uploadEndpoint := os.Getenv("UPLOAD_ENDPOINT")
+    	uploadURL := fmt.Sprintf(`http://%s/upload`, uploadEndpoint)
+		req, err := http.NewRequest("POST", uploadURL, body)
 		req.Header.Set("Content-Type", writer.FormDataContentType())
 
 		if err != nil {
