@@ -52,7 +52,7 @@ router.post('/:apiName', upload.any(), async (req, res) => {
     
         // hit the add endpoint to add image and begin approval process
         let formData = new FormData()
-        formData.append('file', image, {filename: "baby", data: image})
+        formData.append('photo', image, {filename: "baby", data: image})
         formData.append('name', name)
         const formHeaders = formData.getHeaders();
     
