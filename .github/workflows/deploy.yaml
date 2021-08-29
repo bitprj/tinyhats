@@ -20,6 +20,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Frontend Service
+        uses: docker/build-push-action@v2
+        with:
+          context: services/frontend-service
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: bitprj/frontend-service
       - name: Gateway Service
         uses: docker/build-push-action@v2
         with:

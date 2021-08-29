@@ -1,0 +1,103 @@
+body {
+    background-color: black;
+    color: white;
+}
+
+.white {
+    color: white;
+}
+
+.h-60 {
+    height: 600px;
+}
+
+.f {
+    border: 2px solid red;
+}
+
+.bold {
+    font-weight: bold;
+    color: wheat;
+}
+
+.cover-text {
+    font-size: 40px;
+}
+
+#exampleImage {
+    max-height: 15rem;
+}
+.navy {
+    background-color: #123540;
+    padding: 1rem;
+}
+
+.separator {
+    height: 10rem;
+}
+
+#overflow {
+    border-radius: 10px;
+}
+@media (min-width: 992px) { 
+    .navy {
+        max-height: 30rem;
+    }
+    #overflow {
+        max-height: 35rem;
+        margin-top: -3.5rem;
+    }
+ }
+
+ @media (max-width: 576px) { 
+     .sm-mt {
+        margin-top: 1.5rem;
+     }
+  }
+  @media (min-width: 576px) and (max-width: 767.98px) { 
+      .sm-block {
+          display: none !important;
+      }
+   }
+
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.form-control, .form-control:focus {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.swiper-slide {
+    background-color: #333333;
+    height: 100px !important;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.swiper-pic {
+    width: 100px;
+}
+
+.swiper-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .swiper-slide {
+
+  }
