@@ -19,7 +19,7 @@ app.listen(PORT, () => {
 router.post('/upload', upload.any(), async(req, res) => {
     console.log("Started")
     let image = req.files[0].buffer
-    let name = req.body.name
+    let name = req.body.name.toLowerCase();
     let fileName = uniqueId()
     // parse from body
     console.log(fileName, name, image)
