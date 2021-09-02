@@ -40,6 +40,11 @@ router.get('/fetch', upload.any(), async(req, res) => {
     } else if (style != undefined) {
         console.log("No custom image, yes style")
         let hat = await getSpecificHat(style)
+        if (hat == null) {
+            return res.status(400).send({
+                message: 'This hat style does not exist! If you want this style - try submitting it'
+             });             
+        }
         console.log("Got specific hat")
         b64Result = await requestManipulate(face, hat, numberHats)
         res.send(b64Result)
