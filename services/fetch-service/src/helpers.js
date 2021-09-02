@@ -32,9 +32,13 @@ export async function downloadBuffer(url) {
 export async function getSpecificHat(style) {
     var sql = `SELECT * FROM main.images WHERE description='${style}' AND approve='true'`;
     const results = await con.promise().query(sql)
+        .catch(err => console.log(err))
     
     let hatList = results[0]
     console.log(hatList)
+    if (hatList.length == 0){
+        return null
+    }
 
     let randNum = Math.floor(Math.random() * hatList.length)
     let hatLink = hatList[randNum].url
