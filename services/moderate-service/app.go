@@ -16,18 +16,22 @@ func main() {
 		log.Print("Moderate request received")
 		var approval string = c.Query("approve")
 		var id string = c.Query("id")
+		var password string = c.Query("admin")
 		var result string
 
 		if approval == "true" {
 			result = ApprovePicture(id)
 		} else if approval == "false" {
 			result = DeletePicture(id)
+		} else if password == "ilovehats" {
+			result = UnmoderatedPic()
 		} else if approval == "" || id == "" {
-			result = "Please access a link from a valid moderation email."
+			result = "Please tell us what picture you would like to approve and a valid id."
 		} else {
-			result = "Please access a link from a valid moderation email."
+			result = "Please tell us what picture you would like to approve and a valid id."
 		}
 
+		c.Append("Content-Type", "application/json")
 		return c.SendString(result)
 	})
 
