@@ -102,13 +102,6 @@ jobs:
         with:
           input: kube/add.yaml
           output: deploy/add.yaml
-      - name: Replace Environment Variables (MYSQL)
-        uses: danielr1996/envsubst-action@1.0.0
-        env:
-          PASSWORD: ${{ secrets.PASSWORD }}
-        with:
-          input: kube/mysql-deployment.yaml
-          output: deploy/mysql-deployment.yaml
       - name: Replace Environment Variables (FETCH)
         uses: danielr1996/envsubst-action@1.0.0
         env:
