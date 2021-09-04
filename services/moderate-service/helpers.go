@@ -6,17 +6,19 @@ import (
 	"fmt"
 	"database/sql"
 	_"github.com/go-sql-driver/mysql"
+	"encoding/json"
   )
 
 var password string = os.Getenv("PASSWORD")
 var endpoint string = os.Getenv("HOST")
+
 type Hats struct {
-	Key 		  int 	 `field:id`
+	// Key 		  int 	 `field:id`
     ID            string `field:"keyId"`                      
     Url           string `field:"url"`           
-    FileName      string `field:"fileName"`           
+    // FileName      string `field:"fileName"`           
     Description   string `field:"description"`
-    Approve       string `field:"approve"`
+    // Approve       string `field:"approve"`
 }
 
 var hats []Hats
@@ -90,7 +92,7 @@ func UnmoderatedPic() string {
 	defer db.Close()
 	
 	// query for id and drop picture
-	rows, err := db.Query("SELECT * FROM main.images WHERE approve='false'")
+	rows, err := db.Query("SELECT keyId, url, description FROM main.images WHERE approve='false'")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -98,7 +100,7 @@ func UnmoderatedPic() string {
 	for rows.Next() {
 		hat := new(Hats)
 
-		err = rows.Scan(&hat.Key, &hat.ID, &hat.Url, &hat.FileName, &hat.Description, &hat.Approve)
+		err = rows.Scan(&hat.ID, &hat.Url, &hat.Description)
 
 		if err != nil {
 			fmt.Println(err)
@@ -107,7 +109,9 @@ func UnmoderatedPic() string {
 		hats = append(hats, *hat)
 	}
 
-	result = fmt.Sprint(hats)
+	hatJson, _ := json.Marshal(hats)
+	result = string(hatJson)
+	// result = fmt.Sprint(json.Marshal(hats))
 
 	if err := rows.Err(); err != nil {
 		fmt.Println(err)

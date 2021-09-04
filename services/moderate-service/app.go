@@ -31,6 +31,7 @@ func main() {
 			result = "Please tell us what picture you would like to approve and a valid id."
 		}
 
+		c.Append("Content-Type", "application/json")
 		return c.SendString(result)
 	})
 
