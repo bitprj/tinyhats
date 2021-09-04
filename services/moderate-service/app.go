@@ -12,6 +12,17 @@ func main() {
 	app := fiber.New()
 
 	// Hello, World!
+	app.Get("/moderate/admin", func(c *fiber.Ctx) error {
+		log.Print("List hats that need moderation")
+
+		var result string
+			
+		result = UnmoderatedPic()
+
+		c.Append("Content-Type", "application/json")
+		return c.SendString(result)
+	})
+
 	app.Get("/moderate", func(c *fiber.Ctx) error {
 		log.Print("Moderate request received")
 		var approval string = c.Query("approve")
@@ -24,8 +35,6 @@ func main() {
 			result = ApprovePicture(id)
 		} else if approval == "false" {
 			result = DeletePicture(id)
-		} else if password == "ilovehats" {
-			result = UnmoderatedPic()
 		} else if approval == "" || id == "" {
 			result = "Please tell us what picture you would like to approve and a valid id."
 		} else {
