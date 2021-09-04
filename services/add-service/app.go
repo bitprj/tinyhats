@@ -8,7 +8,6 @@ import (
 	"mime/multipart"
 	"log"
 	"os"
-	"encoding/json"
 )
 
 type Message struct {
@@ -85,7 +84,7 @@ func addService(w http.ResponseWriter, request *http.Request) {
 			buf, _ = io.ReadAll(body)
 		  
 			w.Header().Set("Content-Type", "application/json")
-			w.Write(string(buf))
+			w.Write(buf)
 			w.WriteHeader(200)
 		}
 }
