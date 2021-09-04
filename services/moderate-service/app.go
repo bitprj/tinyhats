@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"os"
-
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -17,6 +17,7 @@ func main() {
 		var approval string = c.Query("approve")
 		var id string = c.Query("id")
 		var password string = c.Query("admin")
+		fmt.Println("Password: " + password)
 		var result string
 
 		if approval == "true" {

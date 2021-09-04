@@ -81,6 +81,7 @@ func DeletePicture(id string) string {
 
 func UnmoderatedPic() string {
 	var result string
+	fmt.Println("Showing unmoderated pictures.")
 
 	// open connection
 	db, err := sql.Open("mysql", "admin:" + password + "@tcp(" + endpoint + ":3306)/main")
