@@ -13,6 +13,7 @@ func main() {
 
 	// Hello, World!
 	app.Get("/moderate/admin", func(c *fiber.Ctx) error {
+		fmt.Println("--------------------------")
 		log.Print("List hats that need moderation")
 
 		var result string
@@ -27,8 +28,6 @@ func main() {
 		log.Print("Moderate request received")
 		var approval string = c.Query("approve")
 		var id string = c.Query("id")
-		var password string = c.Query("admin")
-		fmt.Println("Password: " + password)
 		var result string
 
 		if approval == "true" {

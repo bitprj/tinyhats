@@ -33,6 +33,7 @@ const overlayHat = async (hat, result, baby, translate, rotate) => {
   let height = result._height
   let left = result._x
   let top = result._y
+  console.log(width, height, left, top)
   //  BoundingBox.Width:      ${data.BoundingBox.Width}`)
 
   hatImg = await hatImg.resize(width, height)
