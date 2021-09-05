@@ -3,26 +3,13 @@ package main
 import (
 	"log"
 	"os"
-	"fmt"
+	// "fmt"
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
 	// Initialize the application
 	app := fiber.New()
-
-	// Hello, World!
-	app.Get("/moderate/admin", func(c *fiber.Ctx) error {
-		fmt.Println("--------------------------")
-		log.Print("List hats that need moderation")
-
-		var result string
-			
-		result = UnmoderatedPic()
-
-		c.Append("Content-Type", "application/json")
-		return c.SendString(result)
-	})
 
 	app.Get("/moderate", func(c *fiber.Ctx) error {
 		log.Print("Moderate request received")
