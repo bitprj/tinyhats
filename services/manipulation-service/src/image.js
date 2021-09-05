@@ -1,28 +1,27 @@
 const Jimp = require('jimp')
-const AWS = require('aws-sdk')
+const faceapi = require('face-api.js')
+const canvas = require('canvas')
+require('@tensorflow/tfjs-node');
 
-const config = new AWS.Config({
-  accessKeyId: process.env.S3_ID,
-  secretAccessKey: process.env.S3_SECRET,
-  region: process.env.AWS_REGION
-})
-
-const client = new AWS.Rekognition();
+const { Canvas, Image, ImageData } = canvas  
+faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
 
 const findBaby = async (baby) => {
-  const params = {
-    Image: {
-      // only accepts pure buffer
-      "Bytes": baby
-    },
-    Attributes: ['ALL']
-  }
-  
-  let data = await client.detectFaces(params).promise()
-  // use await to retrieve face data
-  console.log(`Detected faces: ${JSON.stringify(data.FaceDetails[0].BoundingBox)}`)
+  const image = await canvas.loadImage(baby)
+  await faceapi.nets.ssdMobilenetv1.loadFromDisk('./weights')
+  // const Canvas = canvas.createCanvas(image.width, image.height)
+  // const ctx = Canvas.getContext('2d')
+  // ctx.drawImage(image, 0, 0, image.width, image.height)
+  // console.log(ctx)
 
-  return data;
+  const fullFaceDescription = await faceapi.detectAllFaces(image)
+  // use await to retrieve face data
+
+  let relData = fullFaceDescription[0]._box
+  console.log(`Detected faces: ${JSON.stringify(relData)}`)
+
+  return relData;
+  // {"_x":225.59293228387833,"_y":122.78662695563085,"_width":183.89773482084274,"_height":181.8649869230835}
 }
 
 const overlayHat = async (hat, result, baby, translate, rotate) => {
@@ -30,12 +29,10 @@ const overlayHat = async (hat, result, baby, translate, rotate) => {
   const image = await Jimp.read(baby);
   let jimpFace = image.bitmap
 
-  let face = result.FaceDetails[0].BoundingBox
-
-  let width = face.Width * jimpFace.width
-  let height = face.Height * jimpFace.height
-  let left = face.Left * jimpFace.width
-  let top = face.Top * jimpFace.height
+  let width = result._width
+  let height = result._height
+  let left = result._x
+  let top = result._y
   //  BoundingBox.Width:      ${data.BoundingBox.Width}`)
 
   hatImg = await hatImg.resize(width, height)
