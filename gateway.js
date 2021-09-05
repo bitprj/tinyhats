@@ -114,6 +114,13 @@ router.get('/:apiName', upload.any(), async (req, res) => {
     
         var result = await moderateResp.text()
         res.send({result})
+    } else if (route == "admin") {
+        const adminResp = await fetch(`http://admin-service:80/admin`, {
+            method: 'GET'
+        })
+    
+        var result = await adminResp.json()
+        res.send({result})
     } else {
         let param = getNumber(req)
         const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?style=${route}&` + param, {
