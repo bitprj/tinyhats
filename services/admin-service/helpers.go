@@ -25,6 +25,7 @@ var hats []Hats
 var hat Hats
 
 func UnmoderatedPic() string {
+	hats = nil
 	var result string
 	fmt.Println("Showing unmoderated pictures.")
 
