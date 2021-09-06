@@ -25,20 +25,20 @@ function getNumber(req) {
 router.post('/', upload.any(), async (req, res) => {
     let param = getNumber(req)
     let formData = new FormData()
-    formData.append('file', req.files[0].buffer, {filename: "face", data: req.files[0].buffer})
+    formData.append('file', req.files[0].buffer, { filename: "face", data: req.files[0].buffer })
     const formHeaders = formData.getHeaders();
     const fetchResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?` + param, {
         method: 'POST',
         body: formData,
         headers: {
-        ...formHeaders,
-        },  
+            ...formHeaders,
+        },
     });
 
     console.log("Fetching base64 image")
 
     var result = await fetchResp.json()
-    res.send({result}) 
+    res.send({ result })
 })
 
 router.post('/:apiName', upload.any(), async (req, res) => {
@@ -49,56 +49,56 @@ router.post('/:apiName', upload.any(), async (req, res) => {
         let image = req.files[0].buffer
         let name = req.body.name
         console.log("Requesting moderation and uploading image...")
-    
+
         // hit the add endpoint to add image and begin approval process
         let formData = new FormData()
-        formData.append('photo', image, {filename: "baby", data: image})
+        formData.append('photo', image, { filename: "baby", data: image })
         formData.append('name', name)
         const formHeaders = formData.getHeaders();
-    
+
         console.log(process.env.ADD_ENDPOINT)
-        
+
         const addResp = await fetch(`http://${process.env.ADD_ENDPOINT}/add`, {
             method: 'POST',
             body: formData,
-                headers: {
+            headers: {
                 ...formHeaders,
-                },        
+            },
         });
-    
+
         var result = await addResp.json()
         console.log(`Received from /add: ${JSON.stringify(result)}`)
-        res.send({result})
+        res.send({ result })
     } else {
         let param = getNumber(req)
         let formData = new FormData()
-        formData.append('file', req.files[0].buffer, {filename: "face", data: req.files[0].buffer})
+        formData.append('file', req.files[0].buffer, { filename: "face", data: req.files[0].buffer })
         const formHeaders = formData.getHeaders();
         const fetchResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?style=${route}&` + param, {
             method: 'POST',
             body: formData,
             headers: {
-            ...formHeaders,
-            },  
+                ...formHeaders,
+            },
         });
 
         console.log("Fetching base64 image")
-    
+
         var result = await fetchResp.json()
-        res.send({result}) 
+        res.send({ result })
     }
 })
 
 router.get('/', upload.any(), async (req, res) => {
     let param = getNumber(req)
     const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?` + param, {
-        method: 'GET',      
+        method: 'GET',
     });
 
     console.log("Fetching base64 image")
 
     var result = await addResp.json()
-    res.send({result}) 
+    res.send({ result })
 })
 
 router.get('/:apiName', upload.any(), async (req, res) => {
@@ -111,36 +111,36 @@ router.get('/:apiName', upload.any(), async (req, res) => {
         const moderateResp = await fetch(`http://${process.env.MODERATE_ENDPOINT}/moderate?approve=${approve}&id=${id}`, {
             method: 'GET'
         })
-    
+
         var result = await moderateResp.text()
-        res.send({result})
+        res.send({ result })
     } else if (route == "admin") {
         const adminResp = await fetch(`http://admin-service:80/admin`, {
             method: 'GET'
         })
-    
+
         var result = await adminResp.json()
-        res.send({result})
+        res.send({ result })
     } else {
         let param = getNumber(req)
         const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?style=${route}&` + param, {
-            method: 'GET',      
+            method: 'GET',
         });
-    
+
         console.log("Fetching base64 image")
-    
+
         var result = await addResp.json()
-        res.send({result}) 
-}
+        res.send({ result })
+    }
 })
 
 router.get('/api/:apiName', upload.any(), async (req, res) => {
     console.log(`[!] /api/${req.params.apiName} was accessed.`)
     let route = req.params.apiName;
-    
+
     if (route == "hats") {
         const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?hats=true`, {
-            method: 'GET',      
+            method: 'GET',
         });
 
         console.log("Fetching hat list")
