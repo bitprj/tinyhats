@@ -9,7 +9,9 @@ let numberHats = document.getElementById("numberHats")
 function getImage(event) {
     event.preventDefault();
 
-    let baseUrl = "http://gateway-service:80/";
+    // let baseUrl = "https://api.tinyhat.me/";
+    var formData = new FormData();
+    let baseUrl = "/api/hat";
 
     let method = "GET";
     let options = {}
@@ -17,28 +19,26 @@ function getImage(event) {
     spinner.classList.remove("hidden");
     exampleImage.classList.add('hidden');
 
+
     if (typeInput) {
-        baseUrl += typeInput.value;
-
-        if (numberHats.value != "") {
-            baseUrl += `?number=${numberHats.value}`
-        }
-
+        formData.append("type", typeInput.value);
         options = {
             method
         }
+    }
+
+    if (numberHats.value != "") {
+        baseUrl += `?number=${numberHats.value}`
     }
 
     if (fileInput.files.length > 0) {
         console.log("file has been added")
         method = "POST"
 
-        if (numberHats.value != "") {
-            baseUrl += `?number=${numberHats.value}`
-        }
 
-        var formData = new FormData();
+        console.log(fileInput.files[0]);
         formData.append("file", fileInput.files[0]);
+
         options = {
             method,
             body: formData
@@ -64,12 +64,13 @@ window.onload = async function getHats(event) {
     event.preventDefault();
 
     console.log("Getting hats")
-    let baseUrl = "http://gateway-service:80/";
+    let baseUrl = "/api/list";
 
     // get description and image links
-    let hats = await fetch(`${baseUrl}api/hats`, {
+    let hats = await fetch(baseUrl, {
         method: "GET"
     })
+    console.log(hats)
     let hatList = await hats.json()
     console.log(hatList)
     let wrapper = document.querySelector(".swiper-wrapper");
@@ -124,8 +125,6 @@ window.onload = async function getHats(event) {
             }
         }
     });
-
-    console.log("init swiper");
 
     // set the number of hats there are
     document.getElementById("numHats").innerHTML = hatList.length + " hats."
