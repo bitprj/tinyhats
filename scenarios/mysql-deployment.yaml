@@ -1,0 +1,123 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mysql
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        - name: MYSQL_DATABASE
+          value: main
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        # - name: mysql-persistent-storage
+        #   mountPath: /var/lib/mysql
+        - name: mysql-initdb
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: mysql-initdb
+          configMap:
+            name: mysql-initdb-config
+        # - name: mysql-persistent-storage
+        #   persistentVolumeClaim:
+        #     claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb-config
+data:
+  initdb.sql: |
+    CREATE TABLE IF NOT EXISTS images(id int NOT NULL AUTO_INCREMENT, keyId varchar(30), url varchar(255), fileName varchar(255), description varchar(255), approve varchar(30), PRIMARY KEY(id));
+    INSERT INTO images VALUES (1, 's7xvjkdunfbeuae2', 'https://tinyhats.s3.amazonaws.com/s7xvjkdunfbeuae2.png', 's7xvjkdunfbeuae2.png', 'baby', 'true');
+    INSERT INTO images VALUES (2, '3joabx0ix4f1xtgy', 'https://tinyhats.s3.amazonaws.com/3joabx0ix4f1xtgy.png', '3joabx0ix4f1xtgy.png', 'bucket', 'true');
+    INSERT INTO images VALUES (3, 's9qnf55ajq3zbzio', 'https://tinyhats.s3.amazonaws.com/s9qnf55ajq3zbzio.png', 's9qnf55ajq3zbzio.png', 'beach', 'true');
+    INSERT INTO images VALUES (4, 'yikpnx1etovnqals', 'https://tinyhats.s3.amazonaws.com/yikpnx1etovnqals.png', 'yikpnx1etovnqals.png', 'spinner', 'true');
+    INSERT INTO images VALUES (5, 'uwevrh9jc5tix6ck', 'https://tinyhats.s3.amazonaws.com/uwevrh9jc5tix6ck.png', 'uwevrh9jc5tix6ck.png', 'cartoon', 'true');
+    INSERT INTO images VALUES (6, '0ebt45s6ycz4x59c', 'https://tinyhats.s3.amazonaws.com/0ebt45s6ycz4x59c.png', '0ebt45s6ycz4x59c.png', 'skull', 'true');
+    INSERT INTO images VALUES (7, 't7p9oczddo3f8o7r', 'https://tinyhats.s3.amazonaws.com/t7p9oczddo3f8o7r.png', 't7p9oczddo3f8o7r.png', 'blob', 'true');
+    INSERT INTO images VALUES (8, 'tae3p4v8kmpxrgxa', 'https://tinyhats.s3.amazonaws.com/tae3p4v8kmpxrgxa.png', 'tae3p4v8kmpxrgxa.png', 'santa', 'true');
+    INSERT INTO images VALUES (9, 'gq4gupxpne9fyzc3', 'https://tinyhats.s3.amazonaws.com/gq4gupxpne9fyzc3.png', 'gq4gupxpne9fyzc3.png', 'st-patricks', 'true');
+    INSERT INTO images VALUES (10, '4scyadmo09jurf0w', 'https://tinyhats.s3.amazonaws.com/4scyadmo09jurf0w.png', '4scyadmo09jurf0w.png', 'santa', 'true');
+    INSERT INTO images VALUES (11, 'rd0y1x24tt0rnnf9', 'https://tinyhats.s3.amazonaws.com/rd0y1x24tt0rnnf9.png', 'rd0y1x24tt0rnnf9.png', 'graduation', 'true');
+    INSERT INTO images VALUES (12, 'hmc8jrjk7eiesldh', 'https://tinyhats.s3.amazonaws.com/hmc8jrjk7eiesldh.png', 'hmc8jrjk7eiesldh.png', 'blob', 'true');
+    INSERT INTO images VALUES (13, 'bk9zrl33auwtpiju', 'https://tinyhats.s3.amazonaws.com/bk9zrl33auwtpiju.png', 'bk9zrl33auwtpiju.png', 'pirate', 'true');
+    INSERT INTO images VALUES (14, 'lolmekg6trszt1vl', 'https://tinyhats.s3.amazonaws.com/lolmekg6trszt1vl.png', 'lolmekg6trszt1vl.png', 'pokemon', 'true');
+    INSERT INTO images VALUES (15, '8k2bi1bwzvcu6bos', 'https://tinyhats.s3.amazonaws.com/8k2bi1bwzvcu6bos.png', '8k2bi1bwzvcu6bos.png', 'clown', 'true');
+    INSERT INTO images VALUES (16, 'llzavthecfp2ul65', 'https://tinyhats.s3.amazonaws.com/llzavthecfp2ul65.png', 'llzavthecfp2ul65.png', 'spy', 'true');
+    INSERT INTO images VALUES (17, '40rzx3d4dwd0chm3', 'https://tinyhats.s3.amazonaws.com/40rzx3d4dwd0chm3.png', '40rzx3d4dwd0chm3.png', 'st-patricks', 'true');
+    INSERT INTO images VALUES (18, 'rbacsal6uglwhcol', 'https://tinyhats.s3.amazonaws.com/rbacsal6uglwhcol.png', 'rbacsal6uglwhcol.png', 'mario', 'true');
+    INSERT INTO images VALUES (19, 'tg9cvjo18qa39yku', 'https://tinyhats.s3.amazonaws.com/tg9cvjo18qa39yku.png', 'tg9cvjo18qa39yku.png', 'tophat', 'true');
+    INSERT INTO images VALUES (20, 'a27nto1wnc85nc0c', 'https://tinyhats.s3.amazonaws.com/a27nto1wnc85nc0c.png', 'a27nto1wnc85nc0c.png', 'pilot', 'true');
+    INSERT INTO images VALUES (21, 'rl0kbydgb6u1cap8', 'https://tinyhats.s3.amazonaws.com/rl0kbydgb6u1cap8.png', 'rl0kbydgb6u1cap8.png', 'tophat', 'true');
+    INSERT INTO images VALUES (22, '26xxbuasu4ud1r32', 'https://tinyhats.s3.amazonaws.com/26xxbuasu4ud1r32.png', '26xxbuasu4ud1r32.png', 'construction', 'true');
+    INSERT INTO images VALUES (23, '5k31vu7u07pwucvc', 'https://tinyhats.s3.amazonaws.com/5k31vu7u07pwucvc.png', '5k31vu7u07pwucvc.png', 'beach', 'true');
+    INSERT INTO images VALUES (24, 's6qgqtfmqatkgh5z', 'https://tinyhats.s3.amazonaws.com/s6qgqtfmqatkgh5z.png', 's6qgqtfmqatkgh5z.png', 'poop', 'true');
+    INSERT INTO images VALUES (25, 'zj9lrq1a9cmaz67k', 'https://tinyhats.s3.amazonaws.com/zj9lrq1a9cmaz67k.png', 'zj9lrq1a9cmaz67k.png', 'turkey', 'true');
+    INSERT INTO images VALUES (26, 'ulktlsrrmtj1va65', 'https://tinyhats.s3.amazonaws.com/ulktlsrrmtj1va65.png', 'ulktlsrrmtj1va65.png', 'pepe', 'true');
+    INSERT INTO images VALUES (27, 'xff8x5s2icgckekt', 'https://tinyhats.s3.amazonaws.com/xff8x5s2icgckekt.png', 'xff8x5s2icgckekt.png', 'st-patricks', 'true');
+    INSERT INTO images VALUES (28, 'alcj03xqojezuu1u', 'https://tinyhats.s3.amazonaws.com/alcj03xqojezuu1u.png', 'alcj03xqojezuu1u.png', 'shark', 'true');
+    INSERT INTO images VALUES (31, '8tg4u10knvn9jq1w', 'https://tinyhats.s3.amazonaws.com/8tg4u10knvn9jq1w.png', '8tg4u10knvn9jq1w.png', 'alien', 'true');
+    INSERT INTO images VALUES (32, 'pn6s373r2bdeql2f', 'https://tinyhats.s3.amazonaws.com/pn6s373r2bdeql2f.png', 'pn6s373r2bdeql2f.png', 'penguin', 'true');
+    INSERT INTO images VALUES (33, 'jx9mr1zt4fip0b90', 'https://tinyhats.s3.amazonaws.com/jx9mr1zt4fip0b90.png', 'jx9mr1zt4fip0b90.png', 'tinyhat', 'true');
+    INSERT INTO images VALUES (37, '8wc1m6wkr3uelnnq', 'https://tinyhats.s3.amazonaws.com/8wc1m6wkr3uelnnq.png', '8wc1m6wkr3uelnnq.png', 'cat-ears', 'true');    
+    INSERT INTO images VALUES (65, '124626ixbtm5qz8u', 'https://tinyhats.s3.amazonaws.com/124626ixbtm5qz8u.png', '124626ixbtm5qz8u.png', 'spicy', 'false');
+    INSERT INTO images VALUES (100, 'faznhokg9hvaz76p', 'https://tinyhats.s3.amazonaws.com/faznhokg9hvaz76p.png', 'faznhokg9hvaz76p.png', 'food', 'false');
+    GRANT ALL PRIVILEGES
+    ON main.images
+    TO 'admin'@'%'
+    IDENTIFIED BY 'password';
