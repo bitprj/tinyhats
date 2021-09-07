@@ -52,7 +52,7 @@ export async function getSpecificHat(style) {
 }
 
 export async function getHatData() {
-    var sql = `SELECT description, url FROM main.images WHERE approve='true'`;
+    var sql = `SELECT description, url FROM main.images`;
     const results = await con.promise().query(sql)
     
     let hatList = results[0]
