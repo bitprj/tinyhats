@@ -19,9 +19,9 @@ spec:
             - containerPort: 5000
           env:
             - name: HOST
-              value: "$HOST"
+              value: mysql
             - name: PASSWORD
-              value: "$PASSWORD"
+              value: password
           imagePullPolicy: Always
 ---
 apiVersion: v1

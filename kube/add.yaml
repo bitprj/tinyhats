@@ -19,11 +19,7 @@ spec:
             - containerPort: 31337
           env:
             - name: UPLOAD_ENDPOINT
-              value: "$UPLOAD_ENDPOINT"
-            - name: EMAIL_ENDPOINT
-              value: "$EMAIL_ENDPOINT"
-            - name: SEND_TO_EMAIL
-              value: "$SEND_TO_EMAIL"
+              value: upload-service:80
             - name: ENDPOINT
               value: "$ENDPOINT"
           imagePullPolicy: Always
