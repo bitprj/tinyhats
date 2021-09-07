@@ -30,7 +30,7 @@ export async function downloadBuffer(url) {
 }
 
 export async function getSpecificHat(style) {
-    var sql = `SELECT * FROM main.images WHERE description='${style}' AND approve='true'`;
+    var sql = `SELECT * FROM main.images WHERE BINARY description='${style}' AND approve='true'`;
     const results = await con.promise().query(sql)
         .catch(err => console.log(err))
     
