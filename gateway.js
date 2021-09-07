@@ -3,10 +3,20 @@ const multer = require('multer')
 const FormData = require('form-data')
 const upload = multer()
 const fetch = require("node-fetch")
+const rateLimit = require("express-rate-limit");
 const cors = require('cors')
 const app = express()
 var router = express.Router();
 const PORT = 4444
+
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: "Too many requests - we don't have any more hats left! Please try again later."
+});
+  
+//  apply to all requests
+app.use(limiter);
 
 app.use(cors());
 
@@ -114,6 +124,13 @@ router.get('/:apiName', upload.any(), async (req, res) => {
     
         var result = await moderateResp.text()
         res.send({result})
+    } else if (route == "admin") {
+        const adminResp = await fetch(`http://admin-service:80/admin`, {
+            method: 'GET'
+        })
+    
+        var result = await adminResp.json()
+        res.send({result})
     } else {
         let param = getNumber(req)
         const addResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?style=${route}&` + param, {
@@ -121,9 +138,11 @@ router.get('/:apiName', upload.any(), async (req, res) => {
         });
     
         console.log("Fetching base64 image")
+        
+        let responseCode = addResp.status
     
         var result = await addResp.json()
-        res.send({result}) 
+        res.status(responseCode).send({result}) 
 }
 })
 

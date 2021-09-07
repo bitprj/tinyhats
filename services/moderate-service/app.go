@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"os"
-
+	// "fmt"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,7 +11,6 @@ func main() {
 	// Initialize the application
 	app := fiber.New()
 
-	// Hello, World!
 	app.Get("/moderate", func(c *fiber.Ctx) error {
 		log.Print("Moderate request received")
 		var approval string = c.Query("approve")
@@ -23,11 +22,12 @@ func main() {
 		} else if approval == "false" {
 			result = DeletePicture(id)
 		} else if approval == "" || id == "" {
-			result = "Please access a link from a valid moderation email."
+			result = "Please tell us what picture you would like to approve and a valid id."
 		} else {
-			result = "Please access a link from a valid moderation email."
+			result = "Please tell us what picture you would like to approve and a valid id."
 		}
 
+		c.Append("Content-Type", "application/json")
 		return c.SendString(result)
 	})
 

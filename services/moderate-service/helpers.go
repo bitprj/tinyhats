@@ -3,12 +3,14 @@ package main
 import (
 	"os"
 	"log"
+	// "fmt"
 	"database/sql"
 	_"github.com/go-sql-driver/mysql"
+	// "encoding/json"
   )
 
 var password string = os.Getenv("PASSWORD")
-var endpoint string = os.Getenv("HOST")
+var endpoint string = os.Getenv("HOST")  
 
 func ApprovePicture(id string) string {
 	
