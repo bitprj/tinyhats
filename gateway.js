@@ -3,10 +3,20 @@ const multer = require('multer')
 const FormData = require('form-data')
 const upload = multer()
 const fetch = require("node-fetch")
+const rateLimit = require("express-rate-limit");
 const cors = require('cors')
 const app = express()
 var router = express.Router();
 const PORT = 4444
+
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: "Too many requests - we don't have any more hats left! Please try again later."
+});
+  
+//  apply to all requests
+app.use(limiter);
 
 app.use(cors());
 
