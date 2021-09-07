@@ -129,7 +129,7 @@ router.get('/:apiName', upload.any(), async (req, res) => {
     
         console.log("Fetching base64 image")
         
-        let responseCode = addResp.statusCode
+        let responseCode = addResp.status
     
         var result = await addResp.json()
         res.status(responseCode).send({result}) 
