@@ -81,44 +81,13 @@ func addService(w http.ResponseWriter, request *http.Request) {
 		resp.Body.Close()
 		// 	fmt.Println(resp.StatusCode)
 		// 	fmt.Println(resp.Header)
-		var buf []byte
-		buf, _ = io.ReadAll(body)
-		fmt.Println(body)
-		var p Message
-		newErr := json.Unmarshal(buf, &p)
-		if newErr != nil {
-			panic(newErr)
-		}
-		fmt.Println(p.Url)
+			var buf []byte
+			buf, _ = io.ReadAll(body)
+		  
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(buf)
+			w.WriteHeader(200)
 
-		ENDPOINT := os.Getenv("ENDPOINT")
-		html := fmt.Sprintf(`<h2>Review this hat 🎩</h2>
-			<h3><img src="%s" alt="" /></h3>
-			<p>The user has given it a style of "<b>%s</b>."</p>
-			<h3>Be sure to consider:</h3>
-			<ul>
-			<li>Is this appropriate?</li>
-			<li>Does this picture contain an object that could be used as a hat?</li>
-			<li>Could this be easily overlayed on a head?</li>
-			</ul>
-			<p>Click <a href="%s/moderate?approve=true&id=%s">here</a> to approve.</p>
-			<p>Click <a href="%s/moderate?approve=false&id=%s">here</a> to disapprove.</p>
-			`, p.Url, p.Description, ENDPOINT, p.Key, ENDPOINT, p.Key)
-
-		emailEndpoint := os.Getenv("EMAIL_ENDPOINT")
-		modEmail := os.Getenv("SEND_TO_EMAIL")
-
-		urlSend := fmt.Sprintf(`http://%s/email?send=%s`, emailEndpoint, modEmail)
-		emailResp, err := http.Post(urlSend, "application/octet-stream", bytes.NewReader([]byte(html)))
-
-		fmt.Println(emailResp)
-
-		responseMessage := fmt.Sprintf(`{"message": "Your image with a style of "%s" has been sent to the moderator."}`, name)
-
-		js, err := json.Marshal(responseMessage)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")

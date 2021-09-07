@@ -34,6 +34,13 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: bitprj/gateway-service
+      - name: Admin Service
+        uses: docker/build-push-action@v2
+        with:
+          context: services/admin-service
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: bitprj/admin-service
       - name: Add Service
         uses: docker/build-push-action@v2
         with:
@@ -41,13 +48,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: bitprj/add-service
-      - name: Email Service
-        uses: docker/build-push-action@v2
-        with:
-          context: services/email-service
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: bitprj/email-service
       - name: Fetch Service
         uses: docker/build-push-action@v2
         with:
@@ -55,13 +55,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: bitprj/fetch-service
-      - name: Email Service
-        uses: docker/build-push-action@v2
-        with:
-          context: services/email-service
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: bitprj/email-service
       - name: Fetch Service
         uses: docker/build-push-action@v2
         with:
@@ -113,18 +106,16 @@ jobs:
         uses: danielr1996/envsubst-action@1.0.0
         env:
           UPLOAD_ENDPOINT: ${{ secrets.UPLOAD_ENDPOINT }}
-          EMAIL_ENDPOINT: ${{ secrets.EMAIL_ENDPOINT }}
         with:
           input: kube/add.yaml
           output: deploy/add.yaml
-      - name: Replace Environment Variables (EMAIL)
+      - name: Replace Environment Variables (MYSQL)
         uses: danielr1996/envsubst-action@1.0.0
         env:
-          EMAIL: ${{ secrets.EMAIL }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          PASSWORD: ${{ secrets.PASSWORD }}
         with:
-          input: kube/email.yaml
-          output: deploy/email.yaml
+          input: kube/mysql-deployment.yaml
+          output: deploy/mysql-deployment.yaml
       - name: Replace Environment Variables (FETCH)
         uses: danielr1996/envsubst-action@1.0.0
         env:
@@ -173,6 +164,3 @@ jobs:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         with:
           args: -n default rollout restart deploy
-      
- 
-      

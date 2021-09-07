@@ -16,7 +16,7 @@ spec:
         - name: frontend-service
           image: bitprj/frontend-service
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -28,5 +28,5 @@ spec:
     app: frontend-service
   ports:
     - port: 80
-      targetPort: 80
+      targetPort: 3000
   type: LoadBalancer

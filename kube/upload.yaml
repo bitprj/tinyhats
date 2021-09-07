@@ -19,9 +19,9 @@ spec:
             - containerPort: 8080
           env:
             - name: HOST
-              value: "$HOST"
+              value: mysql
             - name: PASSWORD
-              value: "$PASSWORD"
+              value: password
             - name: S3_ID
               value: "$S3_ID"
             - name: S3_SECRET
