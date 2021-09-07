@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: upload-service
-          image: bitprj/upload-service-beta
+          image: bitprj/upload-service
           ports:
             - containerPort: 8080
           env:
