@@ -43,12 +43,15 @@ router.get('/admin', function (req, res) {
 });
 
 router.get('/api/hat', upload.any(), async function (req, res) {
-    let baseUrl = "http://gateway-service:80";
+    let baseUrl = "https://api.tinyhat.me";
     const number = req.query.number ? req.query.number : "1";
 
     try {
-        let type = req.body.type;
-        baseUrl += `/${type}`;
+        let type = req.headers['type'];
+        console.log("Type: " + type)
+        if (type != undefined) {
+            baseUrl += `/${type}`;
+        }
     }
     catch (e) {
         console.log("no type");
@@ -61,20 +64,22 @@ router.get('/api/hat', upload.any(), async function (req, res) {
     console.log(baseUrl);
     let resp = await fetch(baseUrl);
     let data = await resp.json();
-    console.log(data);
+    // console.log(data);
     res.send(data);
 });
 
 router.post('/api/hat', upload.any(), async function (req, res) {
     console.log("post data");
-    let baseUrl = "http://gateway-service:80";
+    let baseUrl = "https://api.tinyhat.me";
     const number = req.query.number ? req.query.number : "1";
 
     let file = req.files[0].buffer;
 
     let formData = await createForm(file);
     const formHeaders = await formData.getHeaders();
-    let type = req.body.type;
+
+    let type = req.headers["type"]
+
     console.log(file);
     let options = {
         method: "POST",
@@ -84,12 +89,15 @@ router.post('/api/hat', upload.any(), async function (req, res) {
         },
     };
 
-    baseUrl += `/${type}`;
+    if (type != undefined) {
+        baseUrl += `/${type}`;
+    }
+
     baseUrl += `?number=${number}`;
     console.log(baseUrl);
     let resp = await fetch(baseUrl, options);
     let data = await resp.json();
-    console.log(data);
+    // console.log(data);
     res.send(data);
 
 });
@@ -104,7 +112,7 @@ async function createForm(file) {
 
 router.get('/api/list', async function (req, res) {
     console.log("HERE")
-    const baseUrl = "http://gateway-service:80/api/hats";
+    const baseUrl = "https://api.tinyhat.me/api/hats";
 
     const resp = await fetch(baseUrl);
     const data = await resp.json();
@@ -114,7 +122,7 @@ router.get('/api/list', async function (req, res) {
 
 
 router.get('/api/admin', async function (req, res) {
-    let resp = await fetch("http://gateway-service:80/admin");
+    let resp = await fetch("https://api.tinyhat.me/api/hats");
     let data = await resp.json();
     res.send(data);
 });

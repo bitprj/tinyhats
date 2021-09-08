@@ -15,15 +15,19 @@ function getImage(event) {
 
     let method = "GET";
     let options = {}
+    let typeHat = ""
     // show spinner and hide the person
     spinner.classList.remove("hidden");
     exampleImage.classList.add('hidden');
 
 
     if (typeInput) {
-        formData.append("type", typeInput.value);
+        typeHat = typeInput.value
         options = {
-            method
+            method,
+            headers: {
+                type: typeHat
+            }
         }
     }
 
@@ -39,9 +43,13 @@ function getImage(event) {
         console.log(fileInput.files[0]);
         formData.append("file", fileInput.files[0]);
 
+        console.log(options)
         options = {
             method,
-            body: formData
+            body: formData,
+            headers: {
+                type: typeHat
+            }
         }
     }
 
