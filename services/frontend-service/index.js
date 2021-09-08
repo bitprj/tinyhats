@@ -43,7 +43,7 @@ router.get('/admin', function (req, res) {
 });
 
 router.get('/api/hat', upload.any(), async function (req, res) {
-    let baseUrl = "https://api.tinyhat.me";
+    let baseUrl = "http://gateway-service:80";
     const number = req.query.number ? req.query.number : "1";
 
     try {
@@ -70,7 +70,7 @@ router.get('/api/hat', upload.any(), async function (req, res) {
 
 router.post('/api/hat', upload.any(), async function (req, res) {
     console.log("post data");
-    let baseUrl = "https://api.tinyhat.me";
+    let baseUrl = "http://gateway-service:80";
     const number = req.query.number ? req.query.number : "1";
 
     let file = req.files[0].buffer;
@@ -112,7 +112,7 @@ async function createForm(file) {
 
 router.get('/api/list', async function (req, res) {
     console.log("HERE")
-    const baseUrl = "https://api.tinyhat.me/api/hats";
+    const baseUrl = "http://gateway-service:80/api/hats";
 
     const resp = await fetch(baseUrl);
     const data = await resp.json();
@@ -122,14 +122,14 @@ router.get('/api/list', async function (req, res) {
 
 
 router.get('/api/admin', async function (req, res) {
-    let resp = await fetch("https://api.tinyhat.me/admin");
+    let resp = await fetch("http://gateway-service:80/admin");
     let data = await resp.json();
     console.log(data)
     res.send(data);
 });
 
 router.get('/api/moderate', async function (req, res) {
-    let resp = await fetch(`https://api.tinyhat.me/moderate?id=${req.query.id}&approve=${req.query.approve}`);
+    let resp = await fetch(`http://gateway-service:80/moderate?id=${req.query.id}&approve=${req.query.approve}`);
     let data = await resp.json();
     res.redirect('/admin?password=ilovecats');
 });
