@@ -47,8 +47,11 @@ router.get('/api/hat', upload.any(), async function (req, res) {
     const number = req.query.number ? req.query.number : "1";
 
     try {
-        let type = req.body.type;
-        baseUrl += `/${type}`;
+        let type = req.headers['type'];
+        console.log("Type: " + type)
+        if (type != undefined) {
+            baseUrl += `/${type}`;
+        }
     }
     catch (e) {
         console.log("no type");
@@ -61,7 +64,7 @@ router.get('/api/hat', upload.any(), async function (req, res) {
     console.log(baseUrl);
     let resp = await fetch(baseUrl);
     let data = await resp.json();
-    console.log(data);
+    // console.log(data);
     res.send(data);
 });
 
@@ -74,7 +77,9 @@ router.post('/api/hat', upload.any(), async function (req, res) {
 
     let formData = await createForm(file);
     const formHeaders = await formData.getHeaders();
-    let type = req.body.type;
+
+    let type = req.headers["type"]
+
     console.log(file);
     let options = {
         method: "POST",
@@ -84,12 +89,15 @@ router.post('/api/hat', upload.any(), async function (req, res) {
         },
     };
 
-    baseUrl += `/${type}`;
+    if (type != undefined) {
+        baseUrl += `/${type}`;
+    }
+
     baseUrl += `?number=${number}`;
     console.log(baseUrl);
     let resp = await fetch(baseUrl, options);
     let data = await resp.json();
-    console.log(data);
+    // console.log(data);
     res.send(data);
 
 });
@@ -116,7 +124,14 @@ router.get('/api/list', async function (req, res) {
 router.get('/api/admin', async function (req, res) {
     let resp = await fetch("http://gateway-service:80/admin");
     let data = await resp.json();
+    console.log(data)
     res.send(data);
+});
+
+router.get('/api/moderate', async function (req, res) {
+    let resp = await fetch(`http://gateway-service:80/moderate?id=${req.query.id}&approve=${req.query.approve}`);
+    let data = await resp.json();
+    res.redirect('/admin?password=ilovecats');
 });
 
 app.listen(process.env.PORT || 3000,

@@ -41,12 +41,12 @@ function createElements(obj) {
     hatName.innerHTML = obj.Description;
     let approveLink = document.createElement("a");
     approveLink.innerHTML = "Approve"
-    approveLink.href = `https://api.tinyhat.me/moderate?id=${obj.ID}&approve=true`;
+    approveLink.href = `/api/moderate?id=${obj.ID}&approve=true`;
     approveLink.classList.add("btn", "btn-success", "mr-2");
 
     let denyLink = document.createElement("a");
     denyLink.innerHTML = "Deny"
-    denyLink.href = `https://api.tinyhat.me/moderate?id=${obj.ID}&approve=false`;
+    denyLink.href = `/api/moderate?id=${obj.ID}&approve=false`;
     denyLink.classList.add("btn", "btn-danger");
 
     modContainer.appendChild(hatName);
