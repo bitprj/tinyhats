@@ -122,9 +122,16 @@ router.get('/api/list', async function (req, res) {
 
 
 router.get('/api/admin', async function (req, res) {
-    let resp = await fetch("https://api.tinyhat.me/api/hats");
+    let resp = await fetch("https://api.tinyhat.me/admin");
     let data = await resp.json();
+    console.log(data)
     res.send(data);
+});
+
+router.get('/api/moderate', async function (req, res) {
+    let resp = await fetch(`https://api.tinyhat.me/moderate?id=${req.query.id}&approve=${req.query.approve}`);
+    let data = await resp.json();
+    res.redirect('/admin?password=ilovecats');
 });
 
 app.listen(process.env.PORT || 3000,

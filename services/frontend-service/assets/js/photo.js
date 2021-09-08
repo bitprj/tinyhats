@@ -89,7 +89,7 @@ document.getElementById("snap").addEventListener('click', () => {
         var formData = new FormData();
         let baseUrl = "/api/hat";
 
-        formData.append("type", document.getElementById("hat-type").alt);
+        let hatType = document.getElementById("hat-type").alt
 
         baseUrl += `?number=${hatCount.innerHTML}`
 
@@ -102,7 +102,8 @@ document.getElementById("snap").addEventListener('click', () => {
         formData.append("file", file);
         options = {
             method,
-            body: formData
+            body: formData,
+            headers: {type: hatType}
         }
 
         console.log("Making fetch")
