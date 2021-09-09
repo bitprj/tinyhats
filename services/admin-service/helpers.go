@@ -94,7 +94,7 @@ func createSampleImage(hatUrl string) string {
 	err = writer.Close()
 
 	fmt.Println("")
-	manipulateEndpoint := "localhost:80"
+	manipulateEndpoint := "manipulation-service:80"
 	manipulateUrl := fmt.Sprintf(`http://%s/manipulate?rotate=1&translate=1`, manipulateEndpoint)
 	req, err := http.NewRequest("POST", manipulateUrl, body)
 	req.Header.Set("Content-Type", writer.FormDataContentType())
