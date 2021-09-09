@@ -7,6 +7,10 @@ import (
 	"database/sql"
 	_"github.com/go-sql-driver/mysql"
 	"encoding/json"
+	"net/http"
+	"bytes"
+	"mime/multipart"
+	"io"
   )
 
 var password string = os.Getenv("PASSWORD")
@@ -18,6 +22,7 @@ type Hats struct {
     Url           string `field:"url"`           
     // FileName      string `field:"fileName"`           
     Description   string `field:"description"`
+	Base64		  string
     // Approve       string `field:"approve"`
 }
 
@@ -52,6 +57,8 @@ func UnmoderatedPic() string {
 		if err != nil {
 			fmt.Println(err)
 		}
+
+		hat.Base64 = createSampleImage(hat.Url)
 		fmt.Println("hat: ", hat)
 		hats = append(hats, *hat)
 	}
@@ -65,4 +72,51 @@ func UnmoderatedPic() string {
 	}
 
 	return result
+}
+
+func createSampleImage(hatUrl string) string {
+	var buf []byte
+
+	hat_response, err := http.Get(hatUrl)
+	defer hat_response.Body.Close()
+
+	ross_response, err := http.Get("https://user-images.githubusercontent.com/69332964/128645143-86405a62-691b-4de9-8500-b9362675e1db.png")
+	defer ross_response.Body.Close()
+
+	fmt.Println("Downloaded pictures and packaging them for multipart...")
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	baby, err := writer.CreateFormFile("file", "hat")
+	_, err = io.Copy(baby, ross_response.Body)
+	hat, err := writer.CreateFormFile("file", "hat")
+	_, err = io.Copy(hat, hat_response.Body)
+	
+	err = writer.Close()
+
+	fmt.Println("")
+	manipulateEndpoint := "localhost:80"
+	manipulateUrl := fmt.Sprintf(`http://%s/manipulate?rotate=1&translate=1`, manipulateEndpoint)
+	req, err := http.NewRequest("POST", manipulateUrl, body)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		body := &bytes.Buffer{}
+		_, err := body.ReadFrom(resp.Body)
+	if err != nil {
+			log.Fatal(err)
+		}
+	resp.Body.Close()
+	// 	fmt.Println(resp.StatusCode)
+	// 	fmt.Println(resp.Header)
+		buf, _ = io.ReadAll(body)
+	}
+
+	return string(buf)
 }
