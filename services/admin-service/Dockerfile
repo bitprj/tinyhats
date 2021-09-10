@@ -1,4 +1,6 @@
 FROM golang:alpine AS builder
+RUN apk --no-cache add ca-certificates
+ADD ca-certificates.crt /etc/ssl/certs/
 
 # Set necessary environmet variables needed for our image
 ENV GO111MODULE=on \
@@ -12,8 +14,6 @@ WORKDIR /build
 # Copy and download dependency using go mod
 COPY . .
 RUN go mod download
-RUN apk --no-cache add ca-certificates
-ADD ca-certificates.crt /etc/ssl/certs/
 
 # Build the application
 RUN go build -o main .
