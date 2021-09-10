@@ -78,9 +78,15 @@ func createSampleImage(hatUrl string) string {
 	var buf []byte
 
 	hat_response, err := http.Get(hatUrl)
+	if err != nil {
+		return "error"
+	}
 	defer hat_response.Body.Close()
 
 	ross_response, err := http.Get("https://user-images.githubusercontent.com/69332964/128645143-86405a62-691b-4de9-8500-b9362675e1db.png")
+	if err != nil {
+		return "error"
+	}
 	defer ross_response.Body.Close()
 
 	fmt.Println("Downloaded pictures and packaging them for multipart...")
