@@ -79,12 +79,14 @@ func createSampleImage(hatUrl string) string {
 
 	hat_response, err := http.Get(hatUrl)
 	if err != nil {
+		fmt.Println(err)
 		return "error"
 	}
 	defer hat_response.Body.Close()
 
 	ross_response, err := http.Get("https://user-images.githubusercontent.com/69332964/128645143-86405a62-691b-4de9-8500-b9362675e1db.png")
 	if err != nil {
+		fmt.Println(err)
 		return "error"
 	}
 	defer ross_response.Body.Close()
