@@ -30,7 +30,12 @@ function createElements(obj) {
     hatCol.classList.add("col-md-6", "d-flex", "align-items-center", "justify-content-center");
     let hatImg = document.createElement("img");
     hatImg.classList.add("img-fluid", "hat-img");
-    hatImg.src = obj.Base64.finalBaby;
+
+    let imgJson = JSON.parse(obj.Base64)
+    hatImg.src = imgJson.finalBaby;
+
+    console.log(imgJson)
+
     hatImg.alt = obj.Description;
     hatCol.appendChild(hatImg);
 
