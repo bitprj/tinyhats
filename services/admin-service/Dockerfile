@@ -1,9 +1,4 @@
 FROM golang:alpine AS builder
-RUN apk update \
-        && apk upgrade \
-        && apk add --no-cache \
-        ca-certificates \
-        && update-ca-certificates 2>/dev/null || true
 
 # Set necessary environmet variables needed for our image
 ENV GO111MODULE=on \
