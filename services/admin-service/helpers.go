@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"mime/multipart"
 	"io"
+	"strings"
   )
 
 var password string = os.Getenv("PASSWORD")
@@ -77,14 +78,14 @@ func UnmoderatedPic() string {
 func createSampleImage(hatUrl string) string {
 	var buf []byte
 
-	hat_response, err := http.Get(hatUrl)
+	hat_response, err := http.Get(strings.ReplaceAll(hatUrl, "https", "http"))
 	if err != nil {
 		fmt.Println(err)
 		return "error"
 	}
 	defer hat_response.Body.Close()
 
-	ross_response, err := http.Get("https://user-images.githubusercontent.com/69332964/128645143-86405a62-691b-4de9-8500-b9362675e1db.png")
+	ross_response, err := http.Get("http://tinyhats.s3.us-east-2.amazonaws.com/bobross.png")
 	if err != nil {
 		fmt.Println(err)
 		return "error"
