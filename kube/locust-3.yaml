@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: locust-service
+  name: locust-service-3
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: locust-service
+      app: locust-service-3
   template:
     metadata:
       labels:
-        app: locust-service
+        app: locust-service-3
     spec:
       containers:
         - name: locust-service
-          image: bitprj/locust-service
+          image: bitprj/locust-service-3
           ports:
           - containerPort: 5557
             name: comm
@@ -24,17 +24,17 @@ spec:
             name: web-ui
           env:
             - name: ATTACKED_HOST
-              value: http://gateway-service:80
+              value: http://frontend-service:80
           imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: locust-service
+  name: locust-service-3
 spec:
   selector:
-    app: locust-service
+    app: locust-service-3
   ports:
     - port: 80
-      targetPort: 5557
-  type: LoadBalancer
+      targetPort: 8089
+  type: ClusterIP

@@ -2,13 +2,9 @@ import random
 from locust import HttpUser, TaskSet, between
 
 products = [
-    'baby',
-    'bucket',
-    'beach',
-    'spinner',
-    'skull',
-    'MARIO',
-    'SPICY']
+    'admin?password="ilovecats"',
+    'admin?password="ilovecats'
+    ]
 
 def index(l):
     l.client.get("/")
