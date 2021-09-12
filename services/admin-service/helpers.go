@@ -15,7 +15,7 @@ var endpoint string = os.Getenv("HOST")
 type Hats struct {
 	// Key 		  int 	 `field:id`
     ID            string `field:"keyId"`                      
-    Url           string `field:"url"`           
+    Base64           string `field:"base64"`           
     // FileName      string `field:"fileName"`           
     Description   string `field:"description"`
     // Approve       string `field:"approve"`
@@ -39,7 +39,7 @@ func UnmoderatedPic() string {
 	defer db.Close()
 	
 	// query for id and drop picture
-	rows, err := db.Query("SELECT keyId, url, description FROM main.images WHERE approve='false'")
+	rows, err := db.Query("SELECT keyId, base64, description FROM main.images WHERE approve='false'")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -47,7 +47,7 @@ func UnmoderatedPic() string {
 	for rows.Next() {
 		hat := new(Hats)
 
-		err = rows.Scan(&hat.ID, &hat.Url, &hat.Description)
+		err = rows.Scan(&hat.ID, &hat.Base64, &hat.Description)
 
 		if err != nil {
 			fmt.Println(err)
