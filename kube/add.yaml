@@ -20,8 +20,6 @@ spec:
           env:
             - name: UPLOAD_ENDPOINT
               value: upload-service:80
-            - name: ENDPOINT
-              value: "$ENDPOINT"
           imagePullPolicy: Always
 ---
 apiVersion: v1
