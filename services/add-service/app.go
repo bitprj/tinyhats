@@ -13,7 +13,7 @@ import (
 type Message struct {
 	Key   string  `json:"key"`
 	FileName string `json:"fileName"`
-	Url string `json:"url"`
+	Base64 string `json:"base64"`
 	Description string `json:"description"`
 	Approve string `json:"approve"`
 }

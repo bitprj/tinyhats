@@ -46,7 +46,7 @@ window.onload = async () => {
 
 function setHats(hatList) {
 
-    hatContainer.src = hatList[hatIndex].url;
+    hatContainer.src = hatList[hatIndex].base64;
     hatContainer.alt = hatList[hatIndex].description;
 }
 
@@ -57,7 +57,7 @@ document.getElementById("hat-type-container").addEventListener("click", () => {
     if (hatIndex > hatList.length - 1) {
         hatIndex = 0;
     }
-    hatContainer.src = hatList[hatIndex].url;
+    hatContainer.src = hatList[hatIndex].base64;
     hatContainer.alt = hatList[hatIndex].description;
 
 });
