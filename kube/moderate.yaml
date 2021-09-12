@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: moderate-service
-          image: bitprj/moderate-service
+          image: bitprj/moderate-service-lite
           ports:
             - containerPort: 5000
           env:

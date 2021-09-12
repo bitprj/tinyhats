@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: gateway-service
-          image: bitprj/gateway-service
+          image: bitprj/gateway-service-lite
           ports:
             - containerPort: 4444
           env:
