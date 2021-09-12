@@ -19,16 +19,6 @@ export async function listPictures() {
     return results
 };
 
-export async function downloadBuffer(url) {
-    let resp = await fetch(url,{
-        method: 'GET',
-    })
-
-    // receive the response
-    let data = await resp.arrayBuffer()
-    return data
-}
-
 export async function getSpecificHat(style) {
     var sql = `SELECT * FROM main.images WHERE description='${style}' AND approve='true'`;
     const results = await con.promise().query(sql)
@@ -41,17 +31,14 @@ export async function getSpecificHat(style) {
     }
 
     let randNum = Math.floor(Math.random() * hatList.length)
-    let hatLink = hatList[randNum].url
+    let hatLink = hatList[randNum].base64
     console.log(hatLink)
 
-    let image = await downloadBuffer(hatLink)
-    image = Buffer.from(image)
-
-    return image
+    return Buffer.from(hatLink, "base64")
 }
 
 export async function getHatData() {
-    var sql = `SELECT description, url FROM main.images WHERE approve='true'`;
+    var sql = `SELECT description, base64 FROM main.images WHERE approve='true'`;
     const results = await con.promise().query(sql)
     
     let hatList = results[0]
@@ -67,12 +54,20 @@ export async function getRandomHat() {
     console.log(hatList)
 
     let randNum = Math.floor(Math.random() * hatList.length)
-    let hatLink = hatList[randNum].url
+    let hatLink = hatList[randNum].base64
     console.log(hatLink)
 
-    let image = await downloadBuffer(hatLink)
-    image = Buffer.from(image)
-    return image
+    return Buffer.from(hatLink, "base64")
+}
+
+export async function downloadBuffer(url) {
+    let resp = await fetch(url,{
+        method: 'GET',
+    })
+
+    // receive the response
+    let data = await resp.arrayBuffer()
+    return data
 }
 
 export async function defaultBoss() {
