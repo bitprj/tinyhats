@@ -2,7 +2,7 @@ import express from 'express'
 import multer from 'multer'
 const upload = multer()
 const app = express()
-import { uniqueId, uploadFile, fileExt, push2RDS } from './src/helpers.js'
+import { uniqueId, fileExt, push2RDS } from './src/helpers.js'
 var router = express.Router();
 const PORT = 8080
 
@@ -27,14 +27,11 @@ router.post('/upload', upload.any(), async(req, res) => {
     // determine file extension
     let ext = fileExt(req.body.mimeType)
 
-    // base64 image to binary data
+    // binary to base64
     console.log("Image received")
-    let imageData = Buffer.from(image, 'base64')
-
-    // upload to s3
-    let link = await uploadFile(fileName + ext, imageData)
+    let imageData = Buffer.from(image).toString("base64")
 
     // push to rds
-    let data = await push2RDS(fileName, ext, name, link)
+    let data = await push2RDS(fileName, ext, name, imageData)
     res.send(data) 
   });
