@@ -116,7 +116,7 @@ data:
     INSERT INTO images VALUES (33, 'jx9mr1zt4fip0b90', 'https://tinyhats.s3.amazonaws.com/jx9mr1zt4fip0b90.png', 'jx9mr1zt4fip0b90.png', 'tinyhat', 'true');
     INSERT INTO images VALUES (37, '8wc1m6wkr3uelnnq', 'https://tinyhats.s3.amazonaws.com/8wc1m6wkr3uelnnq.png', '8wc1m6wkr3uelnnq.png', 'cat-ears', 'true');    
     INSERT INTO images VALUES (65, '124626ixbtm5qz8u', 'https://tinyhats.s3.amazonaws.com/124626ixbtm5qz8u.png', '124626ixbtm5qz8u.png', 'spicy', 'false');
-    INSERT INTO images VALUES (100, 'faznhokg9hvaz76p', 'https://tinyhats.s3.amazonaws.com/faznhokg9hvaz76p.png', 'faznhokg9hvaz76p.png', 'food', 'false');
+    INSERT INTO images VALUES (100, 'faznhokg9hvaz76p', 'https://tinyhats.s3.amazonaws.com/pixie.png', 'pixie.png', 'PIXIE', 'true');
     GRANT ALL PRIVILEGES
     ON main.images
     TO 'admin'@'%'
