@@ -100,7 +100,7 @@ window.onload = async function getHats(event) {
     }
 
     for (var i = 0; i < hatList.length; i++) {
-        $('.swiper-wrapper').append(`<div class="swiper-slide d-flex align-items-center justify-content-center"><img class="img-fluid swiper-pic" width="100px" src="${hatList[i].base64}" alt=""></div>`)
+        $('.swiper-wrapper').append(`<div class="swiper-slide d-flex align-items-center justify-content-center"><img class="img-fluid swiper-pic" src="data:image/png;base64,${hatList[i].base64}" alt=""></div>`)
     }
 
     const swiper = new Swiper('.swiper-container', {
