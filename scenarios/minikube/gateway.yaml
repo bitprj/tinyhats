@@ -37,5 +37,3 @@ spec:
     - port: 80
       targetPort: 4444
   type: LoadBalancer
-  externalIPs:
-    - 192.168.0.10

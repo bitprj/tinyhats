@@ -82,7 +82,7 @@ metadata:
   name: mysql-initdb-config
 data:
   initdb.sql: |
-    CREATE TABLE IF NOT EXISTS images(id int NOT NULL AUTO_INCREMENT, keyId varchar(30), base64 varchar(8000), fileName varchar(255), description varchar(255), approve varchar(30), PRIMARY KEY(id));
+    CREATE TABLE IF NOT EXISTS images(id int NOT NULL AUTO_INCREMENT, keyId varchar(30), base64 LONGTEXT, fileName varchar(255), description varchar(255), approve varchar(30), PRIMARY KEY(id));
     CREATE USER 'admin'@'%' IDENTIFIED BY 'password';
     GRANT ALL ON *.* TO 'admin'@'%';
     FLUSH PRIVILEGES;
