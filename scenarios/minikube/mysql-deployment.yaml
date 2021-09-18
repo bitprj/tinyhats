@@ -25,7 +25,7 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: mysql:5.6
+      - image: mysql/mysql-server
         name: mysql
         env:
           # Use secret in real usage
@@ -84,4 +84,5 @@ data:
   initdb.sql: |
     CREATE TABLE IF NOT EXISTS images(id int NOT NULL AUTO_INCREMENT, keyId varchar(30), base64 varchar(8000), fileName varchar(255), description varchar(255), approve varchar(30), PRIMARY KEY(id));
     CREATE USER 'admin'@'%' IDENTIFIED BY 'password';
-    GRANT ALL PRIVILEGES ON main.images TO 'admin'@'%';
+    GRANT ALL ON *.* TO 'admin'@'%';
+    FLUSH PRIVILEGES;

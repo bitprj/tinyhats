@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manipulation-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: manipulation-service
+  template:
+    metadata:
+      labels:
+        app: manipulation-service
+    spec:
+      containers:
+        - name: manipulation-service
+          image: bitprj/mini-manipulation-service
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: manipulation-service
+spec:
+  selector:
+    app: manipulation-service
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP

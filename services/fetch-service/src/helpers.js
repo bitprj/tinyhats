@@ -3,8 +3,8 @@ import mysql from 'mysql2'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 
-const HOST = process.env.HOST;
-const PASSWORD = process.env.PASSWORD;
+const HOST = "mysql";
+const PASSWORD = "password";
 
 const con = mysql.createConnection({
     host: HOST,
