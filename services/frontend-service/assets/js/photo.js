@@ -26,8 +26,10 @@ let hatCountIndex = 0;
 let hatContainer = document.getElementById("hat-type");
 let hatIndex = 0;
 let hatList;
-
-
+let overlay = document.getElementById("overlay");
+let loadingGif = document.getElementById("loading");
+let camera = document.getElementById("my_camera");
+let buttonControls = document.getElementById("button-controls");
 
 window.onload = async () => {
     hatCount.innerHTML = hatCountList[hatCountIndex];
@@ -74,12 +76,13 @@ document.getElementById("count-container").addEventListener("click", () => {
 
 document.getElementById("snap").addEventListener('click', () => {
     audio.play();
+    overlay.classList.remove("hidden");
+    loadingGif.classList.remove("hidden");
+    removeAllChildNodes(camera);
 
     let spinner = document.getElementById('spinner');
     let result = document.getElementById('result');
     Webcam.snap(async function (data_uri) {
-        spinner.classList.remove("hidden");
-        result.classList.add("hidden");
         // display results in page  
 
         var file = dataURLtoFile(data_uri, 'bruh.jpeg');
@@ -88,8 +91,7 @@ document.getElementById("snap").addEventListener('click', () => {
 
         var formData = new FormData();
         let baseUrl = "/api/hat";
-
-        let hatType = document.getElementById("hat-type").alt
+        let type = document.getElementById("hat-type").alt
 
         baseUrl += `?number=${hatCount.innerHTML}`
 
@@ -102,8 +104,10 @@ document.getElementById("snap").addEventListener('click', () => {
         formData.append("file", file);
         options = {
             method,
-            body: formData,
-            headers: {type: hatType}
+            headers: {
+                type
+            },
+            body: formData
         }
 
         console.log("Making fetch")
@@ -113,14 +117,27 @@ document.getElementById("snap").addEventListener('click', () => {
         let resp = await fetch(baseUrl, options);
         let data = await resp.json();
         console.log(data);
-        document.getElementById("result").src = data.result.finalBaby;
-        result.classList.remove("hidden");
-        console.log(document.getElementById("result"));
-        spinner.classList.add("hidden");
+
+        let img = document.createElement("img");
+        img.src = data.result.finalBaby;
+        camera.appendChild(img);
+        // result.classList.remove("hidden");
+        // console.log(document.getElementById("result"));
+        loadingGif.classList.add('hidden');
+        overlay.classList.add("hidden");
+        buttonControls.classList.add("hidden");
+        document.getElementById("reset").classList.remove("hidden");
     });
 
 
 });
+
+document.getElementById("reset").addEventListener("click", () => {
+    removeAllChildNodes(camera);
+    Webcam.attach('#my_camera');
+    buttonControls.classList.remove("hidden");
+    document.getElementById("reset").classList.add("hidden");
+})
 
 function SaveBlobAs(blob, file_name) {
     if (typeof navigator.msSaveBlob == "function")
@@ -202,4 +219,10 @@ function explode(x, y) {
 // get random number between min and max value
 function rand(min, max) {
     return Math.floor(Math.random() * (max + 1)) + min;
+}
+
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
 }
