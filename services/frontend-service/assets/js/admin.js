@@ -41,12 +41,14 @@ function createElements(obj) {
     hatName.innerHTML = obj.Description;
     let approveLink = document.createElement("a");
     approveLink.innerHTML = "Approve"
-    approveLink.href = `/api/moderate?id=${obj.ID}&approve=true`;
+    approveLink.href = `/api/admin/moderate?id=${obj.ID}&approve=true`;
+    approveLink.setAttribute('target', '_blank');
     approveLink.classList.add("btn", "btn-success", "mr-2");
 
     let denyLink = document.createElement("a");
     denyLink.innerHTML = "Deny"
-    denyLink.href = `/api/moderate?id=${obj.ID}&approve=false`;
+    denyLink.href = `/api/admin/moderate?id=${obj.ID}&approve=false`;
+    denyLink.setAttribute('target', '_blank');
     denyLink.classList.add("btn", "btn-danger");
 
     modContainer.appendChild(hatName);

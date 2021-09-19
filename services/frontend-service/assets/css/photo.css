@@ -1,0 +1,25 @@
+body {
+    overflow: hidden;
+}
+#loading {
+    height: 80vh;
+    z-index: 100;
+    position: absolute;
+}
+
+#overlay {
+    background-color: rgba(0,0,0,0.5);
+    position:fixed;
+    left:0;
+    top: 0;
+    width:100%;
+    height:100%;
+  }
+
+.w-800 {
+    max-width: 800px;
+}
+
+#my_camera video, #my_camera img {
+    border-radius: 10px;
+}

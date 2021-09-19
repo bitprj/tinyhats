@@ -15,18 +15,18 @@ function getImage(event) {
 
     let method = "GET";
     let options = {}
-    let typeHat = ""
     // show spinner and hide the person
     spinner.classList.remove("hidden");
     exampleImage.classList.add('hidden');
 
 
     if (typeInput) {
-        typeHat = typeInput.value
+        formData.append("type", typeInput.value);
+        console.log(typeInput.value);
         options = {
             method,
             headers: {
-                type: typeHat
+                type: typeInput.value
             }
         }
     }
@@ -43,14 +43,8 @@ function getImage(event) {
         console.log(fileInput.files[0]);
         formData.append("file", fileInput.files[0]);
 
-        console.log(options)
-        options = {
-            method,
-            body: formData,
-            headers: {
-                type: typeHat
-            }
-        }
+        options["body"] = formData;
+        options["method"] = method;
     }
 
     console.log("Making fetch")
