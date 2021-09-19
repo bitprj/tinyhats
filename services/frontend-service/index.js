@@ -43,7 +43,7 @@ router.get('/admin', function (req, res) {
 });
 
 router.get('/api/hat', upload.any(), async function (req, res) {
-    let baseUrl = "gateway-service:80";
+    let baseUrl = "http://gateway-service:80";
     const number = req.query.number ? req.query.number : "1";
     console.log(req.body);
     let type = req.headers.type;
@@ -65,7 +65,7 @@ router.get('/api/hat', upload.any(), async function (req, res) {
 
 router.post('/api/hat', upload.any(), async function (req, res) {
     console.log("post data");
-    let baseUrl = "gateway-service:80";
+    let baseUrl = "http://gateway-service:80";
     const number = req.query.number ? req.query.number : "1";
 
     let file = req.files[0].buffer;
@@ -103,7 +103,7 @@ async function createForm(file) {
 }
 
 router.get('/api/list', async function (req, res) {
-    const baseUrl = "gateway-service:80/api/hats";
+    const baseUrl = "http://gateway-service:80/api/hats";
 
     const resp = await fetch(baseUrl);
     const data = await resp.json();
@@ -113,7 +113,7 @@ router.get('/api/list', async function (req, res) {
 
 
 router.get('/api/admin', async function (req, res) {
-    let baseUrl = "gateway-service:80/admin"
+    let baseUrl = "http://gateway-service:80/admin"
     let resp = await fetch(baseUrl);
     let data = await resp.json();
     res.send(data);
@@ -123,7 +123,7 @@ router.get('/api/admin/moderate', async function (req, res) {
     let id = req.query.id;
     let approve = req.query.approve;
 
-    let baseUrl = `gateway-service:80/moderate?id=${id}&approve=${approve}`;
+    let baseUrl = `http://gateway-service:80/moderate?id=${id}&approve=${approve}`;
 
     let resp = await fetch(baseUrl);
     let data = await resp.json();
