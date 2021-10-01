@@ -14,12 +14,14 @@ spec:
     spec:
       containers:
         - name: add-service
-          image: bitprj/add-service-lite
+          image: bitprj/mini-add-service
           ports:
             - containerPort: 31337
           env:
             - name: UPLOAD_ENDPOINT
               value: upload-service:80
+            - name: ENDPOINT
+              value: "$ENDPOINT"
           imagePullPolicy: Always
 ---
 apiVersion: v1

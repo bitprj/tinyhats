@@ -1,0 +1,36 @@
+{
+  "name": "intro-to-k8s",
+  "version": "1.0.0",
+  "description": "",
+  "exports": "./index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitprj/intro-to-k8s.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bitprj/intro-to-k8s/issues"
+  },
+  "homepage": "https://github.com/bitprj/intro-to-k8s#readme",
+  "dependencies": {
+    "@grpc/proto-loader": "^0.6.4",
+    "aws-sdk": "^2.936.0",
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "file-type": "^16.5.2",
+    "generate-unique-id": "^2.0.1",
+    "grpc": "^1.24.11",
+    "lowdb": "^2.1.0",
+    "multer": "^1.4.2",
+    "mysql2": "^2.3.0",
+    "nodemon": "^2.0.8"
+  }
+}

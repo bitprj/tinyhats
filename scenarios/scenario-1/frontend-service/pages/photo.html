@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./assets/css/index.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <title>TinyHat - Photo</title>
+</head>
+
+<body>
+    <!-- Image and text -->
+    <nav class="navbar">
+        <a class="navbar-brand" href="index.html">
+            <div class="content d-flex align-items-center">
+                <img src="./assets/img/logo.png" width="60" height="60" class="" alt="">
+                <h1 class="d-inline ml-4 mt-1 white"><span class="bold">TinyHat</span>.me</h1>
+            </div>
+        </a>
+    </nav>
+
+    <section id="cover" class="">
+        <div class="container d-flex justify-content-center">
+            <div id="my_camera"></div>
+        </div>
+    </section>
+    <div class="mt-4 container">
+        <div class="row">
+            <div class="col-md-4 d-flex justify-content-center align-items-center controls button-container">
+                <button id="hat-type-container" class="blob-btn">
+                    <img id="hat-type" src="./assets/img/logo.png" alt="" class="img-fluid">
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <!-- <div id="hat-type-container" class="button-container d-flex justify-content-center pointer">
+                    <img id="hat-type" src="./img/logo.png" alt="" class="img-fluid">
+                </div> -->
+            </div>
+            <div class="col-md-4 d-flex justify-content-center align-items-center controls button-container">
+                <!-- <div class="button-container pointer d-flex justify-content-center align-items-center"
+                    id="count-container"> -->
+                <button id="count-container" class="blob-btn">
+                    <h4 class="no-m">Hat Count: <span id="hat-count" style="color: #B89D04;"></span></h4>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <!-- </div> -->
+            </div>
+            <!-- <div class="col-md-4 d-flex justify-content-center align-items-center controls">
+                <button id="snap" class="btn button btn-lg btn-primary w-100">snap 🐈</button>
+            </div> -->
+
+
+            <div class="col-md-4 d-flex justify-content-center align-items-center controls button-container">
+                <button id="snap" class="blob-btn">
+                    <h4 class="no-m" style="color: #B89D04;">snap 🐈</h4>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <section>
+        <div class="container d-flex justify-content-center align-items-center mt-4">
+            <img id="spinner" src="./assets/img/spinner.png" alt="" class="img-fluid hidden" style="height: 80px">
+            <img id="result" src="" alt="">
+        </div>
+    </section>
+
+
+    <div class="separator"></div>
+    <div class="separator"></div>
+
+
+
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo">
+                </feColorMatrix>
+                <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+            </filter>
+        </defs>
+    </svg>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.7/js/tether.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <script src="./assets/js/anime.min.js"></script>
+    <script src="./assets/js/particles.js"></script>
+
+    <script src="./assets/js/webcam.js"></script>
+    <script src="./assets/js/photo.js"></script>
+
+</body>
+
+</html>

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: upload-service
-          image: bitprj/upload-service-lite
+          image: bitprj/mini-upload-service
           ports:
             - containerPort: 8080
           env:
@@ -22,6 +22,10 @@ spec:
               value: mysql
             - name: PASSWORD
               value: password
+            - name: S3_ID
+              value: "$S3_ID"
+            - name: S3_SECRET
+              value: "$S3_SECRET"
           imagePullPolicy: Always
 ---
 apiVersion: v1
