@@ -20,7 +20,7 @@ export async function listPictures() {
 };
 
 export async function getSpecificHat(style) {
-    var sql = `SELECT * FROM main.images WHERE description='${style}' AND approve='true'`;
+    var sql = `SELECT * FROM main.images WHERE BINARY description='${style.toLowerCase()}' AND approve='true'`;
     const results = await con.promise().query(sql)
         .catch(err => console.log(err))
     
