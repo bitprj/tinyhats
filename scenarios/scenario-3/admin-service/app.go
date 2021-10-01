@@ -13,7 +13,6 @@ import (
 	"bytes"
 	"mime/multipart"
 	"io"
-	"strings"
 )
 
 func main() {
