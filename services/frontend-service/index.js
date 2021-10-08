@@ -15,13 +15,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 app.set('view engine', 'ejs');
 app.set('views', __dirname);
 
+// this is just setting up configuration for where all the files are.
 const path = __dirname;
 
-// this is just setting up configuration for where all the files are.
-
-
 //__dirname is the current directory we are in. Remember that every website literally has a computer running behind it!
-
 app.use('/', router);
 app.use('/assets', express.static(path + '/assets'))
 
