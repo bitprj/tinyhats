@@ -36,4 +36,4 @@ COPY locustfile.py .
 # enable gevent support in debugger
 ENV GEVENT_SUPPORT=True
 
-ENTRYPOINT locust -f locustfile.py --headless -u 1 -r 1 --host="http://gateway-service:80"
+ENTRYPOINT locust
