@@ -37,6 +37,17 @@ router.post('/', upload.any(), async (req, res) => {
     let formData = new FormData()
     formData.append('file', req.files[0].buffer, {filename: "face", data: req.files[0].buffer})
     const formHeaders = formData.getHeaders();
+    const handleResp = await fetch(`http://${process.env.HANDLER_ENDPOINT}/handler`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+        ...formHeaders,
+        },  
+    });
+
+    var url = await handleResp.json().link
+    console.log(url)
+
     const fetchResp = await fetch(`http://${process.env.FETCH_ENDPOINT}/fetch?` + param, {
         method: 'POST',
         body: formData,
@@ -161,6 +172,8 @@ router.get('/api/:apiName', upload.any(), async (req, res) => {
         res.send(result)
     }
 })
+
+async function imageHandler()
 
 app.use('/', router)
 
