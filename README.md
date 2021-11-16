@@ -7,6 +7,10 @@ TinyHat.Me is an up and coming startup that provides an API to allow users to tr
 
 <img src="https://user-images.githubusercontent.com/69332964/128766963-f2cce4f8-076c-4cff-a4a7-67be99ea6616.png" width=429 height=217></img>
 
+## Featured In
+* [New Relic One and Pixie AWS Workshop](https://newrelic.awsworkshop.io/pixie/prereqs/)
+* [New Relic Pixie Tutorial](https://developer.newrelic.com/collect-data/pixie/)
+
 ## Run `tinyhats` Locally without S3
 ### Download `minikube`
 Follow instructions [here](https://v1-18.docs.kubernetes.io/docs/tasks/tools/install-minikube/) to install minikube.
@@ -45,7 +49,7 @@ Click `Create bucket`.
 2. Edit the Public Access settings to match the configuration below:
 
 ![](https://i.imgur.com/u6ZrfvH.png)
-3. Leave all other settings as deafult and click `Create bucket`.
+3. Leave all other settings as defult and click `Create bucket`.
 
 #### Allowing public access
 On the S3 console, click on the newly created S3 bucket by identifying it with the name you assigned it to. (Example: `tinyhats`)
@@ -69,6 +73,17 @@ On the S3 console, click on the newly created S3 bucket by identifying it with t
 3. Click `Save changes`. If you configured your bucket correctly, you should see the labels `Publicly accessible` and Access labeled as `Public`.
 ![](https://i.imgur.com/cYq2MYc.png)
 
+### Deploying the Cluster
+> Ensure you have a running cluster and `kubectl` configured.
+Obtain your AWS ID and Secret. Export these into environment variables.
+```
+export S3_ID=[your S3 ID]
+export S3_SECRET=[your S3 secret]
+```
+Clone this directory. Change directory (`cd`) into the `kube` folder and run the below command to apply your S3 secrets and deploy the Kubernetes resources.
+```
+for f in *.yaml; do envsubst < $f | kubectl apply -f -; done
+```
 ## API Documentation
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/13335676-7e8c1f75-79bc-4cfa-aa5f-58ca98530a85?action=collection%2Ffork&collection-url=entityId%3D13335676-7e8c1f75-79bc-4cfa-aa5f-58ca98530a85%26entityType%3Dcollection%26workspaceId%3D98a973b2-634a-4c12-8263-bcdb4ab93659)
 #### Parameters
@@ -101,5 +116,5 @@ Returns a specific hat style on your POSTed image.
 Adds the image to the `admin` page to queue for approval.
 
 ### Flowchart
-![flowchart](https://user-images.githubusercontent.com/69332964/141993802-60c018a9-e8ab-44ab-97f1-cc61df741bf8.png)
+![flowchart](https://user-images.githubusercontent.com/69332964/141996439-d990abde-91b1-4720-afe7-5f38eb3ef9e0.png)
 
