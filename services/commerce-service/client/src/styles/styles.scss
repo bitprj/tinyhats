@@ -1,0 +1,43 @@
+body {
+    background-image: url('../assets/RedisLabsIllustration.svg');
+    background-color: #f8f8fb;
+    background-repeat: no-repeat;
+    background-size: 340px;
+    background-position: right top;
+}
+
+#app {
+    background: none;
+}
+
+.text {
+    word-break: normal;
+}
+
+input {
+    text-align: center;
+    margin: 0 !important;
+}
+
+.v-input__slot {
+    margin: 0 !important;
+}
+
+.v-input__slot::before {
+    border-style: none !important;
+    content: none;
+}
+
+.v-input__slot::before:active {
+    border-style: none !important;
+    content: none;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.v-sheet.v-card:not(.v-sheet--outlined) {
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+        0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: commerce-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: commerce-service
+  template:
+    metadata:
+      labels:
+        app: commerce-service
+    spec:
+      containers:
+        - name: commerce-service
+          image: bitprj/commerce-service
+          ports:
+            - containerPort: 22222
+          env:
+            - name: REDIS_ENDPOINT_URI
+              value: redis://redis-service:6379
+            - name: REDIS_PASSWORD
+              value: 88901
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: commerce-service
+spec:
+  selector:
+    app: commerce-service
+  ports:
+    - port: 80
+      targetPort: 22222
+  type: LoadBalancer
