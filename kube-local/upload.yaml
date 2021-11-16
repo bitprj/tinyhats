@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upload-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: upload-service
+  template:
+    metadata:
+      labels:
+        app: upload-service
+    spec:
+      containers:
+        - name: upload-service
+          image: bitprj/mini-upload-service
+          ports:
+            - containerPort: 8080
+          env:
+            - name: HOST
+              value: mysql
+            - name: PASSWORD
+              value: password
+            - name: S3_ID
+              value: "$S3_ID"
+            - name: S3_SECRET
+              value: "$S3_SECRET"
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: upload-service
+spec:
+  selector:
+    app: upload-service
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP
