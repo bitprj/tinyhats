@@ -52,8 +52,8 @@ Returns a specific hat style on your POSTed image.
 ### `[POST] /add`
 > `api.tinyhat.me/add` POST with multipart/form-data: image with hat and `name` attribute
 
-Emails moderator with your proposed hat for moderation.
+Adds the image to the `admin` page to queue for approval.
 
 ### Flowchart
-![image](https://user-images.githubusercontent.com/69332964/126816456-d5c5e4b5-243b-457a-a9e1-e643c0ffbd35.png)
+![flowchart](https://user-images.githubusercontent.com/69332964/141993802-60c018a9-e8ab-44ab-97f1-cc61df741bf8.png)
 
