@@ -19,7 +19,7 @@ spec:
             - containerPort: 22222
           env:
             - name: REDIS_ENDPOINT_URI
-              value: redis://redis-service:6379
+              value: redis://redis:6379
             - name: REDIS_PASSWORD
               value: 88901
           imagePullPolicy: Always
