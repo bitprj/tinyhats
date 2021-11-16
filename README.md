@@ -84,6 +84,8 @@ Clone this directory. Change directory (`cd`) into the `kube` folder and run the
 ```
 for f in *.yaml; do envsubst < $f | kubectl apply -f -; done
 ```
+Using `kubectl get pods --watch`, monitor when the pods are finished deploying. Use `kubectl get services` to copy the URI of the `gateway-service` or `frontend-service` for testing.
+
 ## API Documentation
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/13335676-7e8c1f75-79bc-4cfa-aa5f-58ca98530a85?action=collection%2Ffork&collection-url=entityId%3D13335676-7e8c1f75-79bc-4cfa-aa5f-58ca98530a85%26entityType%3Dcollection%26workspaceId%3D98a973b2-634a-4c12-8263-bcdb4ab93659)
 #### Parameters
