@@ -20,7 +20,6 @@ Clone this repository and `cd` into root directory.
 ```
 kubectl apply -f kube-local
 ```
-
 ### Test Cluster
 To test the API directly:
 ```
@@ -30,11 +29,45 @@ To interact with the API through the frontend:
 ```
 minikube service -n default --url frontend-service
 ```
-
 ### Cleaning Up
 ```
 minikube delete
 ```
+
+## Deploying `tinyhats` with EKS and S3
+### S3 Bucket
+Click [here](https://console.aws.amazon.com/s3/home) to access the S3 console.
+
+#### Creating the bucket
+Click `Create bucket`.
+
+1. Name your bucket in the `Bucket name` field. (Example: `tinyhats`)
+2. Edit the Public Access settings to match the configuration below:
+
+![](https://i.imgur.com/u6ZrfvH.png)
+3. Leave all other settings as deafult and click `Create bucket`.
+
+#### Allowing public access
+On the S3 console, click on the newly created S3 bucket by identifying it with the name you assigned it to. (Example: `tinyhats`)
+
+1. Click on `Permissions` and scroll down to `Bucket policy`.
+2. Click `Edit` and paste the below policy in the editor, **remembering to replace `tinyhats` with your bucket name**
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AddPerm",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::tinyhats/*"
+        }
+    ]
+}
+```
+3. Click `Save changes`. If you configured your bucket correctly, you should see the labels `Publicly accessible` and Access labeled as `Public`.
+![](https://i.imgur.com/cYq2MYc.png)
 
 ## API Documentation
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/13335676-7e8c1f75-79bc-4cfa-aa5f-58ca98530a85?action=collection%2Ffork&collection-url=entityId%3D13335676-7e8c1f75-79bc-4cfa-aa5f-58ca98530a85%26entityType%3Dcollection%26workspaceId%3D98a973b2-634a-4c12-8263-bcdb4ab93659)
