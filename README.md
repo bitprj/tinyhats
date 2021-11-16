@@ -1,27 +1,40 @@
 ![image](https://user-images.githubusercontent.com/69332964/128773669-a4c000e4-bd8b-4e29-8498-f7f9d88027cd.png)
 
-<h4 align="center">Click <a href="https://github.com/bitprj/intro-to-k8s/tree/bugs">here</a> to see the "buggy" version 🐛</h4>
+<h4 align="center">Click <a href="https://github.com/bitprj/tinyhats/tree/readme-update/scenarios">here</a> to see the "buggy" versions 🐛</h4>
 
 # The Scenario
 TinyHat.Me is an up and coming startup that provides an API to allow users to try on tiny hats via a REST API. The startup is looking to you to ship some awesome new features! While we have a frontend working to serve tiny hats from a database, the startup is looking to add some exciting new features. Today, as the newest backend engineer at TinyHat.Me, you are going to be learning how the microservices work, as well as fix a few outstanding bugs from our customers!
 
 <img src="https://user-images.githubusercontent.com/69332964/128766963-f2cce4f8-076c-4cff-a4a7-67be99ea6616.png" width=429 height=217></img>
 
-## The Outline
-### 🔨 Building
-- What are Microservices?
-- Let's write the `/email` and `/moderate` services!
-- Hello? Are you there? How do the pods communicate?
-### 🚀 Deploying
-- What even is Kubernetes, the whale, and containers?
-- Containerizing with Docker
-- EKS: it does not stand for Ecstatic Kittens Surfing
-- Let's spring into action: Deploying Continuously with Github
-- Routing traffic with Route53 and DNS configuration
-### 🐛 Debugging
-- Yikes! Innappropriate hats are on the website!
-- We have complaints about the `fetch` feature...
-- The moderate can't moderate?
+## Run `tinyhats` Locally without S3
+### Download `minikube`
+Follow instructions [here](https://v1-18.docs.kubernetes.io/docs/tasks/tools/install-minikube/) to install minikube.
+
+### Deploy Cluster
+```
+minikube start
+```
+### Download Kubernetes Manifests
+Clone this repository and `cd` into root directory.
+```
+kubectl apply -f kube-local
+```
+
+### Test Cluster
+To test the API directly:
+```
+minikube service -n default --url gateway-service
+```
+To interact with the API through the frontend:
+```
+minikube service -n default --url frontend-service
+```
+
+### Cleaning Up
+```
+minikube delete
+```
 
 ## API Documentation
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/13335676-7e8c1f75-79bc-4cfa-aa5f-58ca98530a85?action=collection%2Ffork&collection-url=entityId%3D13335676-7e8c1f75-79bc-4cfa-aa5f-58ca98530a85%26entityType%3Dcollection%26workspaceId%3D98a973b2-634a-4c12-8263-bcdb4ab93659)
