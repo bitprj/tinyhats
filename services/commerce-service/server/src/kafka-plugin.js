@@ -2,7 +2,7 @@ const { Kafka } = require('kafkajs')
 
 const kafka = new Kafka({
     clientId: 'tinyhats-commerce',
-    brokers: ['kafka1:9092']
+    brokers: ['kafka-kafka-brokers:9092']
   })
 
 const producer = kafka.producer()
