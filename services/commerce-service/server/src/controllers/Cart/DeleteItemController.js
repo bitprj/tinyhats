@@ -1,11 +1,22 @@
 const { StatusCodes } = require('http-status-codes');
+const { Analytics } = require('analytics')
+const kafka = require('../../kafka-plugin')
 
+const analytics = Analytics({
+  app: 'app-name',
+  plugins: [
+    kafka
+  ]
+})
 class CartDeleteItemController {
     constructor(redisClientService) {
         this.redisClientService = redisClientService;
     }
 
     async index(req, res) {
+        analytics.track('deleted', {
+            hat_id: productId
+          })
         const { cartId } = req.session;
         const { id: productId } = req.params;
 

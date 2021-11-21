@@ -1,4 +1,13 @@
 const { StatusCodes } = require('http-status-codes');
+const { Analytics } = require('analytics')
+const kafka = require('../../kafka-plugin')
+
+const analytics = Analytics({
+  app: 'app-name',
+  plugins: [
+    kafka
+  ]
+})
 
 class CartEmptyController {
     constructor(redisClientService) {
@@ -7,6 +16,10 @@ class CartEmptyController {
 
     async index(req, res) {
         const { cartId } = req.session;
+
+        analytics.track('emptied_cart', {
+            cart_id: cartId
+          })
 
         const cartList = await this.redisClientService.hgetall(`cart:${cartId}`);
 
