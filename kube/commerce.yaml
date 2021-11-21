@@ -16,12 +16,12 @@ spec:
         - name: commerce-service
           image: bitprj/commerce-service
           ports:
-            - containerPort: 22222
+            - containerPort: 3000
           env:
             - name: REDIS_ENDPOINT_URI
-              value: redis://redis:6379
+              value: 'redis://redis:6379'
             - name: REDIS_PASSWORD
-              value: 88901
+              value: '88901'
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -33,5 +33,5 @@ spec:
     app: commerce-service
   ports:
     - port: 80
-      targetPort: 22222
+      targetPort: 3000
   type: LoadBalancer

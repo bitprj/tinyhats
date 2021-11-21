@@ -34,7 +34,7 @@ spec:
           env:
             - name: REDIS_PASSWORD
           image: redislabs/rejson:latest
-          name: redis.redisshoppingcart.docker
+          name: redis-redisshoppingcart-docker
           ports:
             - containerPort: 6379
           resources: {}

@@ -11,5 +11,5 @@ COPY ./server/package.json ./
 RUN npm install
 COPY ./server .
 COPY --from=vue-build /app/dist ./../client-dist
-EXPOSE 80
+EXPOSE 3000
 CMD ["node", "./src/index.js"]
