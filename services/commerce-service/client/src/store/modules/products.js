@@ -19,7 +19,7 @@ const mutations = {
 
 const actions = {
     async fetch({ commit }) {
-        let result = await fetch('http://gateway-service:80/api/hats');
+        let result = await fetch('gateway-service:80/api/hats');
         let data = await result.json()
         console.log(data)
         const sorted = data.sort((a, b) => {
