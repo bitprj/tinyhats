@@ -18,7 +18,7 @@ class ProductIndexController {
             return res.send(productList);
         }
 
-        let result = await fetch('gateway-service:80/api/hats')
+        let result = await fetch('http://gateway-service:80/api/hats')
         let products = await result.json()
 
         for (const product of products) {
