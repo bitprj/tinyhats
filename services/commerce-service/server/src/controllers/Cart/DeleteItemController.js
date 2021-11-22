@@ -1,38 +1,40 @@
 const { StatusCodes } = require('http-status-codes');
-const { Analytics } = require('analytics')
-const kafka = require('../../kafka-plugin')
+// const { Analytics } = require('analytics')
+const kafka = require('../../kafka-plugin.js')
 
-const analytics = Analytics({
-  app: 'app-name',
-  plugins: [
-    kafka
-  ]
-})
+// const analytics = Analytics({
+//   app: 'app-name',
+//   plugins: [
+//     kafka.kafkaPlugin
+//   ]
+// })
 class CartDeleteItemController {
     constructor(redisClientService) {
         this.redisClientService = redisClientService;
     }
 
     async index(req, res) {
-        analytics.track('deleted', {
-            hat_id: productId
-          })
-        const { cartId } = req.session;
-        const { id: productId } = req.params;
+        // analytics.track('deleted', {
+        //     hat_id: productId
+        //   })
+      const { cartId } = req.session;
+      const { id: productId } = req.params;
 
-        const quantityInCart =
-            parseInt(await this.redisClientService.hget(`cart:${cartId}`, `product:${productId}`)) || 0;
+      await kafka.kafkaPlugin(JSON.stringify({'event':'deleted_item', 'hatId': hatId, 'cartId': cartId}))
 
-        if (quantityInCart) {
-            await this.redisClientService.hdel(`cart:${cartId}`, `product:${productId}`);
+      const quantityInCart =
+          parseInt(await this.redisClientService.hget(`cart:${cartId}`, `product:${productId}`)) || 0;
 
-            let productInStore = await this.redisClientService.jsonGet(`product:${productId}`);
+      if (quantityInCart) {
+          await this.redisClientService.hdel(`cart:${cartId}`, `product:${productId}`);
 
-            productInStore = JSON.parse(productInStore);
-            productInStore.stock += quantityInCart;
+          let productInStore = await this.redisClientService.jsonGet(`product:${productId}`);
 
-            await this.redisClientService.jsonSet(`product:${productId}`, '.', JSON.stringify(productInStore));
-        }
+          productInStore = JSON.parse(productInStore);
+          productInStore.stock += quantityInCart;
+
+          await this.redisClientService.jsonSet(`product:${productId}`, '.', JSON.stringify(productInStore));
+      }
 
         return res.sendStatus(StatusCodes.NO_CONTENT);
     }

@@ -1,13 +1,13 @@
 const { StatusCodes } = require('http-status-codes');
-const { Analytics } = require('analytics')
-const kafka = require('../../kafka-plugin')
+// const { Analytics } = require('analytics')
+const kafka = require('../../kafka-plugin.js')
 
-const analytics = Analytics({
-  app: 'app-name',
-  plugins: [
-    kafka
-  ]
-})
+// const analytics = Analytics({
+//   app: 'app-name',
+//   plugins: [
+//     kafka.kafkaPlugin
+//   ]
+// })
 class CartUpdateController {
     constructor(redisClientService) {
         this.redisClientService = redisClientService;
@@ -19,10 +19,13 @@ class CartUpdateController {
             params: { id: productId }
         } = req;
 
-        analytics.track('addedCart', {
-            hat_id: productId
-          })
-        
+        // analytics.track('addedCart', {
+        //     hat_id: productId
+        //   })
+
+        let kafkaRes = await kafka.kafkaPlugin(JSON.stringify({'event':'added_to_cart', 'hatId': productId, 'cartId': cartId}))
+        console.log("Kafka: " + kafkaRes)
+
         let { quantity, incrementBy } = req.body;
 
         let productInStore = await this.redisClientService.jsonGet(`product:${productId}`);
