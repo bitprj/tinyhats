@@ -7,7 +7,6 @@ const app = express()
 var router = express.Router();
 const PORT = 1337
 
-// for testing locally: node -r dotenv/config index.js  
 // https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
 
 
