@@ -1,6 +1,7 @@
 name: upload-service production
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'main'
@@ -36,12 +37,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Assume Role
+        uses: youyo/awscredswrap@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
+          role_arn: ${{ secrets.ROLE_ARN }}
+          duration_seconds: 3600
+          role_session_name: 'awscredswrap@GitHubActions'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-west-2'
+          
+      - name: Identity Check
+        run: aws sts get-caller-identity
           
       - name: Apply Configuration Changes
         uses: bitprj/kubernetes-action@master
@@ -56,3 +64,15 @@ jobs:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         with:
           args: -n default rollout restart deploy
+
+      - name: Slack notification                                
+        uses: rtCamp/action-slack-notify@master                 
+        env:                                                    
+          SLACK_CHANNEL: 'k8s-work'                  
+          SLACK_MESSAGE: 'Just deployed upload-service to production!'
+          SLACK_TITLE: 'Deploy'                         
+          SLACK_USERNAME: 'Ganning'                           
+          SLACK_ICON: "https://ca.slack-edge.com/TJ2FB5CE9-U024KSA4HFE-636d36515d0a-512"
+          SLACK_COLOR: '#228B22'                                
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}       
+          MSG_MINIMAL: true  
