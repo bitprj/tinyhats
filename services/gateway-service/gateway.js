@@ -118,6 +118,7 @@ router.get('/:apiName', upload.any(), async (req, res) => {
     if (route == "moderate") {
         let approve = req.query.approve;
         let id = req.query.id;
+        
         const moderateResp = await fetch(`http://${process.env.MODERATE_ENDPOINT}/moderate?approve=${approve}&id=${id}`, {
             method: 'GET'
         })

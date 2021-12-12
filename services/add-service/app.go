@@ -79,7 +79,6 @@ func addService(w http.ResponseWriter, request *http.Request) {
 			}
 		resp.Body.Close()
 		// 	fmt.Println(resp.StatusCode)
-		// 	fmt.Println(resp.Header)
 			var buf []byte
 			buf, _ = io.ReadAll(body)
 		  

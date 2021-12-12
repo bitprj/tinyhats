@@ -26,7 +26,6 @@ func main() {
 		return c.SendString(result)
 	})
 
-	// Listen and Server in 0.0.0.0:$PORT
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "4040"

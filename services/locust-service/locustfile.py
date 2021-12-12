@@ -19,10 +19,8 @@ hats = [
 def index(l):
     l.client.get("/")
 
-
 def browseProduct(l):
     l.client.get("/" + random.choice(hats))
-
 class UserBehavior(TaskSet):
 
     def on_start(self):
