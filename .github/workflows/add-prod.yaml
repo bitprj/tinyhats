@@ -28,7 +28,7 @@ jobs:
           context: services/add-service
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: bitprj/tinyhat-add-service
+          tags: bitprj/tinyhat-add-service:latest
           
   deploy:
     needs: build
@@ -36,12 +36,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Assume Role
+        uses: youyo/awscredswrap@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
+          role_arn: ${{ secrets.ROLE_ARN }}
+          duration_seconds: 3600
+          role_session_name: 'awscredswrap@GitHubActions'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-west-2'
+      - name: Install aws-cli
+        uses: chrislennon/action-aws-cli@v1.1
+      - name: Identity Check
+        run: aws sts get-caller-identity
           
       - name: Apply Configuration Changes
         uses: bitprj/kubernetes-action@master

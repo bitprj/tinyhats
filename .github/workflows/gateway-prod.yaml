@@ -28,7 +28,7 @@ jobs:
           context: services/gateway-service
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: bitprj/tinyhat-gateway-service
+          tags: bitprj/tinyhat-gateway-service:latest
           
   deploy:
     needs: build

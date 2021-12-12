@@ -28,7 +28,7 @@ jobs:
           context: services/locust-service
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: bitprj/tinyhat-locust-service
+          tags: bitprj/tinyhat-locust-service:latest
           
   deploy:
     needs: build

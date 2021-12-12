@@ -28,7 +28,7 @@ jobs:
           context: services/frontend-service
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: bitprj/tinyhat-frontend-service
+          tags: bitprj/tinyhat-frontend-service:latest
           
   deploy:
     needs: build

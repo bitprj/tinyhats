@@ -28,7 +28,7 @@ jobs:
           context: services/upload-service
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: bitprj/tinyhat-upload-service
+          tags: bitprj/tinyhat-upload-service:latest
           
   deploy:
     needs: build
