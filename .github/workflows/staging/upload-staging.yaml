@@ -71,8 +71,8 @@ jobs:
           SLACK_CHANNEL: 'k8s-work'                  
           SLACK_MESSAGE: 'Just deployed upload-service to staging!'
           SLACK_TITLE: 'Deploy'                         
-          SLACK_USERNAME: 'Ganning'                           
-          SLACK_ICON: "https://ca.slack-edge.com/TJ2FB5CE9-U024KSA4HFE-636d36515d0a-512"
+          SLACK_USERNAME: 'Daniel'                           
+          SLACK_ICON: "https://ca.slack-edge.com/TJ2FB5CE9-UHW7UUSDP-6f70027657b3-512"
           SLACK_COLOR: '#228B22'                                
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}       
           MSG_MINIMAL: true  
