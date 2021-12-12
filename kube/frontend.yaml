@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend-service
-          image: bitprj/frontend-service
+          image: bitprj/tinyhat-frontend-service
           ports:
             - containerPort: 3000
           imagePullPolicy: Always
