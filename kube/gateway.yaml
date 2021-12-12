@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: gateway-service
-          image: bitprj/tinyhat-gateway-service
+          image: bitprj/tinyhat-gateway-service:beta
           ports:
             - containerPort: 4444
           env:

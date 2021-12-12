@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: locust-service
-          image: bitprj/tinyhat-locust-service
+          image: bitprj/tinyhat-locust-service:beta
           ports:
           - containerPort: 5557
             name: comm

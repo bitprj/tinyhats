@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: admin-service
-          image: bitprj/tinyhat-admin-service
+          image: bitprj/tinyhat-admin-service:beta
           ports:
             - containerPort: 4040
           env:

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: add-service
-          image: bitprj/tinyhat-add-service
+          image: bitprj/tinyhat-add-service:beta
           ports:
             - containerPort: 31337
           env:

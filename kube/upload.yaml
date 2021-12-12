@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: upload-service
-          image: bitprj/tinyhat-upload-service
+          image: bitprj/tinyhat-upload-service:beta
           ports:
             - containerPort: 8080
           env:

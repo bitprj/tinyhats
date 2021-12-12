@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: manipulation-service
-          image: bitprj/tinyhat-manipulation-service
+          image: bitprj/tinyhat-manipulation-service:beta
           ports:
             - containerPort: 80
           imagePullPolicy: Always

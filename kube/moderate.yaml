@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: moderate-service
-          image: bitprj/tinyhat-moderate-service
+          image: bitprj/tinyhat-moderate-service:beta
           ports:
             - containerPort: 5000
           env:

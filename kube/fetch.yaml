@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: fetch-service
-          image: bitprj/tinyhat-fetch-service
+          image: bitprj/tinyhat-fetch-service:beta
           ports:
             - containerPort: 1337
           env:

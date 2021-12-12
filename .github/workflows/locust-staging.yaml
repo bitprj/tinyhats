@@ -1,12 +1,12 @@
-name: frontend-service production
+name: locust-service staging
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - 'main'
+      - 'staging'
     paths:
-      - services/frontend-service/**
+      - services/locust-service/**
 
 jobs:
   build:
@@ -23,13 +23,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Frontend Service
+      - name: Locust Service
         uses: docker/build-push-action@v2
         with:
-          context: services/frontend-service
+          context: services/locust-service
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: bitprj/tinyhat-frontend-service:latest
+          tags: bitprj/tinyhat-locust-service:beta
           
   deploy:
     needs: build
@@ -40,7 +40,7 @@ jobs:
       - name: Assume Role
         uses: youyo/awscredswrap@v1
         with:
-          role_arn: ${{ secrets.ROLE_ARN }}
+          role_arn: ${{ secrets.ROLE_ARN_STAGING }}
           duration_seconds: 3600
           role_session_name: 'awscredswrap@GitHubActions'
         env:
@@ -54,14 +54,14 @@ jobs:
       - name: Apply Configuration Changes
         uses: bitprj/kubernetes-action@master
         env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA_STAGING }}
         with:
           args: apply -f kube
 
       - name: Trigger deploy
         uses: bitprj/kubernetes-action@master
         env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA_STAGING }}
         with:
           args: -n default rollout restart deploy
 
@@ -69,7 +69,7 @@ jobs:
         uses: rtCamp/action-slack-notify@master                 
         env:                                                    
           SLACK_CHANNEL: 'k8s-work'                  
-          SLACK_MESSAGE: 'Just deployed frontend-service to production!'
+          SLACK_MESSAGE: 'Just deployed locust-service to staging!'
           SLACK_TITLE: 'Deploy'                         
           SLACK_USERNAME: 'Ganning'                           
           SLACK_ICON: "https://ca.slack-edge.com/TJ2FB5CE9-U024KSA4HFE-636d36515d0a-512"
