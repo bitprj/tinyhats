@@ -112,7 +112,6 @@ export async function requestManipulate(face, hat, numberHats) {
 
         console.log(`Received response from /manipulate [${i}]`)
     }
-
     return faceData
 }
 
