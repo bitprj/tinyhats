@@ -7,8 +7,6 @@ const app = express()
 var router = express.Router();
 const PORT = 1337
 
-// https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
-
 app.use('/', router)
 
 app.listen(PORT, () => {
