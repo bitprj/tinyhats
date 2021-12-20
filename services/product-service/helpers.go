@@ -14,20 +14,21 @@ var endpoint string = os.Getenv("HOST")
 
 type Hats struct {
 	// Key 		  int 	 `field:id`
-    ID            string `field:"keyId"`                      
-    Url           string `field:"url"`           
+    Description   string `field:"description"`                      
+    Hat           string `field:"hat"`           
     // FileName      string `field:"fileName"`           
-    Description   string `field:"description"`
+    Preview1      string `field:"preview1"`
+	Preview2      string `field:"preview2"`
     // Approve       string `field:"approve"`
 }
 
 var hats []Hats
 var hat Hats
 
-func UnmoderatedPic() string {
+func hatPreviews() string {
 	hats = nil
 	var result string
-	fmt.Println("Showing unmoderated pictures.")
+	fmt.Println("Showing hats.")
 
 	// open connection
 	db, err := sql.Open("mysql", "admin:" + password + "@tcp(" + endpoint + ":3306)/main")
@@ -39,7 +40,7 @@ func UnmoderatedPic() string {
 	defer db.Close()
 	
 	// query for id and drop picture
-	rows, err := db.Query("SELECT keyId, url, description FROM main.images WHERE approve='false'")
+	rows, err := db.Query("SELECT description, hat, preview1, preview2 FROM main.images")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -47,7 +48,7 @@ func UnmoderatedPic() string {
 	for rows.Next() {
 		hat := new(Hats)
 
-		err = rows.Scan(&hat.ID, &hat.Url, &hat.Description)
+		err = rows.Scan(&hat.Description, &hat.Hat, &hat.Preview1, &hat.Preview2)
 
 		if err != nil {
 			fmt.Println(err)

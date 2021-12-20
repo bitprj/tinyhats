@@ -16,11 +16,11 @@ func main() {
 	// Hello, World!
 	app.Get("/admin", func(c *fiber.Ctx) error {
 		fmt.Println("--------------------------")
-		log.Print("List hats that need moderation")
+		log.Print("List hats with previews")
 
 		var result string
 			
-		result = UnmoderatedPic()
+		result = hatPreviews()
 
 		c.Append("Content-Type", "application/json")
 		return c.SendString(result)
