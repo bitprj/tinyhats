@@ -1,7 +1,8 @@
 const Jimp = require('jimp')
 const faceapi = require('face-api.js')
 const canvas = require('canvas')
-// require('@tensorflow/tfjs-node');
+const mysql = require('mysql')
+require('@tensorflow/tfjs-node');
 
 const { Canvas, Image, ImageData } = canvas  
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
@@ -49,10 +50,10 @@ const overlayHat = async (hat, result, baby) => {
 
 const uploadPreview = async (description, hat, preview1, preview2) => {
   const con = mysql.createConnection({
-    host: HOST,
+    host: process.env.HOST,
     port: '3306',
     user: "admin",
-    password: PASSWORD,
+    password: process.env.PASSWORD,
   });
 
   con.connect(function(err) {
