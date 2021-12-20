@@ -1,4 +1,4 @@
-name: upload-service staging
+name: product-service staging
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     branches:
       - 'staging'
     paths:
-      - services/upload-service/**
+      - services/product-service/**
 
 jobs:
   build:
@@ -26,10 +26,10 @@ jobs:
       - name: Upload Service
         uses: docker/build-push-action@v2
         with:
-          context: services/upload-service
+          context: services/product-service
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: bitprj/tinyhat-upload-service:beta
+          tags: bitprj/tinyhat-product-service:beta
           
   deploy:
     needs: build
@@ -69,7 +69,7 @@ jobs:
         uses: rtCamp/action-slack-notify@master                 
         env:                                                    
           SLACK_CHANNEL: 'k8s-work'                  
-          SLACK_MESSAGE: 'Just deployed upload-service to staging!'
+          SLACK_MESSAGE: 'Just deployed product-service to staging!'
           SLACK_TITLE: 'Deploy'                         
           SLACK_USERNAME: 'Daniel'                           
           SLACK_ICON: "https://ca.slack-edge.com/TJ2FB5CE9-UHW7UUSDP-6f70027657b3-512"

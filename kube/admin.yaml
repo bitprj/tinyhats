@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: upload-service
+  name: admin-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: upload-service
+      app: admin-service
   template:
     metadata:
       labels:
-        app: upload-service
+        app: admin-service
     spec:
       containers:
-        - name: upload-service
-          image: bitprj/tinyhat-upload-service:beta
+        - name: admin-service
+          image: bitprj/tinyhat-admin-service:beta
           ports:
             - containerPort: 8080
           env:
@@ -31,10 +31,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: upload-service
+  name: admin-service
 spec:
   selector:
-    app: upload-service
+    app: admin-service
   ports:
     - port: 80
       targetPort: 8080
