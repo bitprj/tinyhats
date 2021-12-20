@@ -17,6 +17,11 @@ spec:
           image: bitprj/tinyhat-manipulation-service:beta
           ports:
             - containerPort: 80
+          env:
+            - name: HOST
+              value: mysql
+            - name: PASSWORD
+              value: password
           imagePullPolicy: Always
 ---
 apiVersion: v1
