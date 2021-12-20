@@ -1,41 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: upload-service
+  name: mockup-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: upload-service
+      app: mockup-service
   template:
     metadata:
       labels:
-        app: upload-service
+        app: mockup-service
     spec:
       containers:
-        - name: upload-service
-          image: bitprj/mini-upload-service
+        - name: mockup-service
+          image: bitprj/tinyhat-mockup-service:beta
           ports:
-            - containerPort: 8080
+            - containerPort: 1337
           env:
             - name: HOST
               value: mysql
             - name: PASSWORD
               value: password
-            - name: S3_ID
-              value: "$S3_ID"
-            - name: S3_SECRET
-              value: "$S3_SECRET"
+            - name: MANIPULATE_ENDPOINT
+              value: manipulation-service:80
           imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: upload-service
+  name: mockup-service
 spec:
   selector:
-    app: upload-service
+    app: mockup-service
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: 1337
   type: ClusterIP
