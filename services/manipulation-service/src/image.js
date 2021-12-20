@@ -1,7 +1,7 @@
 const Jimp = require('jimp')
 const faceapi = require('face-api.js')
 const canvas = require('canvas')
-require('@tensorflow/tfjs-node');
+// require('@tensorflow/tfjs-node');
 
 const { Canvas, Image, ImageData } = canvas  
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
@@ -38,7 +38,7 @@ const overlayHat = async (hat, result, baby) => {
 
   hatImg = await hatImg.resize(width, height)
 
-  image.composite(hatImg, left - width, top - height*1.2, {
+  image.composite(hatImg, left - width*0.1, top - height*1.2, {
     mode: Jimp.BLEND_SOURCE_OVER,
     opacityDest: 1,
     opacitySource: 0.9
