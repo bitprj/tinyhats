@@ -37,8 +37,9 @@ export default {
             for (let i = 0; i < this.products.length; i++) {
                 const formData = new FormData();
                 formData.append('file', file);
+                console.log(this.products[i].Description)
                 const response = await fetch(
-                    `https://api.tinyhat.me/${this.products[i].description}`,
+                    `http://aecd4af3f5b31453e901f0e4fd885a63-1647978061.us-west-2.elb.amazonaws.com/mockup/${this.products[i].Description}`,
                     {
                         method: 'POST',
                         body: formData
@@ -46,7 +47,7 @@ export default {
                 );
                 const json = await response.json();
                 console.log(json);
-                temp_products[i].url = json.result.finalBaby;
+                temp_products[i].Hat = json.result.preview;
             }
             document.getElementById('spinner').classList.add('hidden');
         }
