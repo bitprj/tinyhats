@@ -26,7 +26,7 @@ const uploadPreview = async (description, hat, preview1, preview2) => {
 const callManipulate = async (face, hat) => {
     let formData = await createForm(face, hat)
     const formHeaders = formData.getHeaders();
-    const manipulateRequest = await fetch(`http://manipulate-service:80/manipulate`, {
+    const manipulateRequest = await fetch(`http://manipulation-service:80/`, {
         method: 'POST',
         body: formData,
             headers: {
@@ -40,10 +40,12 @@ const callManipulate = async (face, hat) => {
 }
 
 async function createForm(face, hat) {
-    face = await downloadBuffer(face)
+    let faceData = await downloadBuffer(face)
+    console.log(face)
+    console.log(faceData)
     let formData = new FormData()
-    formData.append('file', face, {filename: "face", data: face})
     formData.append('file', hat, {filename: "hat", data: hat})
+    formData.append('file', faceData, {filename: "face", data: faceData})
     console.log("Posting to Manipulate")
 
     return formData
@@ -56,7 +58,7 @@ async function downloadBuffer(url) {
 
     // receive the response
     let data = await resp.arrayBuffer()
-    return data
+    return Buffer.from(data)
 }
 
 exports.uploadPreview = uploadPreview
