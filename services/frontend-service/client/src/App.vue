@@ -14,7 +14,6 @@
         <v-container>
             <v-row>
                 <v-col cols="12" sm="7" md="8">
-                    <info />
                     <product-list :products="products" />
                 </v-col>
                 <v-col cols="12" sm="5" md="4" class="d-flex flex-column">
@@ -36,7 +35,6 @@ import { mapGetters, mapActions } from 'vuex';
 import Cart from '@/components/Cart';
 import ProductList from '@/components/ProductList';
 import ResetDataBtn from '@/components/ResetDataBtn.vue';
-import Info from '@/components/Info';
 import CustomHat from '@/components/CustomHat.vue';
 
 export default {
@@ -47,7 +45,6 @@ export default {
         Cart,
         CustomHat,
         ResetDataBtn,
-        Info
     },
 
     computed: {

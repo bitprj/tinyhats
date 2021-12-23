@@ -4,6 +4,7 @@
         <h4>Choose a model!</h4>
         <a class="v-btn v-btn--is-elevated theme--light" @click="chooseOne"><img style="width: 50%; float:left" src="https://image.freepik.com/free-photo/close-up-shot-pretty-woman-with-perfect-teeth-dark-clean-skin-having-rest-indoors-smiling-happily-after-received-good-positive-news_273609-1248.jpg"></a>
         <a class="v-btn v-btn--is-elevated theme--light" @click="chooseTwo"><img style="width: 50%; float:right" src="https://media.istockphoto.com/photos/handsome-young-man-on-white-background-picture-id523478288?k=20&m=523478288&s=612x612&w=0&h=Fg8yDwFhbB4XljB1aCclYbjJpUlRwB-jcPPFfd1Iteg="></a>
+        <br><br>
         <h4>Upload a picture!</h4>
         <input type="file" class="file-upload" @change="updatePictures" />
 
