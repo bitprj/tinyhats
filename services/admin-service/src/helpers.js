@@ -12,7 +12,7 @@ const uploadPreview = async (description, hat, preview1, preview2) => {
 
   con.connect(function(err) {
       console.log(err)
-      con.query(`INSERT INTO main.images (description, hat, preview1, preview2) VALUES ('${description}', '${hat}', '${preview1}', '${preview2}')`, function(err, result, fields) {
+      con.query(`INSERT INTO main.images (description, hat, preview1, preview2) VALUES ('${description}', '${"data:image/png;base64," + hat}', '${preview1}', '${preview2}')`, function(err, result, fields) {
           if (err) console.log(err);
           if (result) console.log({description: `${description}`});
           if (fields) console.log(fields);
