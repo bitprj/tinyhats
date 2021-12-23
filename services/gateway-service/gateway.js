@@ -24,6 +24,7 @@ app.use(cors());
 // https://stackoverflow.com/questions/28305120/differences-between-express-router-and-app-get
 
 router.post('/mockup/:apiName', upload.any(), async (req, res) => {
+    console.log(`[!] /mockup/${apiName} was accessed.`)
     let param = req.params.apiName
     let formData = new FormData()
     formData.append('file', req.files[0].buffer, {filename: "face", data: req.files[0].buffer})

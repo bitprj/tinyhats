@@ -18,11 +18,12 @@ export async function getSpecificHat(style) {
         .catch(err => console.log(err))
     
     let hatList = results[0]
-    console.log(hatList)
+    // console.log(hatList)
 
     let hatData = hatList[0].hat
 
-    image = Buffer.from(hatData)
+    let image = Buffer.from(hatData, 'base64')
+    console.log(image)
 
     return image
 }
@@ -30,7 +31,7 @@ export async function getSpecificHat(style) {
 export async function requestManipulate(face, hat) {
     let formData = await createForm(face, hat)
     const formHeaders = formData.getHeaders();
-    const manipulateRequest = await fetch(`http://${process.env.MANIPULATE_ENDPOINT}/manipulate`, {
+    const manipulateRequest = await fetch(`http://${process.env.MANIPULATE_ENDPOINT}/`, {
         method: 'POST',
         body: formData,
             headers: {
@@ -44,8 +45,8 @@ export async function requestManipulate(face, hat) {
 
 async function createForm(face, hat) {
     let formData = new FormData()
-    formData.append('file', face, {filename: "face", data: face})
     formData.append('file', hat, {filename: "hat", data: hat})
+    formData.append('file', face, {filename: "face", data: face})
     console.log("Posting to Manipulate")
 
     return formData

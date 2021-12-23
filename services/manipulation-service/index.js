@@ -15,7 +15,7 @@ app.listen(PORT, () => {
     console.log(`API Gateway started on port ${PORT}`)
 })
 
-router.post('/manipulate', upload.any(), async(req, res) => {
+router.post('/', upload.any(), async(req, res) => {
     let hat = req.files[0].buffer
     let face = req.files[1].buffer
     
