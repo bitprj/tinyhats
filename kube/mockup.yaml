@@ -1,37 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: admin-service
+  name: mockup-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: admin-service
+      app: mockup-service
   template:
     metadata:
       labels:
-        app: admin-service
+        app: mockup-service
     spec:
       containers:
-        - name: admin-service
-          image: bitprj/mini-admin-service
+        - name: mockup-service
+          image: bitprj/tinyhat-mockup-service:beta
           ports:
-            - containerPort: 4040
+            - containerPort: 1337
           env:
             - name: HOST
               value: mysql
             - name: PASSWORD
               value: password
+            - name: MANIPULATE_ENDPOINT
+              value: manipulation-service:80
           imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: admin-service
+  name: mockup-service
 spec:
   selector:
-    app: admin-service
+    app: mockup-service
   ports:
     - port: 80
-      targetPort: 4040
+      targetPort: 1337
   type: ClusterIP

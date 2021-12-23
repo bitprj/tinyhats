@@ -16,12 +16,16 @@ spec:
         - name: admin-service
           image: bitprj/tinyhat-admin-service:beta
           ports:
-            - containerPort: 4040
+            - containerPort: 8080
           env:
             - name: HOST
               value: mysql
             - name: PASSWORD
               value: password
+            - name: S3_ID
+              value: "$S3_ID"
+            - name: S3_SECRET
+              value: "$S3_SECRET"
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -33,5 +37,5 @@ spec:
     app: admin-service
   ports:
     - port: 80
-      targetPort: 4040
+      targetPort: 8080
   type: ClusterIP
