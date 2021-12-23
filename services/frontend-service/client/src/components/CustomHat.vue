@@ -1,6 +1,10 @@
 <template>
     <div class="file-cont">
-        <h3>Want to try the hat on? Upload a picture!</h3>
+        <h3><b>Want to preview the hat?</b></h3>
+        <h4>Choose a model!</h4>
+        <a @click="chooseOne"><img src="https://image.freepik.com/free-photo/close-up-shot-pretty-woman-with-perfect-teeth-dark-clean-skin-having-rest-indoors-smiling-happily-after-received-good-positive-news_273609-1248.jpg"></a>
+        <a @click="chooseTwo"><img src="https://media.istockphoto.com/photos/handsome-young-man-on-white-background-picture-id523478288?k=20&m=523478288&s=612x612&w=0&h=Fg8yDwFhbB4XljB1aCclYbjJpUlRwB-jcPPFfd1Iteg="></a>
+        <h4>Upload a picture!</h4>
         <input type="file" class="file-upload" @change="updatePictures" />
 
         <br />
@@ -29,6 +33,20 @@ export default {
     },
 
     methods: {
+        async chooseOne() {
+            let temp_products = this.products;
+            for (let i = 0; i < this.products.length; i++) {
+                temp_products[i].Hat = temp_products[i].Preview1;
+            }
+        },
+
+        async chooseTwo() {
+            let temp_products = this.products;
+            for (let i = 0; i < this.products.length; i++) {
+                temp_products[i].Hat = temp_products[i].Preview2;
+            }
+        },
+
         async updatePictures(event) {
             document.getElementById('spinner').classList.remove('hidden');
             let temp_products = this.products;
