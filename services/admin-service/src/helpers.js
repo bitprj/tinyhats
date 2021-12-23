@@ -38,7 +38,7 @@ const callManipulate = async (face, hat) => {
 }
 
 async function createForm(face, hat) {
-    let face = await downloadBuffer(face)
+    face = await downloadBuffer(face)
     let formData = new FormData()
     formData.append('file', face, {filename: "face", data: face})
     formData.append('file', hat, {filename: "hat", data: hat})
