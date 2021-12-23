@@ -14,7 +14,7 @@ func main() {
 	fmt.Println("Started")
 
 	// Hello, World!
-	app.Get("/admin", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *fiber.Ctx) error {
 		fmt.Println("--------------------------")
 		log.Print("List hats with previews")
 
