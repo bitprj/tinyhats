@@ -1,4 +1,5 @@
 const mysql = require('mysql')
+const fetch = require('node-fetch')
 
 const uploadPreview = async (description, hat, preview1, preview2) => {
   const con = mysql.createConnection({

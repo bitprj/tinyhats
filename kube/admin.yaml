@@ -16,7 +16,7 @@ spec:
         - name: admin-service
           image: bitprj/tinyhat-admin-service:beta
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           env:
             - name: HOST
               value: mysql
@@ -37,5 +37,5 @@ spec:
     app: admin-service
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: 80
   type: ClusterIP
