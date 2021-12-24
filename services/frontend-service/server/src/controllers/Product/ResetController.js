@@ -12,7 +12,7 @@ class ProductResetController {
             await this.redisClientService.del(key);
         }
 
-        let result = await fetch('http://aecd4af3f5b31453e901f0e4fd885a63-1647978061.us-west-2.elb.amazonaws.com/catalog')
+        let result = await fetch('http://gateway-service:80/catalog')
         let products = await result.json()
         products = products.result
         console.log(products)
