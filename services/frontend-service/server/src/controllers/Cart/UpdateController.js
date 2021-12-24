@@ -16,7 +16,7 @@ class CartUpdateController {
         let productInStore = await this.redisClientService.jsonGet(`product:${productId}`);
 
         if (!productInStore) {
-            return res.status(StatusCodes.NOT_FOUND).send({ message: "Product with this id doesn't exist" });
+            return res.status(StatusCodes.NOT_FOUND).send({ message: `Product with this id: ${productId} doesn't exist` });
         }
 
         let quantityInCart = (await this.redisClientService.hget(`cart:${cartId}`, `product:${productId}`)) || 0;

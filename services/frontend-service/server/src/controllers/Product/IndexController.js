@@ -20,15 +20,11 @@ class ProductIndexController {
 
         let result = await fetch('http://aecd4af3f5b31453e901f0e4fd885a63-1647978061.us-west-2.elb.amazonaws.com/catalog')
         let products = await result.json()
-        console.log(products)
+        products = products.result
 
         for (const product of products) {
-            var { description } = product;
-            var { hat } = hatData;
-            var { preview1 } = preview1Data
-            var { preview2 } = preview2Data
-            await this.redisClientService.jsonSet(`product:${description}`, '.', JSON.stringify(product));
-
+            console.log(product.Description)
+            await this.redisClientService.jsonSet(`product:${product.Description}`, '.', JSON.stringify(product));
             productList.push({product});
         }
 

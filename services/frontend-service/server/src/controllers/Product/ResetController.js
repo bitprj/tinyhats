@@ -12,14 +12,15 @@ class ProductResetController {
             await this.redisClientService.del(key);
         }
 
-        let result = await fetch('https://api.tinyhat.me/api/hats')
+        let result = await fetch('http://aecd4af3f5b31453e901f0e4fd885a63-1647978061.us-west-2.elb.amazonaws.com/catalog')
         let products = await result.json()
+        products = products.result
         console.log(products)
         for (const product of products) {
-            var { url } = product;
-            url = url.replace("https://tinyhats.s3.amazonaws.com/", "")
-            url = url.replace(".png", "")
-            await this.redisClientService.jsonSet(`product:${url}`, '.', JSON.stringify(product));
+            var { Description } = product;
+            console.log(Description)
+            await this.redisClientService.jsonSet(`product:${Description}`, '.', JSON.stringify(product));
+            productList.push({product});
         }
 
         return res.sendStatus(StatusCodes.OK);

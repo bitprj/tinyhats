@@ -1,4 +1,3 @@
-const fetch = require('node-fetch')
 import axios from '@/plugins/axios';
 
 const initialState = {
@@ -19,10 +18,7 @@ const mutations = {
 
 const actions = {
     async fetch({ commit }) {
-        let result = await fetch('http://aecd4af3f5b31453e901f0e4fd885a63-1647978061.us-west-2.elb.amazonaws.com/catalog');
-        let data = await result.json()
-        data = data.result
-        console.log(data)
+        const { data } = await axios.get('/api/products');
 
         const sorted = data.sort((a, b) => {
             if (a.Description.localeCompare(b.Description) > 0) {

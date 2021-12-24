@@ -4,7 +4,7 @@
             v-for="product in products"
             :key="product.Description"
             :product="product"
-            @add="addToCart"
+            @add="addToCart(product.Description)"
         />
     </v-row>
     <v-row v-else>

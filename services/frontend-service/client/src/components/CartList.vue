@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col v-for="item in items" :key="item.id" cols="12">
+        <v-col v-for="item in items" :key="item.Description" cols="12">
             <cart-item :item="item" @save="save" @delete="remove" />
         </v-col>
     </v-row>
@@ -51,11 +51,11 @@ export default {
                     }
 
                     const itemInCart = this.items.find(
-                        item => item.id === data.id
+                        item => item.Description === data.id
                     );
 
                     const item = this.products.find(
-                        item => item.id === data.id
+                        item => item.Description === data.id
                     );
 
                     const inCartQuantity = parseInt(itemInCart.quantity);

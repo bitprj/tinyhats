@@ -5,13 +5,13 @@
                     <v-img
                         class="rounded-lg d-lg-flex d-md-none"
                         min-height="100%"
-                        :src="item.url"
+                        :src="item.Hat"
                     />
                 </v-col>
 
                 <v-col cols="8" lg="9" md="12" sm="12">
                         <v-card-title class="text-subtitle-1 text-xl-h6 pa-0">
-                            {{ item.description }}
+                            {{ item.Description }}
                         </v-card-title>
 
                         <v-card-actions class="justify-space-between text-xl-h6 px-0">
@@ -76,7 +76,7 @@ export default {
     methods: {
         onItemQuantityChange() {
             this.$emit('save', {
-                id: this.item.id,
+                id: this.item.Description,
                 quantity: this.itemQuantity
             });
         },
@@ -87,13 +87,13 @@ export default {
 
         incrementItem(value) {
             if (this.itemQuantity + value === 0) {
-                this.deleteItem(this.item.id);
+                this.deleteItem(this.item.Description);
 
                 return;
             }
 
             this.$emit('save', {
-                id: this.item.url,
+                id: this.item.Description,
                 incrementBy: value
             });
         }

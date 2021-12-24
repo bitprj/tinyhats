@@ -23,7 +23,7 @@
                 <v-btn
                     class="success"
                     :disabled="product.stock === 0"
-                    @click="$emit('add', product.url)"
+                    @click="$emit('add', product.Description)"
                 >
                     <span class="d-xs-flex d-none d-xl-flex">Add to cart</span>
                     <v-icon right dark>mdi-cart-plus</v-icon>
