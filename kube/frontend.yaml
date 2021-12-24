@@ -17,6 +17,11 @@ spec:
           image: bitprj/tinyhat-frontend-service:beta
           ports:
             - containerPort: 3000
+          env:
+            - name: REDIS_ENDPOINT_URI
+              value: 'redis://redis:6379'
+            - name: REDIS_PASSWORD
+              value: '88901'
           imagePullPolicy: Always
 ---
 apiVersion: v1
