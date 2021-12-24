@@ -56,7 +56,17 @@ export default {
             for (let i = 0; i < this.products.length; i++) {
                 const formData = new FormData();
                 formData.append('file', file);
-                console.log(this.products[i].Description)
+                formData.append('name', this.products[i].Description)
+                console.log(formData)
+
+                // const response = await fetch(
+                //     `http://localhost:3000/api/products/custom?name=${this.products[i].Description}`,
+                //     {
+                //         method: 'POST',
+                //         body: formData
+                //     }
+                // );
+
                 const response = await fetch(
                     `http://aecd4af3f5b31453e901f0e4fd885a63-1647978061.us-west-2.elb.amazonaws.com/mockup/${this.products[i].Description}`,
                     {
@@ -64,6 +74,7 @@ export default {
                         body: formData
                     }
                 );
+
                 const json = await response.json();
                 console.log(json);
                 temp_products[i].Hat = json.result.preview;
