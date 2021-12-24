@@ -21,6 +21,8 @@ export async function getSpecificHat(style) {
     // console.log(hatList)
 
     let hatData = hatList[0].hat
+    hatData = hatData.replace("data:image/png;base64,", "")
+    console.log(hatData)
 
     let image = Buffer.from(hatData, 'base64')
     console.log(image)

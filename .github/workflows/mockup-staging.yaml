@@ -63,7 +63,7 @@ jobs:
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA_STAGING }}
         with:
-          args: -n default rollout restart deploy
+          args: rollout restart deployment mockup-service
 
       - name: Slack notification                                
         uses: rtCamp/action-slack-notify@master                 

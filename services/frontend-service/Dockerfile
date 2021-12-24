@@ -1,7 +1,15 @@
-FROM node:12.0-slim
-COPY . .
+FROM node:lts-alpine as vue-build
+WORKDIR /app
+COPY ./client/package.json ./
 RUN npm install
-CMD [ "node", "--experimental-modules", "index.js" ]
+COPY ./client/ .
+RUN npm run build
 
-# docker build -t manipulate .
-# docker run --env-file ./.env -p 80:80 manipulate
+FROM node:lts-alpine AS server-build
+WORKDIR /app/server
+COPY ./server/package.json ./
+RUN npm install
+COPY ./server .
+COPY --from=vue-build /app/dist ./../client-dist
+EXPOSE ${PORT}
+CMD ["node", "./src/index.js"]
