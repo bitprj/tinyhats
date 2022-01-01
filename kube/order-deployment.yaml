@@ -27,7 +27,7 @@ spec:
         - env:
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: kafka-service:9092
-          image: gcr.io/pl-dev-infra/demos/microservice-kafka/order:1.0
+          image: bitprj/tinyhat-order-service
           name: order
           resources: {}
       restartPolicy: Always

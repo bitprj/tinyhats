@@ -29,7 +29,7 @@ spec:
               value: dbpass
             - name: POSTGRES_USER
               value: dbuser
-          image: gcr.io/pl-dev-infra/demos/microservice-kafka/postgres:1.0
+          image: bitprj/tinyhat-postgres-service
           name: postgres
           resources: {}
       restartPolicy: Always

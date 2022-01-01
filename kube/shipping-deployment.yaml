@@ -27,7 +27,7 @@ spec:
         - env:
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: kafka-service:9092
-          image: gcr.io/pl-dev-infra/demos/microservice-kafka/shipping:1.0
+          image: bitprj/tinyhat-shipping-service
           name: shipping
           resources: {}
       restartPolicy: Always

@@ -28,7 +28,7 @@ spec:
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: kafka-service:9092
           imagePullPolicy: Always
-          image: gcr.io/pl-dev-infra/demos/microservice-kafka/invoicing:1.03
+          image: bitprj/tinyhat-invoicing-service
           name: invoicing
           resources: {}
       restartPolicy: Always

@@ -24,7 +24,7 @@ spec:
         io.kompose.service: apache
     spec:
       containers:
-        - image: gcr.io/pl-dev-infra/demos/microservice-kafka/apache:1.0
+        - image: bitprj/tinyhat-apache-service
           name: apache
           ports:
             - containerPort: 80
