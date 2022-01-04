@@ -20,12 +20,10 @@ export async function getSpecificHat(style) {
     let hatList = results[0]
     // console.log(hatList)
 
-    let hatData = hatList[0].hat
-    hatData = hatData.replace("data:image/png;base64,", "")
-    console.log(hatData)
+    let hatLink = hatList[0].hat
+    console.log(hatLink)
 
-    let image = Buffer.from(hatData, 'base64')
-    console.log(image)
+    let image = await downloadBuffer(hatLink)
 
     return image
 }
@@ -52,4 +50,14 @@ async function createForm(face, hat) {
     console.log("Posting to Manipulate")
 
     return formData
+}
+
+async function downloadBuffer(url) {
+    let resp = await fetch(url,{
+        method: 'GET',
+    })
+
+    // receive the response
+    let data = await resp.arrayBuffer()
+    return Buffer.from(data)
 }
