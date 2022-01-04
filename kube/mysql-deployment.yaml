@@ -82,7 +82,7 @@ metadata:
   name: mysql-initdb-config
 data:
   initdb.sql: |
-    CREATE TABLE IF NOT EXISTS images(id int NOT NULL AUTO_INCREMENT, description varchar(255), hat LONGTEXT, preview1 LONGTEXT, preview2 LONGTEXT, PRIMARY KEY(id));
+    CREATE TABLE IF NOT EXISTS images(id int NOT NULL AUTO_INCREMENT, description varchar(255), hat varchar(255), preview1 varchar(255), preview2 varchar(255), PRIMARY KEY(id));
     GRANT ALL PRIVILEGES
     ON main.images
     TO 'admin'@'%'
