@@ -83,6 +83,10 @@ metadata:
 data:
   initdb.sql: |
     CREATE TABLE IF NOT EXISTS images(id int NOT NULL AUTO_INCREMENT, description varchar(255), hat varchar(255), preview1 varchar(255), preview2 varchar(255), PRIMARY KEY(id));
+    INSERT INTO images VALUES (1, 'Helicopter', 'https://tinyhats.s3.amazonaws.com/h9b8lpt7o7ez2m7r.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/rlcphkcttq6q5w2r.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/xr3wxcknyw1kqkkz.png');
+    INSERT INTO images VALUES (2, 'Santa', 'https://tinyhats.s3.us-east-2.amazonaws.com/2az3jti2ztc7yfjw.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/xdcw2so450opo8vt.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/gurmxl9cnfhd5hqi.png');
+    INSERT INTO images VALUES (3, 'Pirate', 'https://tinyhats.s3.us-east-2.amazonaws.com/0795v0j4xygzjyhq.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/tepzhf0928q35821.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/jm0cbuqyyjlsaylh.png')
+    INSERT INTO images VALUES (4, 'Graduation', 'https://tinyhats.s3.us-east-2.amazonaws.com/z0kjd6qr5tked3x7.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/usnosun0jhq2xny4.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/mmhvicywkfzn81lk.png')
     GRANT ALL PRIVILEGES
     ON main.images
     TO 'admin'@'%'
