@@ -83,7 +83,7 @@ function generateName() {
     return id + ".png"
 }
 
-function up2S3(fileName, body) {
+async function up2S3(fileName, body) {
     const s3 = new AWS.S3({
         accessKeyId: ID,
         secretAccessKey: SECRET
