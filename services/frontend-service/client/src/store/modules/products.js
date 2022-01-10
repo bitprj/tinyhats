@@ -13,6 +13,10 @@ const getters = {
 const mutations = {
     setProducts: (state, products) => {
         state.products = products;
+    },
+
+    setCustom: (state, custom) => {
+        state.custom = custom;
     }
 };
 
@@ -43,6 +47,24 @@ const actions = {
 
         await dispatch('fetch');
         await dispatch('cart/fetch', null, { root: true });
+    },
+
+    async custom({ commit }, {formData, description}) {
+        console.log("making custom post request")
+        console.log(formData)
+        console.log(description)
+        const response = await axios({
+            method: 'post',
+            url: `/api/products/custom?name=${description}`,
+            data: formData,
+            headers: {
+                'Content-Type': `multipart/form-data`,
+            },
+        });
+
+        let data = await response.json()
+        commit('setCustom', data);
+        return data
     }
 };
 
@@ -51,5 +73,5 @@ export default {
     getters,
     mutations,
     actions,
-    namespaced: true
+    namespaced: true,
 };
