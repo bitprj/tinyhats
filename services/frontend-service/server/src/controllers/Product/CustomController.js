@@ -16,7 +16,7 @@ class ProductCustomController {
         console.log(req.query.name)
         const formHeaders = formData.getHeaders();
         const response = await fetch(
-            `http://aecd4af3f5b31453e901f0e4fd885a63-1647978061.us-west-2.elb.amazonaws.com/mockup/${req.query.name}`,
+            `http://gateway-service:80/mockup/${req.query.name}`,
             {
                 method: 'POST',
                 body: formData,
