@@ -48,7 +48,6 @@ export default {
                 let description = this.products[i].Description
                 const formData = new FormData();
                 formData.append('file', file);
-                formData.append('name', description)
                 console.log(formData)
 
                 var response;
@@ -66,9 +65,8 @@ export default {
                 //     }
                 // );
 
-                const json = await response.json();
-                console.log(json);
-                temp_products[i].Hat = json.result.preview;
+                console.log(response)
+                temp_products[i].Hat = response.data.result.preview;
             }
             document.getElementById('spinner').classList.add('hidden');
         },

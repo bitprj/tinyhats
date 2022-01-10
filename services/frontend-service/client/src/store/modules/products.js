@@ -62,7 +62,7 @@ const actions = {
             },
         });
 
-        let data = await response.json()
+        let data = await response
         commit('setCustom', data);
         return data
     }
