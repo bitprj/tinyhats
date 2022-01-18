@@ -20,7 +20,7 @@
   "homepage": "https://github.com/bitprj/intro-to-k8s#readme",
   "dependencies": {
     "@grpc/proto-loader": "^0.6.4",
-    "aws-sdk": "^2.936.0",
+    "aws-sdk": "^2.1049.0",
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",

@@ -27,7 +27,7 @@ router.post('/', upload.any(), async(req, res) => {
         previews.push(finalImage)
     }
 
-    let uploadRes = await helpers.uploadPreview(name, Buffer.from(hat).toString("base64"), previews[0], previews[1])
+    let uploadRes = await helpers.uploadPreview(name, hat, Buffer.from(previews[0].replace("data:image/png;base64,", ""), 'base64'), Buffer.from(previews[1].replace("data:image/png;base64,", ""), 'base64'))
     console.log(uploadRes)
 
     res.send({"response": `Your hat with a description of '${name}' was added."`}) 

@@ -47,6 +47,16 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: 'us-west-2'
+
+      - name: Replace Environment Variables
+        uses: danielr1996/envsubst-action@1.0.0
+        env:
+          S3_ID: ${{ secrets.S3_ID}}
+          S3_SECRET: ${{ secrets.S3_SECRET }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+        with:
+          input: kube/admin.yaml
+          output: kube/admin.yaml
           
       - name: Identity Check
         run: aws sts get-caller-identity
