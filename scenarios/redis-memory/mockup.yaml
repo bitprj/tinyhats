@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mockup-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mockup-service
+  template:
+    metadata:
+      labels:
+        app: mockup-service
+    spec:
+      containers:
+        - name: mockup-service
+          image: bitprj/tinyhat-mockup-service:beta
+          ports:
+            - containerPort: 1337
+          env:
+            - name: HOST
+              value: mysql
+            - name: PASSWORD
+              value: password
+            - name: MANIPULATE_ENDPOINT
+              value: manipulation-service:80
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mockup-service
+spec:
+  selector:
+    app: mockup-service
+  ports:
+    - port: 80
+      targetPort: 1337
+  type: ClusterIP
