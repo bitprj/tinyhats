@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+    cloud.google.com/load-balancer-type: "internal"
+  creationTimestamp: null
+  labels:
+    io.kompose.service: apache
+  name: apache
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 80
+  selector:
+    io.kompose.service: apache
+status:
+  loadBalancer: {}

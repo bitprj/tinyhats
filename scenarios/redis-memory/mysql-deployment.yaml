@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mysql
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        - name: MYSQL_DATABASE
+          value: main
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        # - name: mysql-persistent-storage
+        #   mountPath: /var/lib/mysql
+        - name: mysql-initdb
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: mysql-initdb
+          configMap:
+            name: mysql-initdb-config
+        # - name: mysql-persistent-storage
+        #   persistentVolumeClaim:
+        #     claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb-config
+data:
+  initdb.sql: |
+    CREATE TABLE IF NOT EXISTS images(id int NOT NULL AUTO_INCREMENT, description varchar(255), hat varchar(255), preview1 varchar(255), preview2 varchar(255), PRIMARY KEY(id));
+    INSERT INTO images VALUES (1, 'Helicopter', 'https://tinyhats.s3.amazonaws.com/h9b8lpt7o7ez2m7r.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/rlcphkcttq6q5w2r.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/xr3wxcknyw1kqkkz.png');
+    INSERT INTO images VALUES (2, 'Santa', 'https://tinyhats.s3.us-east-2.amazonaws.com/2az3jti2ztc7yfjw.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/xdcw2so450opo8vt.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/gurmxl9cnfhd5hqi.png');
+    INSERT INTO images VALUES (3, 'Pirate', 'https://tinyhats.s3.us-east-2.amazonaws.com/0795v0j4xygzjyhq.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/tepzhf0928q35821.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/jm0cbuqyyjlsaylh.png')
+    INSERT INTO images VALUES (4, 'Graduation', 'https://tinyhats.s3.us-east-2.amazonaws.com/z0kjd6qr5tked3x7.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/usnosun0jhq2xny4.png', 'https://tinyhats.s3.us-east-2.amazonaws.com/mmhvicywkfzn81lk.png')
+    GRANT ALL PRIVILEGES
+    ON main.images
+    TO 'admin'@'%'
+    IDENTIFIED BY 'password';

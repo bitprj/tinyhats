@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-service
+  template:
+    metadata:
+      labels:
+        app: admin-service
+    spec:
+      containers:
+        - name: admin-service
+          image: bitprj/tinyhat-admin-service:beta
+          ports:
+            - containerPort: 80
+          env:
+            - name: HOST
+              value: mysql
+            - name: PASSWORD
+              value: password
+            - name: S3_ID
+              value: "$S3_ID"
+            - name: S3_SECRET
+              value: "$S3_SECRET"
+            - name: BUCKET_NAME
+              value: "$BUCKET_NAME"
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-service
+spec:
+  selector:
+    app: admin-service
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP

@@ -13,7 +13,7 @@ const con = mysql.createConnection({
 });
 
 export async function getSpecificHat(style) {
-    var sql = `SELECT * FROM main.images WHERE description='${style} COLLATE SQL_Latin1_General_CP1_CS_AS'`;
+    var sql = `SELECT * FROM main.images WHERE BINARY description='${style.toLowerCase()}''`;
     const results = await con.promise().query(sql)
         .catch(err => console.log(err))
     
